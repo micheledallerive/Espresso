@@ -12,3 +12,9 @@ TEST(HTTPMessage, testParseHeaders) {
   Espresso::HTTPMessage message("HTTP/1.1", headers, "");
   ASSERT_EQ(message.getHeader("Content-Type"), "text/html");
 }
+
+TEST(HTTPMessage, testSetHeader) {
+  Espresso::HTTPMessage message("HTTP/1.1", "", "");
+  message.setHeader("Content-Type", "text/html");
+  ASSERT_EQ(message.getHeader("Content-Type"), "text/html");
+}
