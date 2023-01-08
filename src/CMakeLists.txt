@@ -3,4 +3,9 @@ project(espresso)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(espresso main.cpp Server.cpp Server.h HTTPMessage.cpp HTTPMessage.h)
+add_executable(
+        espresso
+        main.cpp
+        Server.cpp
+        HTTPMessage.cpp
+)
