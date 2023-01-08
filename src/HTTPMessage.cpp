@@ -26,6 +26,7 @@ void HTTPMessage::parseHeaders_(const std::string &headers) {
   while (std::getline(iss, line)) {
     std::string name = line.substr(0, line.find(':'));
     std::string value = line.substr(line.find(':') + 2);
+    value.pop_back(); // remove the \r
     this->headers_.insert({name, value});
   }
 }
