@@ -15,9 +15,9 @@ class HTTPMessage {
   HTTPMessage(std::string version, const std::string& headers, std::string body);
   virtual ~HTTPMessage();
 
-  void setHeader(const char *name, const char *value);
-  const char *getHeader(const char *name);
-  void setBody(const char *body);
+  void setHeader(const std::string& name, const std::string& value);
+  std::string getHeader(const std::string& name);
+  void setBody(std::string body);
   std::string getBody();
 
   void parseHeaders_(const std::string& headers);
