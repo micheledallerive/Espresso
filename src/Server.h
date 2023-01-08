@@ -7,6 +7,7 @@
 
 #include <functional>
 #include "Middleware.h"
+#include "Router.h"
 
 const int ESPRESSO_MAX_CONNECTIONS = 100;
 const unsigned int ESPRESSO_DEFAULT_PORT = 8888;
@@ -19,6 +20,7 @@ class Server {
   int socket_;
   int max_connections_;
   Espresso::MiddlewareList *middlewares_;
+  Espresso::Router *router_;
 
   void handle_connection_(int client_socket);
  public:

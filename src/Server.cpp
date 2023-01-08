@@ -80,7 +80,8 @@ void Server::handle_connection_(int client_socket) {
   auto response = new Espresso::HTTPResponse();
 
   this->middlewares_->run(request, response);
-  std::cout << buffer << std::endl;
+
+  this->router_->matchRoute(request->getPath())->callback(request, response);
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
