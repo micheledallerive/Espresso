@@ -49,4 +49,8 @@ std::string HTTPMessage::getBody() {
   return this->body_;
 }
 
+std::string HTTPMessage::getVersion() {
+  return this->version_;
+}
+
 } // Espresso
