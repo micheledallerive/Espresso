@@ -83,7 +83,7 @@ void Server::handle_connection_(int client_socket) {
 
   this->middlewares_->run(request, response);
 
-  this->router->matchRoute(request->getPath())->callback(request, response);
+  this->router->executeMatchingRoute(request, response);
 
   send(client_socket, response->toString().c_str(),
        response->toString().length(), 0);

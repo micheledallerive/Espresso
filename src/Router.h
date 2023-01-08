@@ -15,7 +15,8 @@
 
 namespace Espresso {
 
-using RouteCallback = std::function<void(HTTPRequest *request, HTTPResponse *response)>;
+using RouteCallback = std::function<void(HTTPRequest *request,
+                                         HTTPResponse *response)>;
 
 struct Route {
   std::string path;
@@ -40,8 +41,7 @@ class Router {
   void addRoute(std::string path,
                 HTTPMethod method,
                 RouteCallback callback);
-
-  Route *matchRoute(const std::string &path);
+  void executeMatchingRoute(Espresso::HTTPRequest *req, Espresso::HTTPResponse *res);
  private:
   std::vector<Route> routes_;
 };
