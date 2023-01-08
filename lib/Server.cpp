@@ -8,11 +8,13 @@
 #include <stdexcept>
 #include <netinet/in.h>
 #include <iostream>
+#include <functional>
 
 namespace Espresso {
     Server::Server() {
         this->_port = ESPRESSO_DEFAULT_PORT;
         this->_socket = -1;
+        this->_max_connections = ESPRESSO_MAX_CONNECTIONS;
     }
 
     Server::~Server() {
@@ -21,12 +23,16 @@ namespace Espresso {
         }
     }
 
-    void Server::listen(unsigned short int port, int max_connections) {
-        this->_port = port;
+    void Server::set_max_connections(int max_connections) {
+        this->_max_connections = max_connections;
+    }
 
+    void Server::listen(unsigned short int port, const std::function<void(void)> &callback) {
+        this->_port = port;
         if (this->_socket != -1) {
             close(this->_socket);
         }
+
         this->_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (this->_socket == -1) {
             throw std::runtime_error("Could not create socket");
@@ -42,9 +48,11 @@ namespace Espresso {
         if (::bind(this->_socket, (struct sockaddr *) &address, sizeof(address)) < 0) {
             throw std::runtime_error("Could not bind socket");
         }
-        if (::listen(this->_socket, max_connections) < 0) {
+        if (::listen(this->_socket, this->_max_connections) < 0) {
             throw std::runtime_error("Could not listen on socket");
         }
+
+        if (callback) callback();
 
         while (true) {
             int client_socket = accept(this->_socket, nullptr, nullptr);

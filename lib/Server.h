@@ -5,6 +5,8 @@
 #ifndef ESPRESSO_SERVER_H
 #define ESPRESSO_SERVER_H
 
+#include <functional>
+
 const int ESPRESSO_MAX_CONNECTIONS = 100;
 const unsigned int ESPRESSO_DEFAULT_PORT = 8888;
 
@@ -14,12 +16,16 @@ namespace Espresso {
     private:
         unsigned short int _port;
         int _socket;
+        int _max_connections;
     public:
         explicit Server();
 
         ~Server();
 
-        void listen(unsigned short int port = ESPRESSO_DEFAULT_PORT, int max_connections = ESPRESSO_MAX_CONNECTIONS);
+        void set_max_connections(int max_connections);
+
+        void
+        listen(unsigned short int port = ESPRESSO_DEFAULT_PORT, const std::function<void(void)> &callback = nullptr);
     };
 
 } // Espresso
