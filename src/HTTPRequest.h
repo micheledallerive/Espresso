@@ -5,6 +5,7 @@
 #ifndef ESPRESSO_SRC_HTTPREQUEST_H_
 #define ESPRESSO_SRC_HTTPREQUEST_H_
 
+#include <unordered_map>
 #include "HTTPMessage.h"
 namespace Espresso {
 
@@ -16,6 +17,9 @@ class HTTPRequest : public HTTPMessage{
 
   std::string getMethod();
   std::string getPath();
+  std::unordered_map<std::string, std::string> params;
+  std::unordered_map<std::string, std::string> query;
+  std::unordered_map<std::string, std::string> cookies;
  private:
   std::string method_;
   std::string path_;
