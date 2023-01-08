@@ -1,6 +1,8 @@
 #include <iostream>
+#include "lib/Server.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    auto server = new Espresso::Server(8080);
+    server->listen();
     return 0;
 }
