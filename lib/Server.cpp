@@ -12,7 +12,7 @@
 
 namespace Espresso {
     Server::Server() {
-        this->_port = ESPRESSO_DEFAULT_PORT;
+        this->_port = -1;
         this->_socket = -1;
         this->_max_connections = ESPRESSO_MAX_CONNECTIONS;
     }
