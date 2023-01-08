@@ -21,7 +21,7 @@ class HTTPMessage {
   std::string getBody();
 
   void parseHeaders_(const std::string& headers);
- private:
+ protected:
   std::string version_;
   std::unordered_map<std::string, std::string> headers_;
   std::string body_;
