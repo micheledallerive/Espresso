@@ -6,6 +6,7 @@
 #define ESPRESSO_SERVER_H
 
 #include <functional>
+#include "Middleware.h"
 
 const int ESPRESSO_MAX_CONNECTIONS = 100;
 const unsigned int ESPRESSO_DEFAULT_PORT = 8888;
@@ -17,6 +18,7 @@ class Server {
   unsigned short int port_;
   int socket_;
   int max_connections_;
+  Espresso::MiddlewareList *middlewares_;
 
   static void handle_connection_(int client_socket);
  public:
@@ -27,6 +29,7 @@ class Server {
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,
          const std::function<void(void)> &callback = nullptr);
+  void use(Espresso::Middleware *middleware);
 };
 
 } // Espresso

@@ -17,12 +17,14 @@ Server::Server() {
   this->port_ = -1;
   this->socket_ = -1;
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
+  this->middlewares_ = new Espresso::MiddlewareList();
 }
 
 Server::~Server() {
   if (this->socket_ != -1) {
     close(this->socket_);
   }
+  delete this->middlewares_;
 }
 
 void Server::set_max_connections(int max_connections) {
@@ -79,6 +81,10 @@ void Server::handle_connection_(int client_socket) {
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
+}
+
+void Server::use(Middleware *middleware) {
+  this->middlewares_->use(middleware);
 }
 
 } // Espresso
