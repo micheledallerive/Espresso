@@ -8,7 +8,7 @@
 #include "HTTPMessage.h"
 namespace Espresso {
 
-class HTTPRequest : HTTPMessage{
+class HTTPRequest : public HTTPMessage{
  public:
   HTTPRequest(std::string method, std::string path, std::string version, const std::string& headers, std::string body);
   explicit HTTPRequest(const std::string& request);
