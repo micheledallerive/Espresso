@@ -5,10 +5,20 @@
 #ifndef ESPRESSO_SRC_HTTPRESPONSE_H_
 #define ESPRESSO_SRC_HTTPRESPONSE_H_
 
+#include <memory>
+#include "HTTPMessage.h"
 namespace Espresso {
 
-class HTTPResponse {
+class HTTPResponse;
 
+class HTTPResponse : public HTTPMessage {
+ public:
+  HTTPResponse();
+  virtual ~HTTPResponse();
+  HTTPResponse *setStatus(int status);
+  std::string toString();
+ private:
+  int status_;
 };
 
 } // Espresso
