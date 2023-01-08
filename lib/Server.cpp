@@ -10,8 +10,8 @@
 #include <iostream>
 
 namespace Espresso {
-    Server::Server(unsigned short port) {
-        this->_port = port;
+    Server::Server() {
+        this->_port = ESPRESSO_DEFAULT_PORT;
         this->_socket = -1;
     }
 
@@ -21,7 +21,9 @@ namespace Espresso {
         }
     }
 
-    void Server::listen(int max_connections) {
+    void Server::listen(unsigned short int port, int max_connections) {
+        this->_port = port;
+
         if (this->_socket != -1) {
             close(this->_socket);
         }
