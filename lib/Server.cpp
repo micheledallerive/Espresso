@@ -62,15 +62,19 @@ void Server::listen(unsigned short int port,
       throw std::runtime_error("Could not accept connection");
     }
     if (fork() == 0) {
-      char buffer[1024] = {0};
-      read(client_socket, buffer, 1024);
-      std::cout << buffer << std::endl;
-      send(client_socket, "HTTP/1.1 200 OK\r\n\r\ntest", 23, 0);
-      shutdown(client_socket, SHUT_RDWR);
-      close(client_socket);
+      Server::handle_connection_(client_socket);
       exit(0);
     }
   }
+}
+
+void Server::handle_connection_(int client_socket) {
+  char buffer[1024] = {0};
+  read(client_socket, buffer, 1024);
+  std::cout << buffer << std::endl;
+  send(client_socket, "HTTP/1.1 200 OK\r\n\r\ntest", 23, 0);
+  shutdown(client_socket, SHUT_RDWR);
+  close(client_socket);
 }
 
 } // Espresso

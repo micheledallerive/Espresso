@@ -17,6 +17,8 @@ class Server {
   unsigned short int port_;
   int socket_;
   int max_connections_;
+
+  static void handle_connection_(int client_socket);
  public:
   explicit Server();
   ~Server();
