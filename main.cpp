@@ -1,5 +1,6 @@
 #include <iostream>
 #include "lib/Server.h"
+#include "lib/HTTPMessage.h"
 
 int main() {
   auto server = new Espresso::Server();
