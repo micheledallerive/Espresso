@@ -18,6 +18,7 @@ Server::Server() {
   this->socket_ = -1;
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
   this->middlewares_ = new Espresso::MiddlewareList();
+  this->router = new Espresso::Router();
 }
 
 Server::~Server() {
@@ -25,6 +26,7 @@ Server::~Server() {
     close(this->socket_);
   }
   delete this->middlewares_;
+  delete this->router;
 }
 
 void Server::set_max_connections(int max_connections) {
