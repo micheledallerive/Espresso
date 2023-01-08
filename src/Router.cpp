@@ -61,5 +61,6 @@ Route *Router::matchRoute(const std::string &path) {
     }
   }
   return nullptr;
+}
 
 } // Espresso
