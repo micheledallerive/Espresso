@@ -2,10 +2,24 @@
 #include "Server.h"
 #include "HTTPMessage.h"
 
+const int PORT = 8888;
+
 int main() {
   auto server = new Espresso::Server();
-  server->listen(8080, []() {
-    std::cout << "Listening on port 8080" << std::endl;
+  server->use([](Espresso::HTTPRequest *request,
+                 Espresso::HTTPResponse *response,
+                 auto next) {
+    std::cout << "Hello World!" << std::endl;
+    next();
+  });
+  server->use([](Espresso::HTTPRequest *request,
+                 Espresso::HTTPResponse *response,
+                 auto next) {
+    std::cout << "Hello World 2!" << std::endl;
+  });
+
+  server->listen(PORT, []() {
+    std::cout << "Listening on port " << PORT << std::endl;
   });
   return 0;
 }
