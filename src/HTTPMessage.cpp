@@ -34,7 +34,7 @@ void HTTPMessage::parseHeaders_(const std::string &headers) {
 }
 
 void HTTPMessage::setHeader(const std::string &name, const std::string &value) {
-  this->headers_.insert({name, value});
+  this->headers_[name] = value;
 }
 
 std::string HTTPMessage::getHeader(const std::string &name) {
