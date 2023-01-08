@@ -7,12 +7,15 @@
 
 #include <string>
 #include <functional>
-#include <list>
+#include <vector>
+
+#include "HTTPMethod.h"
 
 namespace Espresso {
 
 struct Route {
   std::string path;
+  HTTPMethod method;
   std::function<void()> callback;
 };
 
@@ -21,10 +24,22 @@ class Router {
   Router();
   ~Router();
 
-  void addRoute(std::string path, std::function<void()> callback);
-  void matchRoute(std::string path);
+  void get(std::string path, std::function<void()> callback);
+  void post(std::string path, std::function<void()> callback);
+  void put(std::string path, std::function<void()> callback);
+  void del(std::string path, std::function<void()> callback);
+  void patch(std::string path, std::function<void()> callback);
+  void options(std::string path, std::function<void()> callback);
+  void head(std::string path, std::function<void()> callback);
+  void connect(std::string path, std::function<void()> callback);
+  void trace(std::string path, std::function<void()> callback);
+  void addRoute(std::string path,
+                HTTPMethod method,
+                std::function<void()> callback);
+
+  Route *matchRoute(const std::string& path);
  private:
-  std::list<Route> routes_;
+  std::vector<Route> routes_;
 };
 
 } // Espresso
