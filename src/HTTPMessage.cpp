@@ -31,12 +31,20 @@ void HTTPMessage::parseHeaders_(const std::string &headers) {
   }
 }
 
-void HTTPMessage::setHeader(const std::string& name, const std::string& value) {
+void HTTPMessage::setHeader(const std::string &name, const std::string &value) {
   this->headers_.insert({name, value});
 }
 
-std::string HTTPMessage::getHeader(const std::string& name) {
+std::string HTTPMessage::getHeader(const std::string &name) {
   return this->headers_.at(name);
+}
+
+void HTTPMessage::setBody(std::string body) {
+  this->body_ = std::move(body);
+}
+
+std::string HTTPMessage::getBody() {
+  return this->body_;
 }
 
 } // Espresso
