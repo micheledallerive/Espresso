@@ -39,4 +39,12 @@ HTTPRequest::HTTPRequest(const std::string &request) {
 
 HTTPRequest::~HTTPRequest() = default;
 
+std::string HTTPRequest::getMethod() {
+  return this->method_;
+}
+
+std::string HTTPRequest::getPath() {
+  return this->path_;
+}
+
 } // Espresso

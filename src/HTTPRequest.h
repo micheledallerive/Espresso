@@ -14,6 +14,8 @@ class HTTPRequest : public HTTPMessage{
   explicit HTTPRequest(const std::string& request);
   virtual ~HTTPRequest();
 
+  std::string getMethod();
+  std::string getPath();
  private:
   std::string method_;
   std::string path_;
