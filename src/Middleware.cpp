@@ -15,15 +15,16 @@ void MiddlewareList::use(const Middleware &middleware) {
 }
 
 void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
-  std::function<void()> next = []() {};
-  for (auto it = this->middlewares_.begin(); it != this->middlewares_.end();
-       ++it) {
-    auto current = *it;
-    next = [current, request, response, next]() {
-      current(request, response, next);
-    };
-    next();
-  }
+  // create a next function that, if called inside the middleware, will run the next one, otherwise will do nothing
+  auto it = this->middlewares_.begin();
+  std::function<void(void)> next = [&]() {
+    if (this->middlewares_.empty()) return;
+
+    Middleware middleware = *it;
+    ++it;
+    middleware(request, response, next);
+  };
+  next();
 }
 
 } // Espresso
