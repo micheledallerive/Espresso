@@ -22,6 +22,15 @@ TEST(HTTPMessage, testSetHeader) {
   ASSERT_EQ(message.getHeader("Content-Type"), "text/html");
 }
 
+TEST(HTTPMessage, testHeadersToString) {
+  Espresso::HTTPMessage message("HTTP/1.1", "", "");
+  message.setHeader("Connection", "keep-alive");
+  message.setHeader("Content-Length", "123");
+  message.setHeader("Content-Type", "text/html");
+  ASSERT_EQ(message.headersToString(),
+            "Connection: keep-alive\r\nContent-Length: 123\r\nContent-Type: text/html\r\n");
+}
+
 TEST(HTTPRequest, testConstructor) {
   std::string method = "GET";
   std::string path = "/index.html";
