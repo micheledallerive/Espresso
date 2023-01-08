@@ -3,9 +3,15 @@ project(espresso)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(TARGET_FILES Server.cpp HTTPMessage.cpp Server.h HTTPMessage.h)
+
 add_executable(
         espresso
         main.cpp
-        Server.cpp
-        HTTPMessage.cpp
+        ${TARGET_FILES}
+)
+
+add_library(
+        espresso_lib
+        ${TARGET_FILES}
 )

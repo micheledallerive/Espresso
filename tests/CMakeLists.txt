@@ -21,6 +21,7 @@ add_executable(
 
 target_link_libraries(
         espresso_test
+        espresso_lib
         GTest::gtest_main
 )
 
