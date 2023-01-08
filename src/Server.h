@@ -29,7 +29,7 @@ class Server {
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,
          const std::function<void(void)> &callback = nullptr);
-  void use(Espresso::Middleware *middleware);
+  void use(const Espresso::Middleware& middleware);
 };
 
 } // Espresso

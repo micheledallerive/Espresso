@@ -83,7 +83,7 @@ void Server::handle_connection_(int client_socket) {
   close(client_socket);
 }
 
-void Server::use(Middleware *middleware) {
+void Server::use(const Middleware& middleware) {
   this->middlewares_->use(middleware);
 }
 
