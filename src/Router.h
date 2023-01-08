@@ -10,13 +10,15 @@
 #include <vector>
 
 #include "HTTPMethod.h"
+#include "HTTPRequest.h"
+#include "HTTPResponse.h"
 
 namespace Espresso {
 
 struct Route {
   std::string path;
   HTTPMethod method;
-  std::function<void()> callback;
+  std::function<void(HTTPRequest *, HTTPResponse *)> callback;
 };
 
 class Router {
@@ -37,7 +39,7 @@ class Router {
                 HTTPMethod method,
                 std::function<void()> callback);
 
-  Route *matchRoute(const std::string& path);
+  Route *matchRoute(const std::string &path);
  private:
   std::vector<Route> routes_;
 };
