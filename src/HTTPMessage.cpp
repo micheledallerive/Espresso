@@ -53,4 +53,12 @@ std::string HTTPMessage::getVersion() {
   return this->version_;
 }
 
+std::string HTTPMessage::headersToString() {
+  std::string headers;
+  for (auto &header : this->headers_) {
+    headers += header.first + ": " + header.second + "\r\n";
+  }
+  return headers;
+}
+
 } // Espresso

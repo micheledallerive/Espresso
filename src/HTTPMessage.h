@@ -22,6 +22,8 @@ class HTTPMessage {
   std::string getBody();
   std::string getVersion();
 
+  std::string headersToString();
+
   void parseHeaders_(const std::string& headers);
  protected:
   std::string version_;
