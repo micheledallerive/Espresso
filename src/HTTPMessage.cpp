@@ -10,6 +10,8 @@
 
 namespace Espresso {
 
+HTTPMessage::HTTPMessage() = default;
+
 HTTPMessage::HTTPMessage(std::string version,
                          const std::string &headers,
                          std::string body) {

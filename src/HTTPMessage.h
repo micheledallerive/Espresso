@@ -12,6 +12,7 @@ namespace Espresso {
 
 class HTTPMessage {
  public:
+  HTTPMessage();
   HTTPMessage(std::string version, const std::string& headers, std::string body);
   virtual ~HTTPMessage();
 
