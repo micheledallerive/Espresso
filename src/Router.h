@@ -15,10 +15,12 @@
 
 namespace Espresso {
 
+using RouteCallback = std::function<void(HTTPRequest *request, HTTPResponse *response)>;
+
 struct Route {
   std::string path;
   HTTPMethod method;
-  std::function<void(HTTPRequest *, HTTPResponse *)> callback;
+  RouteCallback callback;
 };
 
 class Router {
@@ -26,18 +28,18 @@ class Router {
   Router();
   ~Router();
 
-  void get(std::string path, std::function<void()> callback);
-  void post(std::string path, std::function<void()> callback);
-  void put(std::string path, std::function<void()> callback);
-  void del(std::string path, std::function<void()> callback);
-  void patch(std::string path, std::function<void()> callback);
-  void options(std::string path, std::function<void()> callback);
-  void head(std::string path, std::function<void()> callback);
-  void connect(std::string path, std::function<void()> callback);
-  void trace(std::string path, std::function<void()> callback);
+  void get(std::string path, RouteCallback callback);
+  void post(std::string path, RouteCallback callback);
+  void put(std::string path, RouteCallback callback);
+  void del(std::string path, RouteCallback callback);
+  void patch(std::string path, RouteCallback callback);
+  void options(std::string path, RouteCallback callback);
+  void head(std::string path, RouteCallback callback);
+  void connect(std::string path, RouteCallback callback);
+  void trace(std::string path, RouteCallback callback);
   void addRoute(std::string path,
                 HTTPMethod method,
-                std::function<void()> callback);
+                RouteCallback callback);
 
   Route *matchRoute(const std::string &path);
  private:
