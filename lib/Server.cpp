@@ -12,52 +12,52 @@
 
 namespace Espresso {
 Server::Server() {
-  this->_port = -1;
-  this->_socket = -1;
-  this->_max_connections = ESPRESSO_MAX_CONNECTIONS;
+  this->port_ = -1;
+  this->socket_ = -1;
+  this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
 }
 
 Server::~Server() {
-  if (this->_socket != -1) {
-    close(this->_socket);
+  if (this->socket_ != -1) {
+    close(this->socket_);
   }
 }
 
 void Server::set_max_connections(int max_connections) {
-  this->_max_connections = max_connections;
+  this->max_connections_ = max_connections;
 }
 
 void Server::listen(unsigned short int port,
                     const std::function<void(void)> &callback) {
-  this->_port = port;
-  if (this->_socket != -1) {
-    close(this->_socket);
+  this->port_ = port;
+  if (this->socket_ != -1) {
+    close(this->socket_);
   }
 
-  this->_socket = socket(AF_INET, SOCK_STREAM, 0);
-  if (this->_socket == -1) {
+  this->socket_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (this->socket_ == -1) {
     throw std::runtime_error("Could not create socket");
   }
   int opt = 1;
-  if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+  if (setsockopt(this->socket_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
     throw std::runtime_error("Could not set socket options");
   }
   struct sockaddr_in address = {0};
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
-  address.sin_port = htons(this->_port);
-  if (::bind(this->_socket, (struct sockaddr *) &address, sizeof(address))
+  address.sin_port = htons(this->port_);
+  if (::bind(this->socket_, (struct sockaddr *) &address, sizeof(address))
       < 0) {
     throw std::runtime_error("Could not bind socket");
   }
-  if (::listen(this->_socket, this->_max_connections) < 0) {
+  if (::listen(this->socket_, this->max_connections_) < 0) {
     throw std::runtime_error("Could not listen on socket");
   }
 
   if (callback) callback();
 
   while (true) {
-    int client_socket = accept(this->_socket, nullptr, nullptr);
+    int client_socket = accept(this->socket_, nullptr, nullptr);
     if (client_socket < 0) {
       throw std::runtime_error("Could not accept connection");
     }
@@ -72,4 +72,5 @@ void Server::listen(unsigned short int port,
     }
   }
 }
+
 } // Espresso
