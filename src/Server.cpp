@@ -3,12 +3,14 @@
 //
 
 #include "Server.h"
+#include "HTTPRequest.h"
 #include <sys/socket.h>
 #include <unistd.h>
 #include <stdexcept>
 #include <netinet/in.h>
 #include <iostream>
 #include <functional>
+#include <memory>
 
 namespace Espresso {
 Server::Server() {
@@ -69,10 +71,12 @@ void Server::listen(unsigned short int port,
 }
 
 void Server::handle_connection_(int client_socket) {
-  char buffer[1024] = {0};
-  read(client_socket, buffer, 1024);
-  std::cout << buffer << std::endl;
-  send(client_socket, "HTTP/1.1 200 OK\r\n\r\ntest", 23, 0);
+  char buffer[2048] = {0};
+  read(client_socket, buffer, 2048);
+
+  std::unique_ptr<HTTPRequest>
+      request = std::make_unique<HTTPRequest>(buffer);
+
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
 }
