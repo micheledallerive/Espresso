@@ -66,7 +66,7 @@ void Server::listen(unsigned short int port,
       throw std::runtime_error("Could not accept connection");
     }
     if (fork() == 0) {
-      Server::handle_connection_(client_socket);
+      this->handle_connection_(client_socket);
       exit(0);
     }
   }
@@ -76,14 +76,17 @@ void Server::handle_connection_(int client_socket) {
   char buffer[2048] = {0};
   read(client_socket, buffer, 2048);
 
-  std::unique_ptr<HTTPRequest>
-      request = std::make_unique<HTTPRequest>(buffer);
+  auto request = new Espresso::HTTPRequest(buffer);
+  auto response = new Espresso::HTTPResponse();
+
+  this->middlewares_->run(request, response);
+  std::cout << buffer << std::endl;
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
 }
 
-void Server::use(const Middleware& middleware) {
+void Server::use(const Middleware &middleware) {
   this->middlewares_->use(middleware);
 }
 

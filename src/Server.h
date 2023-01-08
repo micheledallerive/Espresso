@@ -20,7 +20,7 @@ class Server {
   int max_connections_;
   Espresso::MiddlewareList *middlewares_;
 
-  static void handle_connection_(int client_socket);
+  void handle_connection_(int client_socket);
  public:
   explicit Server();
   ~Server();
