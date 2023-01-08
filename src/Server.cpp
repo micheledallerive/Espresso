@@ -81,7 +81,7 @@ void Server::handle_connection_(int client_socket) {
 
   this->middlewares_->run(request, response);
 
-  this->router_->matchRoute(request->getPath())->callback(request, response);
+  this->router->matchRoute(request->getPath())->callback(request, response);
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);

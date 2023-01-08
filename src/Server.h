@@ -20,13 +20,13 @@ class Server {
   int socket_;
   int max_connections_;
   Espresso::MiddlewareList *middlewares_;
-  Espresso::Router *router_;
 
   void handle_connection_(int client_socket);
  public:
   explicit Server();
   ~Server();
 
+  Espresso::Router *router;
   void set_max_connections(int max_connections);
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,

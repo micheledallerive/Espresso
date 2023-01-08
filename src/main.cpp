@@ -18,6 +18,8 @@ int main() {
     std::cout << "Hello World 2!" << std::endl;
   });
 
+  server->
+
   server->listen(PORT, []() {
     std::cout << "Listening on port " << PORT << std::endl;
   });
