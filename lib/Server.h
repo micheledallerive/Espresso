@@ -12,21 +12,22 @@ const unsigned int ESPRESSO_DEFAULT_PORT = 8888;
 
 namespace Espresso {
 
-    class Server {
-    private:
-        unsigned short int _port;
-        int _socket;
-        int _max_connections;
-    public:
-        explicit Server();
+class Server {
+ private:
+  unsigned short int _port;
+  int _socket;
+  int _max_connections;
+ public:
+  explicit Server();
 
-        ~Server();
+  ~Server();
 
-        void set_max_connections(int max_connections);
+  void set_max_connections(int max_connections);
 
-        void
-        listen(unsigned short int port = ESPRESSO_DEFAULT_PORT, const std::function<void(void)> &callback = nullptr);
-    };
+  void
+  listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,
+         const std::function<void(void)> &callback = nullptr);
+};
 
 } // Espresso
 
