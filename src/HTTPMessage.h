@@ -3,7 +3,7 @@
 //
 
 #include<cstring>
-#include<unordered_map>
+#include<map>
 
 #ifndef ESPRESSO_LIB_HTTPMESSAGE_H_
 #define ESPRESSO_LIB_HTTPMESSAGE_H_
@@ -27,7 +27,7 @@ class HTTPMessage {
   void parseHeaders_(const std::string& headers);
  protected:
   std::string version_;
-  std::unordered_map<std::string, std::string> headers_;
+  std::map<std::string, std::string> headers_;
   std::string body_;
 };
 
