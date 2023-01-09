@@ -6,12 +6,13 @@
 #define ESPRESSO_SRC_HTTPRESPONSE_H_
 
 #include <memory>
+#include <unordered_map>
 #include "HTTPMessage.h"
 #include "Cookies.h"
 
 namespace Espresso {
 
-class HTTPResponse;
+extern std::unordered_map<int, std::string> HTTP_REASONS;
 
 class HTTPResponse : public HTTPMessage {
  public:
