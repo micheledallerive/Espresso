@@ -32,7 +32,7 @@ TEST(HTTPMessage, testHeadersToString) {
 }
 
 TEST(HTTPRequest, testConstructor) {
-  std::string method = "GET";
+  Espresso::HTTPMethod method = Espresso::HTTPMethod::GET;
   std::string path = "/index.html";
   std::string version = "HTTP/1.1";
   std::string headers = "Content-Type: text/html\r\n"
@@ -57,7 +57,7 @@ TEST(HTTPRequest, testConstructorFromRequest) {
                         "\r\n"
                         "Hello World!";
   Espresso::HTTPRequest req(request);
-  ASSERT_EQ(req.getMethod(), "GET");
+  ASSERT_EQ(req.getMethod(), Espresso::HTTPMethod::GET);
   ASSERT_EQ(req.getPath(), "/index.html");
   ASSERT_EQ(req.getVersion(), "HTTP/1.1");
   ASSERT_EQ(req.getHeader("Content-Type"), "text/html");
@@ -74,7 +74,11 @@ TEST(Middlewares, testMiddlewareExecute) {
     res->setHeader("Content-Type", "text/html");
     res->setHeader("Content-Length", "000");
   });
-  auto *req = new Espresso::HTTPRequest("GET", "/", "HTTP/1.1", "", "");
+  auto *req = new Espresso::HTTPRequest(Espresso::HTTPMethod::GET,
+                                        "/",
+                                        "HTTP/1.1",
+                                        "",
+                                        "");
   auto *res = new Espresso::HTTPResponse();
   list->run(req, res);
   ASSERT_TRUE(res->getHeader("Content-Type") == "text/html");
@@ -94,7 +98,11 @@ TEST(Middlewares, testMiddlewaresContinue) {
                auto next) {
     res->setHeader("Content-Length", "123");
   });
-  auto *req = new Espresso::HTTPRequest("GET", "/", "HTTP/1.1", "", "");
+  auto *req = new Espresso::HTTPRequest(Espresso::HTTPMethod::GET,
+                                        "/",
+                                        "HTTP/1.1",
+                                        "",
+                                        "");
   auto *res = new Espresso::HTTPResponse();
   list->run(req, res);
   ASSERT_EQ(res->getHeader("Content-Type"), "text/html");
@@ -114,7 +122,11 @@ TEST(Middlewares, testMiddlewaresBlocked) {
                auto next) {
     res->setHeader("Content-Length", "123");
   });
-  auto *req = new Espresso::HTTPRequest("GET", "/", "HTTP/1.1", "", "");
+  auto *req = new Espresso::HTTPRequest(Espresso::HTTPMethod::GET,
+                                        "/",
+                                        "HTTP/1.1",
+                                        "",
+                                        "");
   auto *res = new Espresso::HTTPResponse();
   list->run(req, res);
   ASSERT_EQ(res->getHeader("Content-Type"), "text/html");
