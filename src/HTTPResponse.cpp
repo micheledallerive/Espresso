@@ -7,15 +7,21 @@
 #include <iostream>
 #include "HTTPResponse.h"
 #include "Server.h"
+#include "utils.h"
 
 namespace Espresso {
 
 HTTPResponse::HTTPResponse() : HTTPMessage() {
   this->status_ = 200;
   this->version_ = "HTTP/1.1";
+  this->addDefaultHeaders_();
 }
 
 HTTPResponse::~HTTPResponse() = default;
+
+void HTTPResponse::addDefaultHeaders_() {
+  this->setHeader("Date", getUTCDate());
+}
 
 HTTPResponse *HTTPResponse::setStatus(int status) {
   this->status_ = status;

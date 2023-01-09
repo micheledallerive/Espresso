@@ -28,6 +28,7 @@ class HTTPResponse : public HTTPMessage {
   void deleteCookie(const std::string &name);
  private:
   int status_;
+  void addDefaultHeaders_();
 };
 
 } // Espresso
