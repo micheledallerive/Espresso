@@ -56,4 +56,22 @@ void HTTPResponse::send(const std::string &body) {
   this->setStatus(200);
 }
 
+void HTTPResponse::setCookie(const Cookie &cookie) {
+  if (this->hasHeader("Set-Cookie")) {
+    this->setHeader("Set-Cookie", this->getHeader("Set-Cookie") + "; "
+        + cookie.toString());
+  } else {
+    this->setHeader("Set-Cookie", cookie.toString());
+  }
+}
+
+void HTTPResponse::setCookie(const std::string &name,
+                             const std::string &value) {
+  this->setCookie(Cookie(name, value));
+}
+
+void HTTPResponse::deleteCookie(const std::string &name) {
+  this->setCookie(Cookie(name, "", "", "", 0, false, false));
+}
+
 } // Espresso

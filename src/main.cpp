@@ -25,6 +25,8 @@ int main() {
   server->router->get("/:test",
                       [](Espresso::HTTPRequest *request,
                          Espresso::HTTPResponse *response) {
+                        response->setCookie("test", "test");
+                        response->setStatus(200)->send("test");
                       });
 
   server->listen(PORT, [&]() {
