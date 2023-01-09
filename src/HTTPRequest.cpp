@@ -28,7 +28,6 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   iss2 >> method >> path >> version;
 
   std::string queryString = path.substr(path.find('?') + 1);
-  this->parseQuery_(queryString);
   path = path.substr(0, path.find('?'));
 
   std::string headers;
@@ -46,12 +45,15 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   this->path_ = std::move(path);
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
-  this->body_ = std::move(body);
+  this->parseQuery_(queryString);
 
   if (this->hasHeader("Cookie")) {
     this->parseCookies_(this->getHeader("Cookie"));
   }
 
+  this->data["prova"] = std::string("tes");
+
+  this->body_ = std::move(body);
 }
 
 HTTPRequest::~HTTPRequest() = default;
