@@ -10,4 +10,8 @@
 
 std::vector<std::string> split(const std::string &s, char delim);
 
+bool urls_match(const std::string &schema,
+                const std::string &url,
+                bool ignore_params = true);
+
 #endif //ESPRESSO_SRC_UTILS_H_
