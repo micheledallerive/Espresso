@@ -109,7 +109,6 @@ void HTTPResponse::sendFile(const std::string &path) {
       final_path =
       path[0] == '/' ? path : (
           any_cast<std::string>(server_settings["BASE_PATH"]) + path);
-  std::cout << final_path << std::endl;
   std::ifstream file(final_path);
   if (file.is_open()) {
     std::stringstream buffer;
