@@ -6,13 +6,21 @@
 #define ESPRESSO_SERVER_H
 
 #include <functional>
+#include <filesystem>
 #include "Middleware.h"
 #include "Router.h"
 
+namespace Espresso {
+
 const int ESPRESSO_MAX_CONNECTIONS = 100;
 const unsigned int ESPRESSO_DEFAULT_PORT = 8888;
+const std::string ESPRESSO_BASE_PATH = std::filesystem::current_path().string();
 
-namespace Espresso {
+using Settings = std::unordered_map<std::string, std::any>;
+
+const Settings ESPRESSO_DEFAULT_SETTINGS = {
+    {"BASE_PATH", ESPRESSO_BASE_PATH}
+};
 
 class Server {
  private:
@@ -23,10 +31,12 @@ class Server {
   void handle_connection_(int client_socket);
  public:
   explicit Server();
+  explicit Server(Settings settings);
   ~Server();
 
   Espresso::MiddlewareList *middlewares;
   Espresso::Router *router;
+  Espresso::Settings settings;
   void set_max_connections(int max_connections);
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,

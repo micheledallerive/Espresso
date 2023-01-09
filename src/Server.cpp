@@ -11,6 +11,7 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include <utility>
 
 namespace Espresso {
 Server::Server() {
@@ -19,6 +20,10 @@ Server::Server() {
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
   this->middlewares = new Espresso::MiddlewareList();
   this->router = new Espresso::Router();
+  this->settings = ESPRESSO_DEFAULT_SETTINGS;
+}
+Server::Server(Settings settings) : Server() {
+  this->settings = std::move(settings);
 }
 
 Server::~Server() {
@@ -91,5 +96,4 @@ void Server::handle_connection_(int client_socket) {
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
 }
-
 } // Espresso

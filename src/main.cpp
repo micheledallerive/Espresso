@@ -5,16 +5,20 @@
 const int PORT = 8888;
 
 int main() {
-  auto server = new Espresso::Server();
+  auto server = new Espresso::Server({
+                                         {"BASE_PATH",
+                                             Espresso::ESPRESSO_BASE_PATH
+                                                 + "/../../"}
+                                     });
   server->middlewares->use([](Espresso::HTTPRequest *request,
-                 Espresso::HTTPResponse *response,
-                 auto next) {
+                              Espresso::HTTPResponse *response,
+                              auto next) {
     std::cout << "Hello World!" << std::endl;
     next();
   });
   server->middlewares->use("/test/*", [](Espresso::HTTPRequest *request,
-                 Espresso::HTTPResponse *response,
-                 auto next) {
+                                         Espresso::HTTPResponse *response,
+                                         auto next) {
     std::cout << "Hello World 2!" << std::endl;
   });
 
@@ -25,8 +29,11 @@ int main() {
                         response->setBody("Hello " + request->params["test"]);
                       });
 
-  server->listen(PORT, []() {
+  server->listen(PORT, [&]() {
     std::cout << "Listening on port " << PORT << std::endl;
+    std::cout << "Base path: "
+              << std::any_cast<std::string>(server->settings["BASE_PATH"])
+              << std::endl;
   });
   return 0;
 }
