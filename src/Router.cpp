@@ -55,7 +55,8 @@ void Router::addRoute(std::string path,
   this->routes_.push_back(Route{std::move(path), method, std::move(callback)});
 }
 
-void Router::executeMatchingRoute(Espresso::HTTPRequest *req, Espresso::HTTPResponse *res) {
+void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
+                                  Espresso::HTTPResponse *res) {
   Route *matchingRoute = nullptr;
   const std::vector<std::string> &pathParts = split(req->getPath(), '/');
   std::vector<std::string> routePathParts;
@@ -81,14 +82,14 @@ void Router::executeMatchingRoute(Espresso::HTTPRequest *req, Espresso::HTTPResp
     }
   }
   if (matchingRoute) {
-//    for (int i = 0; i < routePathParts.size(); ++i) {
-//      const std::string &routePathPart = routePathParts[i];
-//      const std::string &pathPart = pathParts[i];
-//      if (routePathPart[0] == ':') {
-//        req->setParam(routePathPart.substr(1), pathPart);
-//      }
-//    }
-    matchingRoute->callback(req,res);
+    for (int i = 0; i < routePathParts.size(); ++i) {
+      const std::string routePathPart = routePathParts[i];
+      if (routePathPart[0] == ':') {
+        const std::string &paramValue = pathParts[i];
+        req->params[routePathPart.substr(1)] = paramValue;
+      }
+    }
+    matchingRoute->callback(req, res);
   }
 }
 

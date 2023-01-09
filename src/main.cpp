@@ -18,11 +18,11 @@ int main() {
     std::cout << "Hello World 2!" << std::endl;
   });
 
-  server->router->get("/",
+  server->router->get("/:test",
                       [](Espresso::HTTPRequest *request,
                          Espresso::HTTPResponse *response) {
                         response->setStatus(200);
-                        response->setBody("Hello World!");
+                        response->setBody("Hello " + request->params["test"]);
                       });
 
   server->listen(PORT, []() {
