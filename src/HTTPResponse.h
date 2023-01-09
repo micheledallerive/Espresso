@@ -17,6 +17,8 @@ class HTTPResponse : public HTTPMessage {
   virtual ~HTTPResponse();
   HTTPResponse *setStatus(int status);
   std::string toString();
+
+  void sendFile(const std::string& path);
  private:
   int status_;
 };

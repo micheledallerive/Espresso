@@ -8,7 +8,7 @@ int main() {
   auto server = new Espresso::Server({
                                          {"BASE_PATH",
                                              Espresso::ESPRESSO_BASE_PATH
-                                                 + "/../../"}
+                                                 + "/../../src/"}
                                      });
   server->middlewares->use([](Espresso::HTTPRequest *request,
                               Espresso::HTTPResponse *response,
@@ -25,8 +25,7 @@ int main() {
   server->router->get("/:test",
                       [](Espresso::HTTPRequest *request,
                          Espresso::HTTPResponse *response) {
-                        response->setStatus(200);
-                        response->setBody("Hello " + request->params["test"]);
+                        response->sendFile("./views/index.html");
                       });
 
   server->listen(PORT, [&]() {
