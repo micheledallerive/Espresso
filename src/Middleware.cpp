@@ -26,9 +26,12 @@ void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
   std::function<void(void)> next = [&]() {
     if (this->middlewares_.empty()) return;
 
-    while (!urls_match(it->first, request->getPath(), false)) {
+    while (it != this->middlewares_.end()
+        && !urls_match(it->first, request->getPath(), false)) {
       ++it;
     }
+    if (it == this->middlewares_.end()) return;
+
     auto [path, middleware] = *it;
     ++it;
     middleware(request, response, next);

@@ -12,7 +12,7 @@ int main() {
     std::cout << "Hello World!" << std::endl;
     next();
   });
-  server->middlewares->use([](Espresso::HTTPRequest *request,
+  server->middlewares->use("/test/*", [](Espresso::HTTPRequest *request,
                  Espresso::HTTPResponse *response,
                  auto next) {
     std::cout << "Hello World 2!" << std::endl;
