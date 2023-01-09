@@ -5,17 +5,19 @@
 #include <sstream>
 #include <utility>
 #include <iostream>
+
 #include "HTTPRequest.h"
+#include "HTTPMethod.h"
 
 namespace Espresso {
-HTTPRequest::HTTPRequest(std::string method,
+HTTPRequest::HTTPRequest(HTTPMethod method,
                          std::string path,
                          std::string version,
                          const std::string &headers,
                          std::string body) : HTTPMessage(std::move(version),
                                                          headers,
                                                          std::move(body)) {
-  this->method_ = std::move(method);
+  this->method_ = method;
   this->path_ = std::move(path);
 }
 
@@ -41,7 +43,7 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   while (std::getline(iss, line)) {
     body += line;
   }
-  this->method_ = std::move(method);
+  this->method_ = stringToMethod(std::move(method));
   this->path_ = std::move(path);
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
@@ -58,7 +60,7 @@ HTTPRequest::HTTPRequest(const std::string &request) {
 
 HTTPRequest::~HTTPRequest() = default;
 
-std::string HTTPRequest::getMethod() {
+HTTPMethod HTTPRequest::getMethod() {
   return this->method_;
 }
 
