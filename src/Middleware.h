@@ -19,10 +19,12 @@ class MiddlewareList {
  public:
   MiddlewareList();
   virtual ~MiddlewareList();
-  void use(const Middleware& middleware);
+  void use(const Middleware &middleware);
+  void use(const std::string &path, const Middleware &middleware);
   void run(HTTPRequest *request, HTTPResponse *response);
+
  private:
-  std::vector<Middleware> middlewares_;
+  std::vector<std::pair<std::string, Middleware>> middlewares_;
 };
 
 } // Espresso

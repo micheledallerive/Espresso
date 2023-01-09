@@ -3,6 +3,7 @@
 //
 
 #include "Middleware.h"
+#include "utils.h"
 
 namespace Espresso {
 
@@ -11,7 +12,12 @@ MiddlewareList::MiddlewareList() = default;
 MiddlewareList::~MiddlewareList() = default;
 
 void MiddlewareList::use(const Middleware &middleware) {
-  this->middlewares_.push_back(middleware);
+  this->middlewares_.emplace_back("*", middleware);
+}
+
+void MiddlewareList::use(const std::string &path,
+                         const Middleware &middleware) {
+  this->middlewares_.emplace_back(path, middleware);
 }
 
 void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
@@ -20,7 +26,10 @@ void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
   std::function<void(void)> next = [&]() {
     if (this->middlewares_.empty()) return;
 
-    Middleware middleware = *it;
+    while (!urls_match(it->first, request->getPath(), false)) {
+      ++it;
+    }
+    auto [path, middleware] = *it;
     ++it;
     middleware(request, response, next);
   };
