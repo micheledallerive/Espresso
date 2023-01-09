@@ -26,6 +26,10 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   std::istringstream iss2(line);
   iss2 >> method >> path >> version;
 
+  std::string queryString = path.substr(path.find('?') + 1);
+  this->parseQuery_(queryString);
+  path = path.substr(0, path.find('?'));
+
   std::string headers;
   while (std::getline(iss, line)) {
     if (line == "\r") {
@@ -52,6 +56,15 @@ std::string HTTPRequest::getMethod() {
 
 std::string HTTPRequest::getPath() {
   return this->path_;
+}
+
+void HTTPRequest::parseQuery_(const std::string &queryString) {
+  std::istringstream iss(queryString);
+  std::string key, value;
+  while (std::getline(iss, key, '=')) {
+    std::getline(iss, value, '&');
+    this->query[key] = value;
+  }
 }
 
 } // Espresso

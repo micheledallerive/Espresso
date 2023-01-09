@@ -23,6 +23,7 @@ class HTTPRequest : public HTTPMessage{
  private:
   std::string method_;
   std::string path_;
+  void parseQuery_(const std::string& queryString);
 };
 
 } // Espresso
