@@ -14,7 +14,7 @@ class HTTPResponse;
 class HTTPResponse : public HTTPMessage {
  public:
   HTTPResponse();
-  virtual ~HTTPResponse();
+  ~HTTPResponse() override;
   std::string toString();
 
   HTTPResponse *setStatus(int status);
