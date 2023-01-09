@@ -29,11 +29,13 @@ bool urls_match(const std::string &schema,
                 bool ignore_params = true) {
   std::vector<std::string> schema_parts = split(schema, '/');
   std::vector<std::string> url_parts = split(url, '/');
-  if (schema_parts.size() != url_parts.size()) return false;
-
-  for (int i = 0; i < schema_parts.size(); ++i) {
+  for (int i = 0; i < url_parts.size(); ++i) {
+    if (i >= schema_parts.size()) return false;
     if (schema_parts[i] == url_parts[i]) continue;
-    if (schema_parts[i] == "*") continue;
+    if (schema_parts[i] == "*") {
+      if (i == schema_parts.size() - 1) return true;
+      continue;
+    }
     if (schema_parts[i][0] == ':' && ignore_params) continue;
     return false;
   }
