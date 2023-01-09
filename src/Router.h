@@ -41,6 +41,9 @@ class Router {
   void addRoute(std::string path,
                 HTTPMethod method,
                 RouteCallback callback);
+  void addRoute(std::vector<std::string> paths,
+                HTTPMethod method,
+                const RouteCallback& callback);
   void executeMatchingRoute(Espresso::HTTPRequest *req, Espresso::HTTPResponse *res);
  private:
   std::vector<Route> routes_;

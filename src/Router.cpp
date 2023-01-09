@@ -55,6 +55,14 @@ void Router::addRoute(std::string path,
   this->routes_.push_back(Route{std::move(path), method, std::move(callback)});
 }
 
+void Router::addRoute(std::vector<std::string> paths,
+                      HTTPMethod method,
+                      const RouteCallback& callback) {
+  for (auto &path : paths) {
+    this->addRoute(std::move(path), method, callback);
+  }
+}
+
 void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
                                   Espresso::HTTPResponse *res) {
   Route *matchingRoute = nullptr;
