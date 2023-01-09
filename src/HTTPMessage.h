@@ -17,7 +17,9 @@ class HTTPMessage {
   virtual ~HTTPMessage();
 
   void setHeader(const std::string& name, const std::string& value);
+  bool hasHeader(const std::string& name);
   std::string getHeader(const std::string& name);
+
   void setBody(std::string body);
   std::string getBody();
   std::string getVersion();

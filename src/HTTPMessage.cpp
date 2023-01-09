@@ -37,6 +37,10 @@ void HTTPMessage::setHeader(const std::string &name, const std::string &value) {
   this->headers_[name] = value;
 }
 
+bool HTTPMessage::hasHeader(const std::string &name) {
+  return this->headers_.find(name) != this->headers_.end();
+}
+
 std::string HTTPMessage::getHeader(const std::string &name) {
   return this->headers_.at(name);
 }
