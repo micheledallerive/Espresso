@@ -9,9 +9,29 @@
 
 namespace Espresso {
 
-struct Cookie;
+class Cookie {
+ public:
+  Cookie();
+  Cookie(std::string name, std::string value);
+  Cookie(std::string name,
+         std::string value,
+         std::string domain,
+         std::string path,
+         std::string expires,
+         std::string max_age,
+         bool secure,
+         bool http_only);
+  std::string name;
+  std::string value;
+  std::string domain;
+  std::string path;
+  std::string expires;
+  std::string max_age;
+  bool secure{};
+  bool http_only{};
 
-std::string to_string(const Cookie &cookie);
+  [[nodiscard]] std::string toString() const;
+};
 
 } // Espresso
 
