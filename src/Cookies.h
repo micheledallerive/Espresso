@@ -11,6 +11,8 @@ namespace Espresso {
 
 struct Cookie;
 
+std::string to_string(const Cookie &cookie);
+
 } // Espresso
 
 #endif //ESPRESSO_SRC_COOKIES_H_
