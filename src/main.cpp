@@ -6,13 +6,13 @@ const int PORT = 8888;
 
 int main() {
   auto server = new Espresso::Server();
-  server->use([](Espresso::HTTPRequest *request,
+  server->middlewares->use([](Espresso::HTTPRequest *request,
                  Espresso::HTTPResponse *response,
                  auto next) {
     std::cout << "Hello World!" << std::endl;
     next();
   });
-  server->use([](Espresso::HTTPRequest *request,
+  server->middlewares->use([](Espresso::HTTPRequest *request,
                  Espresso::HTTPResponse *response,
                  auto next) {
     std::cout << "Hello World 2!" << std::endl;

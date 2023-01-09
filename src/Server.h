@@ -19,19 +19,18 @@ class Server {
   unsigned short int port_;
   int socket_;
   int max_connections_;
-  Espresso::MiddlewareList *middlewares_;
 
   void handle_connection_(int client_socket);
  public:
   explicit Server();
   ~Server();
 
+  Espresso::MiddlewareList *middlewares;
   Espresso::Router *router;
   void set_max_connections(int max_connections);
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,
          const std::function<void(void)> &callback = nullptr);
-  void use(const Espresso::Middleware& middleware);
 };
 
 } // Espresso

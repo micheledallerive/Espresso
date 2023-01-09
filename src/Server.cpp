@@ -17,7 +17,7 @@ Server::Server() {
   this->port_ = -1;
   this->socket_ = -1;
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
-  this->middlewares_ = new Espresso::MiddlewareList();
+  this->middlewares = new Espresso::MiddlewareList();
   this->router = new Espresso::Router();
 }
 
@@ -25,7 +25,7 @@ Server::~Server() {
   if (this->socket_ != -1) {
     close(this->socket_);
   }
-  delete this->middlewares_;
+  delete this->middlewares;
   delete this->router;
 }
 
@@ -81,7 +81,7 @@ void Server::handle_connection_(int client_socket) {
   auto request = new Espresso::HTTPRequest(buffer);
   auto response = new Espresso::HTTPResponse();
 
-  this->middlewares_->run(request, response);
+  this->middlewares->run(request, response);
 
   this->router->executeMatchingRoute(request, response);
 
@@ -90,10 +90,6 @@ void Server::handle_connection_(int client_socket) {
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
-}
-
-void Server::use(const Middleware &middleware) {
-  this->middlewares_->use(middleware);
 }
 
 } // Espresso
