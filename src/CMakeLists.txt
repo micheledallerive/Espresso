@@ -3,7 +3,7 @@ project(espresso)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(TARGET_FILES Server.cpp HTTPMessage.cpp Server.h HTTPMessage.h HTTPRequest.cpp HTTPRequest.h Router.cpp Router.h HTTPResponse.cpp HTTPResponse.h Middleware.cpp Middleware.h HTTPMethod.cpp HTTPMethod.h utils.cpp utils.h)
+set(TARGET_FILES Server.cpp HTTPMessage.cpp Server.h HTTPMessage.h HTTPRequest.cpp HTTPRequest.h Router.cpp Router.h HTTPResponse.cpp HTTPResponse.h Middleware.cpp Middleware.h HTTPMethod.cpp HTTPMethod.h utils.cpp utils.h Cookies.cpp Cookies.h)
 
 add_executable(
         espresso
