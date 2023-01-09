@@ -14,4 +14,6 @@ bool urls_match(const std::string &schema,
                 const std::string &url,
                 bool ignore_params = true);
 
+std::string getUTCDate();
+
 #endif //ESPRESSO_SRC_UTILS_H_

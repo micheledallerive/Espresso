@@ -41,3 +41,13 @@ bool urls_match(const std::string &schema,
   }
   return true;
 }
+
+std::string getUTCDate() {
+  char out[30];
+  time_t t = time(0);
+  struct tm *tmp = gmtime(&t);
+  const char *format = "%a, %d %b %y %T GMT";
+  if (!tmp) return "";
+  if (strftime(out, sizeof(out), format, tmp) == 0) return "";
+  return out;
+}
