@@ -15,15 +15,13 @@ Cookie::Cookie(std::string name,
                std::string value,
                std::string domain,
                std::string path,
-               std::string expires,
-               std::string max_age,
+               int max_age,
                bool secure,
                bool http_only) : name(std::move(name)),
                                  value(std::move(value)),
                                  domain(std::move(domain)),
                                  path(std::move(path)),
-                                 expires(std::move(expires)),
-                                 max_age(std::move(max_age)),
+                                 max_age(max_age),
                                  secure(secure),
                                  http_only(http_only) {}
 
@@ -35,12 +33,9 @@ std::string Cookie::toString() const {
   if (!this->path.empty()) {
     cookie_string += "; Path=" + this->path;
   }
-  if (!this->expires.empty()) {
-    cookie_string += "; Expires=" + this->expires;
-  }
-  if (!this->max_age.empty()) {
-    cookie_string += "; Max-Age=" + this->max_age;
-  }
+
+  cookie_string += "; Max-Age=" + std::to_string(this->max_age);
+
   if (this->secure) {
     cookie_string += "; Secure";
   }

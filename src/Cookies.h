@@ -17,16 +17,14 @@ class Cookie {
          std::string value,
          std::string domain,
          std::string path,
-         std::string expires,
-         std::string max_age,
+         int max_age,
          bool secure,
          bool http_only);
   std::string name;
   std::string value;
   std::string domain;
-  std::string path;
-  std::string expires;
-  std::string max_age;
+  std::string path = "/";
+  int max_age = 60 * 60;
   bool secure{};
   bool http_only{};
 
