@@ -13,7 +13,7 @@ class HTTPRequest : public HTTPMessage{
  public:
   HTTPRequest(std::string method, std::string path, std::string version, const std::string& headers, std::string body);
   explicit HTTPRequest(const std::string& request);
-  virtual ~HTTPRequest();
+  ~HTTPRequest() override;
 
   std::string getMethod();
   std::string getPath();
@@ -24,6 +24,7 @@ class HTTPRequest : public HTTPMessage{
   std::string method_;
   std::string path_;
   void parseQuery_(const std::string& queryString);
+  void parseCookies_(const std::string& cookiesString);
 };
 
 } // Espresso

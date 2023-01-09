@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <utility>
+#include <iostream>
 #include "HTTPRequest.h"
 
 namespace Espresso {
@@ -46,6 +47,11 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
   this->body_ = std::move(body);
+
+  if (this->hasHeader("Cookie")) {
+    this->parseCookies_(this->getHeader("Cookie"));
+  }
+
 }
 
 HTTPRequest::~HTTPRequest() = default;
@@ -64,6 +70,15 @@ void HTTPRequest::parseQuery_(const std::string &queryString) {
   while (std::getline(iss, key, '=')) {
     std::getline(iss, value, '&');
     this->query[key] = value;
+  }
+}
+
+void HTTPRequest::parseCookies_(const std::string &cookiesString) {
+  std::istringstream iss(cookiesString);
+  std::string key, value;
+  while (std::getline(iss, key, '=')) {
+    std::getline(iss, value, ';');
+    this->cookies[key] = value;
   }
 }
 
