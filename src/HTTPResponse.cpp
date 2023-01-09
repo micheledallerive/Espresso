@@ -50,4 +50,10 @@ void HTTPResponse::sendFile(const std::string &path) {
   }
 }
 
+void HTTPResponse::send(const std::string &body) {
+  this->setBody(body);
+  this->setHeader("Content-Length", std::to_string(body.length()));
+  this->setStatus(200);
+}
+
 } // Espresso

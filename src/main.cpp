@@ -25,7 +25,6 @@ int main() {
   server->router->get("/:test",
                       [](Espresso::HTTPRequest *request,
                          Espresso::HTTPResponse *response) {
-                        response->sendFile("./views/index.html");
                       });
 
   server->listen(PORT, [&]() {

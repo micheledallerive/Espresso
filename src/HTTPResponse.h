@@ -15,10 +15,11 @@ class HTTPResponse : public HTTPMessage {
  public:
   HTTPResponse();
   virtual ~HTTPResponse();
-  HTTPResponse *setStatus(int status);
   std::string toString();
 
-  void sendFile(const std::string& path);
+  HTTPResponse *setStatus(int status);
+  void sendFile(const std::string &path);
+  void send(const std::string &body);
  private:
   int status_;
 };
