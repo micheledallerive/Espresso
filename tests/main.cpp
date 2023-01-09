@@ -7,6 +7,7 @@
 #include "../src/HTTPRequest.h"
 #include "../src/HTTPResponse.h"
 #include "../src/Middleware.h"
+#include "../src/utils.h"
 
 TEST(HTTPMessage, testParseHeaders) {
   std::string headers = "Content-Type: text/html\r\n"
@@ -131,4 +132,14 @@ TEST(Middlewares, testMiddlewaresBlocked) {
   list->run(req, res);
   ASSERT_EQ(res->getHeader("Content-Type"), "text/html");
   ASSERT_EQ(res->getHeader("Content-Length"), "000");
+}
+
+TEST(Utils, testUrlsMatch) {
+  std::string schema_all = "/*";
+  std::string schema_param = "/test/:id";
+  std::string schema_fixed = "/index.html";
+  std::string path = "/test/index.html";
+  EXPECT_TRUE(urls_match(schema_all, path));
+  EXPECT_TRUE(urls_match(schema_param, path));
+  EXPECT_FALSE(urls_match(schema_fixed, path));
 }
