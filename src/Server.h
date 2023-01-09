@@ -22,6 +22,8 @@ const Settings ESPRESSO_DEFAULT_SETTINGS = {
     {"BASE_PATH", ESPRESSO_BASE_PATH}
 };
 
+extern Settings server_settings;
+
 class Server {
  private:
   unsigned short int port_;
@@ -36,7 +38,6 @@ class Server {
 
   Espresso::MiddlewareList *middlewares;
   Espresso::Router *router;
-  Espresso::Settings settings;
   void set_max_connections(int max_connections);
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,

@@ -31,9 +31,6 @@ int main() {
 
   server->listen(PORT, [&]() {
     std::cout << "Listening on port " << PORT << std::endl;
-    std::cout << "Base path: "
-              << std::any_cast<std::string>(server->settings["BASE_PATH"])
-              << std::endl;
   });
   return 0;
 }

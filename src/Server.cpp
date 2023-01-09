@@ -14,16 +14,19 @@
 #include <utility>
 
 namespace Espresso {
+
+Settings server_settings;
+
 Server::Server() {
   this->port_ = -1;
   this->socket_ = -1;
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
   this->middlewares = new Espresso::MiddlewareList();
   this->router = new Espresso::Router();
-  this->settings = ESPRESSO_DEFAULT_SETTINGS;
+  server_settings = ESPRESSO_DEFAULT_SETTINGS;
 }
 Server::Server(Settings settings) : Server() {
-  this->settings = std::move(settings);
+  server_settings = std::move(settings);
 }
 
 Server::~Server() {
