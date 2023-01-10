@@ -14,13 +14,18 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(
         espresso_test
-        main.cpp
-)
+        RouterTests.cpp CookiesTests.cpp HTTPMessageTests.cpp HTTPMethodTests.cpp HTTPRequestTests.cpp HTTPResponseTests.cpp MiddlewareTests.cpp ServerTests.cpp UtilsTests.cpp)
 
 target_link_libraries(
         espresso_test
         espresso_lib
         GTest::gtest_main
+)
+
+target_include_directories(
+        espresso_test
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src
 )
 
 include(GoogleTest)

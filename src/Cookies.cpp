@@ -4,12 +4,16 @@
 
 #include "Cookies.h"
 
+#include <utility>
+
 namespace Espresso {
 
 Cookie::Cookie() = default;
 
-Cookie::Cookie(std::string name, std::string value)
-    : name(std::move(name)), value(std::move(value)) {}
+Cookie::Cookie(std::string name, std::string value) : Cookie() {
+  this->name = std::move(name);
+  this->value = std::move(value);
+}
 
 Cookie::Cookie(std::string name,
                std::string value,
@@ -17,18 +21,21 @@ Cookie::Cookie(std::string name,
                std::string path,
                int max_age,
                bool secure,
-               bool http_only) : name(std::move(name)),
-                                 value(std::move(value)),
-                                 domain(std::move(domain)),
-                                 path(std::move(path)),
-                                 max_age(max_age),
-                                 secure(secure),
-                                 http_only(http_only) {}
+               bool http_only) : Cookie() {
+  this->name = std::move(name);
+  this->value = std::move(value);
+  this->domain = std::move(domain);
+  this->path = std::move(path);
+  this->max_age = max_age;
+  this->secure = secure;
+  this->http_only = http_only;
+}
 
 std::string Cookie::toString() const {
   if (this->name.empty() || this->value.empty()) {
     return "";
   }
+
   std::string cookie_string = this->name + "=" + this->value;
   if (!this->domain.empty()) {
     cookie_string += "; Domain=" + this->domain;
