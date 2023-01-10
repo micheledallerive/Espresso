@@ -38,13 +38,19 @@ class Router {
   void head(std::string path, RouteCallback callback);
   void connect(std::string path, RouteCallback callback);
   void trace(std::string path, RouteCallback callback);
+  void route(const std::string &path,
+             const std::vector<std::pair<HTTPMethod,
+                                         RouteCallback>> &callbacks);
+
   void addRoute(std::string path,
                 HTTPMethod method,
                 RouteCallback callback);
+
   void addRoute(std::vector<std::string> paths,
                 HTTPMethod method,
-                const RouteCallback& callback);
-  void executeMatchingRoute(Espresso::HTTPRequest *req, Espresso::HTTPResponse *res);
+                const RouteCallback &callback);
+  void executeMatchingRoute(Espresso::HTTPRequest *req,
+                            Espresso::HTTPResponse *res);
  private:
   std::vector<Route> routes_;
 };

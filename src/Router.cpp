@@ -87,5 +87,11 @@ void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
     matchingRoute->callback(req, res);
   }
 }
+void Router::route(const std::string& path,
+                   const std::vector<std::pair<HTTPMethod, RouteCallback>>& callbacks) {
+  for (auto &pair : callbacks) {
+    this->addRoute(path, pair.first, pair.second);
+  }
+}
 
 } // Espresso
