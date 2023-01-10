@@ -26,6 +26,9 @@ Cookie::Cookie(std::string name,
                                  http_only(http_only) {}
 
 std::string Cookie::toString() const {
+  if (this->name.empty() || this->value.empty()) {
+    return "";
+  }
   std::string cookie_string = this->name + "=" + this->value;
   if (!this->domain.empty()) {
     cookie_string += "; Domain=" + this->domain;
