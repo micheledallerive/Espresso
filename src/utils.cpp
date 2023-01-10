@@ -52,7 +52,7 @@ bool urls_match(const std::string &schema,
 
 std::string getUTCDate() {
   char out[30];
-  time_t t = time(0);
+  time_t t = time(nullptr);
   struct tm *tmp = gmtime(&t);
   const char *format = "%a, %d %b %y %T GMT";
   if (!tmp) return "";
