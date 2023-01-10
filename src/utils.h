@@ -16,4 +16,6 @@ bool urls_match(const std::string &schema,
 
 std::string getUTCDate();
 
+std::string getAbsolutePath(const std::string &path);
+
 #endif //ESPRESSO_SRC_UTILS_H_

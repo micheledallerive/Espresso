@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 
+#include "Server.h"
+
 std::vector<std::string> split(const std::string &s, char delim) {
   std::vector<std::string> elems;
   std::istringstream iss(s);
@@ -50,4 +52,9 @@ std::string getUTCDate() {
   if (!tmp) return "";
   if (strftime(out, sizeof(out), format, tmp) == 0) return "";
   return out;
+}
+
+std::string getAbsolutePath(const std::string &path) {
+  return path[0] == '/' ? path : (
+      any_cast<std::string>(Espresso::server_settings["BASE_PATH"]) + path);
 }
