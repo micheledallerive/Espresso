@@ -1,5 +1,6 @@
 .idea
 cmake-build-debug
+cmake-build-debug-coverage
 src/main.cpp
 src/views
 Testing
