@@ -21,8 +21,9 @@ class HTTPResponse : public HTTPMessage {
   std::string toString();
 
   HTTPResponse *setStatus(int status);
-  void sendFile(const std::string &path);
   void send(const std::string &body);
+  void sendFile(const std::string &path);
+  void downloadFile(const std::string &path, const std::string &filename="");
 
   void setCookie(const Cookie &cookie);
   void setCookie(const std::string &name, const std::string &value);

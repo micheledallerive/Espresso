@@ -104,11 +104,13 @@ std::string HTTPResponse::toString() {
   return response;
 }
 
+void HTTPResponse::send(const std::string &body) {
+  this->setBody(body);
+  this->setHeader("Content-Length", std::to_string(body.length()));
+}
+
 void HTTPResponse::sendFile(const std::string &path) {
-  const std::string
-      final_path =
-      path[0] == '/' ? path : (
-          any_cast<std::string>(server_settings["BASE_PATH"]) + path);
+  std::string final_path = getAbsolutePath(path);
   std::ifstream file(final_path);
   if (file.is_open()) {
     std::stringstream buffer;
@@ -121,9 +123,12 @@ void HTTPResponse::sendFile(const std::string &path) {
   }
 }
 
-void HTTPResponse::send(const std::string &body) {
-  this->setBody(body);
-  this->setHeader("Content-Length", std::to_string(body.length()));
+void HTTPResponse::downloadFile(const std::string &path,
+                                const std::string &filename) {
+  this->sendFile(path);
+  std::string disposition =
+      "attachment" + (filename.empty() ? "" : "; filename=\"" + filename + "\"");
+  this->setHeader("Content-Disposition", disposition);
 }
 
 void HTTPResponse::setCookie(const Cookie &cookie) {
