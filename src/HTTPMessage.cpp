@@ -26,9 +26,16 @@ void HTTPMessage::parseHeaders_(const std::string &headers) {
   std::istringstream iss(headers);
   std::string line;
   while (std::getline(iss, line)) {
-    std::string name = line.substr(0, line.find(':'));
-    std::string value = line.substr(line.find(':') + 2);
-    value.pop_back(); // remove the \r
+    const auto pos = line.find(':');
+    if (pos == std::string::npos) continue; // invalid header
+    std::string name = line.substr(0, pos);
+    std::string value;
+    if (pos + 2 >= line.length())
+      value = ""; // empty header
+    else {
+      value = line.substr(pos + 2);
+      value.pop_back(); // remove the \r
+    }
     this->headers_.insert({name, value});
   }
 }
