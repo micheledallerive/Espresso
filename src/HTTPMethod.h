@@ -17,7 +17,8 @@ enum HTTPMethod {
   OPTIONS,
   PATCH,
   TRACE,
-  CONNECT
+  CONNECT,
+  UNDEFINED
 };
 
 std::string methodToString(HTTPMethod method);
