@@ -127,8 +127,14 @@ void HTTPResponse::downloadFile(const std::string &path,
                                 const std::string &filename) {
   this->sendFile(path);
   std::string disposition =
-      "attachment" + (filename.empty() ? "" : "; filename=\"" + filename + "\"");
+      "attachment"
+          + (filename.empty() ? "" : "; filename=\"" + filename + "\"");
   this->setHeader("Content-Disposition", disposition);
+}
+
+void HTTPResponse::redirect(const std::string &path, unsigned int status) {
+  this->setHeader("Location", path);
+  this->setStatus(status);
 }
 
 void HTTPResponse::setCookie(const Cookie &cookie) {
