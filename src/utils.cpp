@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include "Server.h"
 
@@ -32,6 +33,8 @@ bool urls_match(const std::string &schema,
                 bool ignore_params = true) {
   std::vector<std::string> schema_parts = split(schema, '/');
   std::vector<std::string> url_parts = split(url, '/');
+  std::cout << schema_parts.size() << std::endl;
+  std::cout << url_parts.size() << std::endl;
   for (int i = 0; i < url_parts.size(); ++i) {
     if (i >= schema_parts.size()) return false;
     if (schema_parts[i] == url_parts[i]) continue;
@@ -39,10 +42,14 @@ bool urls_match(const std::string &schema,
       if (i == schema_parts.size() - 1) return true;
       continue;
     }
-    if (schema_parts[i][0] == ':' && ignore_params) continue;
+    if (schema_parts[i][0] == ':' && ignore_params
+        && url_parts[i].length() > 0)
+      continue;
     return false;
   }
-  return true;
+  return (schema_parts.size() <= url_parts.size()
+      || (schema_parts.size() == url_parts.size() + 1
+          && schema_parts.back() == "*"));
 }
 
 std::string getUTCDate() {

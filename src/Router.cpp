@@ -57,7 +57,7 @@ void Router::addRoute(std::string path,
 
 void Router::addRoute(std::vector<std::string> paths,
                       HTTPMethod method,
-                      const RouteCallback& callback) {
+                      const RouteCallback &callback) {
   for (auto &path : paths) {
     this->addRoute(std::move(path), method, callback);
   }
@@ -70,24 +70,9 @@ void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
   std::vector<std::string> routePathParts;
   for (auto &route : this->routes_) {
     if (route.method != req->getMethod()) continue;
-
-    const std::string &routePath = route.path;
-    routePathParts = split(routePath, '/');
-
-    if (routePathParts.size() != pathParts.size()) continue;
-
-    bool matching = true;
-    for (int i = 0; i < routePathParts.size(); ++i) {
-      const std::string &routePathPart = routePathParts[i];
-      const std::string &pathPart = pathParts[i];
-      if (routePathPart[0] == ':') continue;
-      if (routePathPart != pathPart) {
-        matching = false;
-        break;
-      }
-    }
-    if (matching) {
+    if (urls_match(route.path, req->getPath())) {
       matchingRoute = &route;
+      routePathParts = split(route.path, '/');
       break;
     }
   }
