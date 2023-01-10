@@ -33,8 +33,6 @@ bool urls_match(const std::string &schema,
                 bool ignore_params = true) {
   std::vector<std::string> schema_parts = split(schema, '/');
   std::vector<std::string> url_parts = split(url, '/');
-  std::cout << schema_parts.size() << std::endl;
-  std::cout << url_parts.size() << std::endl;
   for (int i = 0; i < url_parts.size(); ++i) {
     if (i >= schema_parts.size()) return false;
     if (schema_parts[i] == url_parts[i]) continue;
