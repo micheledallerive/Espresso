@@ -82,7 +82,9 @@ void HTTPRequest::parseCookies_(const std::string &cookiesString) {
   std::string key, value;
   while (std::getline(iss, key, '=')) {
     std::getline(iss, value, ';');
+    key = key[0] == ' ' ? key.substr(1) : key;
     this->cookies[key] = value;
+    std::cout << key << std::endl << value << std::endl;
   }
 }
 
