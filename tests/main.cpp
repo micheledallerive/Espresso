@@ -139,7 +139,7 @@ TEST(Utils, testUrlsMatch) {
   std::string schema_param = "/test/:id";
   std::string schema_fixed = "/index.html";
   std::string path = "/test/index.html";
-  EXPECT_TRUE(urls_match(schema_all, path));
-  EXPECT_TRUE(urls_match(schema_param, path));
-  EXPECT_FALSE(urls_match(schema_fixed, path));
+  EXPECT_TRUE(Espresso::urls_match(schema_all, path));
+  EXPECT_TRUE(Espresso::urls_match(schema_param, path));
+  EXPECT_FALSE(Espresso::urls_match(schema_fixed, path));
 }
