@@ -17,6 +17,7 @@ std::string methodToString(HTTPMethod method) {
     case PATCH:return "PATCH";
     case TRACE:return "TRACE";
     case CONNECT:return "CONNECT";
+    default:return "";
   }
 }
 
