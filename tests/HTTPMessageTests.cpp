@@ -43,7 +43,7 @@ TEST(HTTPMessage, ParseHeaders) {
   message = HTTPMessage();
   message.parseHeaders_("Test: prova\r\nEmpty:");
   EXPECT_EQ(message.getHeader("Test"), "prova");
-  EXPECT_EQ(message.getHeader("Empty"), "");
+  EXPECT_FALSE(message.hasHeader("Empty"));
 }
 
 TEST(HTTPMessage, SetHeader) {
