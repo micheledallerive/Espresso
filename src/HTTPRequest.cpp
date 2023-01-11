@@ -10,6 +10,7 @@
 #include "HTTPMethod.h"
 
 namespace Espresso {
+
 HTTPRequest::HTTPRequest(HTTPMethod method,
                          std::string path,
                          std::string version,
@@ -78,14 +79,23 @@ void HTTPRequest::parseQuery_(const std::string &queryString) {
 }
 
 void HTTPRequest::parseCookies_(const std::string &cookiesString) {
-  std::istringstream iss(cookiesString);
-  std::string key, value;
-  while (std::getline(iss, key, '=')) {
-    std::getline(iss, value, ';');
-    key = key[0] == ' ' ? key.substr(1) : key;
-    if (!value.empty() && !key.empty()) {
-      this->cookies[key] = value;
-    }
+  std::istringstream iss(" " + cookiesString);
+  std::string cookiePair;
+
+  while (std::getline(iss, cookiePair, ';')) {
+    if (cookiePair.empty()) continue;
+
+    cookiePair = cookiePair.substr(1);
+    std::string key, value;
+
+    auto pos = cookiePair.find('=');
+    if (pos == std::string::npos || pos == 0) continue;
+
+    key = cookiePair.substr(0, pos);
+    value = cookiePair.substr(pos + 1);
+    if (key.empty()) continue;
+
+    this->cookies[key] = value;
   }
 }
 
