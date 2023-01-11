@@ -56,6 +56,22 @@ TEST(HTTPRequest, PartialRequest) {
   ASSERT_EQ(request.getBody(), "");
 }
 
+TEST(HTTPRequest, WithoutBody) {
+  HTTPRequest request("GET / HTTP/1.1\r\n"
+                      "Host: localhost\r\n"
+                      "\r\n");
+  ASSERT_EQ(request.getMethod(), GET);
+  ASSERT_TRUE(request.getBody().empty());
+}
+
+TEST(HTTPRequest, WithoutHeaders) {
+  HTTPRequest request("GET / HTTP/1.1\r\n"
+                      "\r\n"
+                      "Hello World!");
+  ASSERT_EQ(request.getMethod(), GET);
+  ASSERT_EQ(request.getBody(), "Hello World!");
+}
+
 TEST(HTTPRequest, InvalidHeaders) {
   HTTPRequest request("GET / HTTP/1.1\r\n"
                       "Accept:\r\n"
