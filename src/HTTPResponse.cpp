@@ -145,6 +145,7 @@ void HTTPResponse::redirect(const std::string &path, int status) {
 }
 
 void HTTPResponse::setCookie(const Cookie &cookie) {
+  // TODO fix, there cannot be multiple set-cookie headers.
   if (this->hasHeader("Set-Cookie")) {
     this->setHeader("Set-Cookie", this->getHeader("Set-Cookie") + "; "
         + cookie.toString());
