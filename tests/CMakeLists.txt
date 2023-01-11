@@ -3,6 +3,10 @@ project(espresso_test)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(TESTS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/)
+configure_file(config.h.in config.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
