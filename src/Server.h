@@ -36,8 +36,8 @@ class Server {
   explicit Server(Settings settings);
   ~Server();
 
-  Espresso::MiddlewareList *middlewares;
-  Espresso::Router *router;
+  Espresso::MiddlewareList middlewares;
+  Espresso::Router router;
   void set_max_connections(int max_connections);
   void
   listen(unsigned short int port = ESPRESSO_DEFAULT_PORT,
