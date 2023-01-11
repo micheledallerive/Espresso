@@ -7,6 +7,7 @@
 #include <utility>
 #include <iostream>
 #include <sstream>
+#include "utils.h"
 
 namespace Espresso {
 
@@ -23,21 +24,16 @@ HTTPMessage::HTTPMessage(std::string version,
 HTTPMessage::~HTTPMessage() = default;
 
 void HTTPMessage::parseHeaders_(const std::string &headers) {
-  std::istringstream iss(headers);
-  std::string line;
-  while (std::getline(iss, line)) {
-    const auto pos = line.find(':');
-    if (pos == std::string::npos) continue; // invalid header
-    std::string name = line.substr(0, pos);
-    std::string value;
-    if (pos + 2 >= line.length())
-      value = ""; // empty header
-    else {
-      value = line.substr(pos + 2);
-      value.pop_back(); // remove the \r
-    }
-    this->headers_.insert({name, value});
-  }
+  splitListOfPairs(headers,
+                   '\n',
+                   ':',
+                   [&](const std::string &key, std::string value) {
+                     if (value.back() == '\r') value.pop_back();
+                     if (value.front() == ' ') value.erase(0, 1);
+                     if (!key.empty() && !value.empty()) {
+                       this->headers_[key] = value;
+                     }
+                   });
 }
 
 void HTTPMessage::setHeader(const std::string &name, const std::string &value) {
