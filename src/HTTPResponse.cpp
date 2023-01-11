@@ -90,6 +90,9 @@ void HTTPResponse::addDefaultHeaders_() {
 }
 
 HTTPResponse *HTTPResponse::setStatus(int status) {
+  if (HTTP_REASONS.find(status) == HTTP_REASONS.end()) {
+    throw std::invalid_argument("Invalid status code");
+  }
   this->status_ = status;
   return this;
 }
@@ -103,7 +106,7 @@ std::string HTTPResponse::toString() {
       this->getVersion() + " " + std::to_string(this->status_) + " "
           + HTTP_REASONS[this->status_] + "\r\n";
   response += this->headersToString();
-  response += "\n";
+  response += "\r\n";
   response += this->getBody();
   return response;
 }
