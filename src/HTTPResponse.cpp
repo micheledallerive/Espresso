@@ -94,6 +94,10 @@ HTTPResponse *HTTPResponse::setStatus(int status) {
   return this;
 }
 
+int HTTPResponse::getStatus() const {
+  return this->status_;
+}
+
 std::string HTTPResponse::toString() {
   std::string response =
       this->getVersion() + " " + std::to_string(this->status_) + " "

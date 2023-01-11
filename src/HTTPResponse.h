@@ -21,6 +21,8 @@ class HTTPResponse : public HTTPMessage {
   std::string toString();
 
   HTTPResponse *setStatus(int status);
+  [[nodiscard]] int getStatus() const;
+
   void send(const std::string &body);
   void sendFile(const std::string &path);
   void downloadFile(const std::string &path, const std::string &filename="");
