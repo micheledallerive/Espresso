@@ -8,6 +8,7 @@
 
 #include "HTTPRequest.h"
 #include "HTTPMethod.h"
+#include "utils.h"
 
 namespace Espresso {
 
@@ -30,8 +31,11 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   std::istringstream iss2(line);
   iss2 >> method >> path >> version;
 
-  std::string queryString = path.substr(path.find('?') + 1);
-  path = path.substr(0, path.find('?'));
+  auto queryPos = path.find('?');
+  if (queryPos != std::string::npos) {
+    this->parseQuery_(path.substr(queryPos + 1));
+    path = path.substr(0, queryPos);
+  }
 
   std::string headers;
   while (std::getline(iss, line)) {
@@ -48,7 +52,6 @@ HTTPRequest::HTTPRequest(const std::string &request) {
   this->path_ = std::move(path);
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
-  this->parseQuery_(queryString);
 
   if (this->hasHeader("Cookie")) {
     this->parseCookies_(this->getHeader("Cookie"));
@@ -70,33 +73,25 @@ std::string HTTPRequest::getPath() {
 }
 
 void HTTPRequest::parseQuery_(const std::string &queryString) {
-  std::istringstream iss(queryString);
-  std::string key, value;
-  while (std::getline(iss, key, '=')) {
-    std::getline(iss, value, '&');
-    this->query[key] = value;
-  }
+  splitListOfPairs(queryString,
+                   '&',
+                   '=',
+                   [&](const std::string &key, const std::string &value) {
+                     if (!key.empty()) {
+                       this->query[key] = value;
+                     }
+                   });
 }
 
 void HTTPRequest::parseCookies_(const std::string &cookiesString) {
-  std::istringstream iss(" " + cookiesString);
-  std::string cookiePair;
-
-  while (std::getline(iss, cookiePair, ';')) {
-    if (cookiePair.empty()) continue;
-
-    cookiePair = cookiePair.substr(1);
-    std::string key, value;
-
-    auto pos = cookiePair.find('=');
-    if (pos == std::string::npos || pos == 0) continue;
-
-    key = cookiePair.substr(0, pos);
-    value = cookiePair.substr(pos + 1);
-    if (key.empty()) continue;
-
-    this->cookies[key] = value;
-  }
+  splitListOfPairs(" " + cookiesString,
+                   ';',
+                   '=',
+                   [&](const std::string &key, const std::string &value) {
+                     if (key.length() > 1) {
+                       this->cookies[key.substr(1)] = value;
+                     }
+                   });
 }
 
 } // Espresso
