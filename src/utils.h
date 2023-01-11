@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 
 namespace Espresso {
 std::vector<std::string> split(const std::string &s, char delim);
@@ -18,6 +19,13 @@ bool urls_match(const std::string &schema,
 std::string getUTCDate();
 
 std::string getAbsolutePath(const std::string &path);
+
+void splitListOfPairs(const std::string &line,
+                      char delim,
+                      char pairDelim,
+                      std::function<void(const std::string &,
+                                         const std::string &)> callback);
+
 }
 
 #endif //ESPRESSO_SRC_UTILS_H_

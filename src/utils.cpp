@@ -65,4 +65,29 @@ std::string getAbsolutePath(const std::string &path) {
       any_cast<std::string>(Espresso::server_settings["BASE_PATH"]) + path);
 }
 
+void splitListOfPairs(const std::string &line,
+                      char delim,
+                      char pairDelim,
+                      std::function<void(const std::string &,
+                                         const std::string &)> callback) {
+  std::istringstream iss(line);
+  std::string values;
+
+  while (std::getline(iss, values, delim)) {
+    if (values.empty()) continue;
+
+    std::string key, value;
+
+    auto pos = values.find(pairDelim);
+    if (pos == std::string::npos || pos == 0)
+      continue;
+
+    key = values.substr(0, pos);
+    value = values.substr(pos + 1);
+    if (key.empty()) continue;
+
+    callback(key, value);
+  }
+}
+
 }
