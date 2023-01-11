@@ -27,7 +27,7 @@ class HTTPResponse : public HTTPMessage {
   void sendFile(const std::string &path);
   void downloadFile(const std::string &path, const std::string &filename="");
 
-  void redirect(const std::string &path, unsigned int status = 302);
+  void redirect(const std::string &path, int status = 302);
 
   void setCookie(const Cookie &cookie);
   void setCookie(const std::string &name, const std::string &value);

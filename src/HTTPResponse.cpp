@@ -139,7 +139,7 @@ void HTTPResponse::downloadFile(const std::string &path,
   this->setHeader("Content-Disposition", disposition);
 }
 
-void HTTPResponse::redirect(const std::string &path, unsigned int status) {
+void HTTPResponse::redirect(const std::string &path, int status) {
   this->setHeader("Location", path);
   this->setStatus(status);
 }
