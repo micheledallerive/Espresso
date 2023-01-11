@@ -172,7 +172,7 @@ TEST(Cookies, ToString) {
 
   cookie.name = "name";
   cookie.value = "";
-  ASSERT_EQ(cookie.toString(), "");
+  ASSERT_EQ(cookie.toString(), "name=; Max-Age=10");
 
   cookie.name = "";
   ASSERT_EQ(cookie.toString(), "");

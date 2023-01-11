@@ -32,7 +32,7 @@ Cookie::Cookie(std::string name,
 }
 
 std::string Cookie::toString() const {
-  if (this->name.empty() || this->value.empty()) {
+  if (this->name.empty()) {
     return "";
   }
 
