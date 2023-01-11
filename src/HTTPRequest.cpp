@@ -57,8 +57,6 @@ HTTPRequest::HTTPRequest(const std::string &request) {
     this->parseCookies_(this->getHeader("Cookie"));
   }
 
-  this->data["prova"] = std::string("tes");
-
   this->body_ = std::move(body);
 }
 
