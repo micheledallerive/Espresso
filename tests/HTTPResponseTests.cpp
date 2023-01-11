@@ -71,7 +71,6 @@ TEST(HTTPResponse, Send) {
 
 TEST(HTTPResponse, SendFile) {
   HTTPResponse response;
-  std::cout << TESTS_PATH << std::endl;
   response.sendFile(TESTS_PATH + std::string("files/test.html"));
   EXPECT_EQ(response.toString(),
             "HTTP/1.1 200 OK\r\n"
@@ -82,6 +81,81 @@ TEST(HTTPResponse, SendFile) {
   EXPECT_EQ(response.getBody(), "Hello World!");
   EXPECT_THROW(response.sendFile("tests/does_not_exist.txt"),
                std::runtime_error);
+}
+
+TEST(HTTPResponse, DownloadFile) {
+  HTTPResponse response;
+  response.downloadFile(TESTS_PATH + std::string("files/test.html"));
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Disposition: attachment\r\n"
+            "Content-Length: 12\r\n"
+            "Date: " + getUTCDate() + "\r\n"
+                + "\r\n"
+                  "Hello World!");
+  EXPECT_EQ(response.getBody(), "Hello World!");
+  response.downloadFile(TESTS_PATH + std::string("files/test.html"),
+                        "test.txt");
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Disposition: attachment; filename=\"test.txt\"\r\n"
+            "Content-Length: 12\r\n"
+            "Date: " + getUTCDate() + "\r\n"
+                + "\r\n"
+                  "Hello World!");
+  EXPECT_EQ(response.getBody(), "Hello World!");
+  EXPECT_THROW(
+      response.downloadFile(TESTS_PATH
+                                + std::string("files/doesntexist.html"),
+                            "test2.html"), std::runtime_error);
+}
+
+TEST(HTTPResponse, Redirect) {
+  HTTPResponse response;
+  const std::string d = getUTCDate();
+  response.redirect("http://www.google.com");
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 302 Found\r\n"
+            "Date: " + d + "\r\n"
+                           "Location: http://www.google.com\r\n"
+                + "\r\n");
+  EXPECT_EQ(response.getBody(), "");
+
+  response.redirect("http://www.google.com", 301);
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 301 Moved Permanently\r\n"
+            "Date: " + d + "\r\n"
+                           "Location: http://www.google.com\r\n"
+                + "\r\n");
+}
+
+TEST(HTTPResponse, SetCookie) {
+  HTTPResponse response;
+  const std::string date = getUTCDate();
+  response.setCookie({"name", "value", "example.com", "/", 3600, true, true});
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Date: " + date + "\r\n"
+                + "Set-Cookie: name=value; Domain=example.com; Path=/; "
+                  "Max-Age=3600; Secure; HttpOnly\r\n"
+                + "\r\n");
+  response = HTTPResponse();
+  response.setCookie("name", "value");
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Date: " + date + "\r\n"
+                + "Set-Cookie: name=value; Path=/; Max-Age=3600\r\n"
+                + "\r\n");
+}
+
+TEST(HTTPResponse, DeleteCookie) {
+  HTTPResponse response;
+  response.deleteCookie("name");
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Date: " + getUTCDate() + "\r\n"
+                + "Set-Cookie: name=; Max-Age=0\r\n"
+                + "\r\n");
 }
 
 }
