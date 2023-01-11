@@ -15,7 +15,7 @@
 
 namespace Espresso {
 
-Settings server_settings;
+Settings server_settings = ESPRESSO_DEFAULT_SETTINGS;
 
 Server::Server() {
   this->port_ = -1;
@@ -23,7 +23,6 @@ Server::Server() {
   this->max_connections_ = ESPRESSO_MAX_CONNECTIONS;
   this->middlewares = new Espresso::MiddlewareList();
   this->router = new Espresso::Router();
-  server_settings = ESPRESSO_DEFAULT_SETTINGS;
 }
 Server::Server(Settings settings) : Server() {
   server_settings = std::move(settings);
