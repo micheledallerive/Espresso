@@ -119,7 +119,7 @@ void HTTPResponse::send(const std::string &body) {
 void HTTPResponse::sendFile(const std::string &path) {
   std::string final_path = getAbsolutePath(path);
   std::ifstream file(final_path);
-  if (file.is_open()) {
+  if (!file.fail() && file.is_open()) {
     std::stringstream buffer;
     buffer << file.rdbuf();
     this->setBody(buffer.str());
