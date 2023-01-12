@@ -25,7 +25,7 @@ class HTTPResponse : public HTTPMessage {
 
   void send(const std::string &body);
   void sendFile(const std::string &path);
-  void downloadFile(const std::string &path, const std::string &filename="");
+  void downloadFile(const std::string &path, const std::string &filename = "");
 
   void redirect(const std::string &path, int status = 302);
 
@@ -35,6 +35,7 @@ class HTTPResponse : public HTTPMessage {
  private:
   int status_;
   void addDefaultHeaders_();
+  std::map<std::string, Cookie> cookies_;
 };
 
 } // Espresso

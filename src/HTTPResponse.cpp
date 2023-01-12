@@ -106,6 +106,9 @@ std::string HTTPResponse::toString() {
       this->getVersion() + " " + std::to_string(this->status_) + " "
           + HTTP_REASONS[this->status_] + "\r\n";
   response += this->headersToString();
+  for (const auto& it : this->cookies_) {
+    response += "Set-Cookie: " + it.second.toString() + "\r\n";
+  }
   response += "\r\n";
   response += this->getBody();
   return response;
@@ -143,15 +146,11 @@ void HTTPResponse::redirect(const std::string &path, int status) {
   this->setHeader("Location", path);
   this->setStatus(status);
 }
-
 void HTTPResponse::setCookie(const Cookie &cookie) {
-  // TODO fix, there cannot be multiple set-cookie headers.
-  if (this->hasHeader("Set-Cookie")) {
-    this->setHeader("Set-Cookie", this->getHeader("Set-Cookie") + "; "
-        + cookie.toString());
-  } else {
-    this->setHeader("Set-Cookie", cookie.toString());
+  if (this->cookies_.find(cookie.name) != this->cookies_.end()) {
+    this->cookies_.erase(cookie.name);
   }
+  this->cookies_.insert({cookie.name, cookie});
 }
 
 void HTTPResponse::setCookie(const std::string &name,
