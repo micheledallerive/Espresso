@@ -22,9 +22,12 @@ learning experience for me. I am open to any suggestions and contributions.
 ### Installation
 
 ```shell
-$ git clone https://github.com/yourusername/espresso.git
+$ git clone https://github.com/micheledallerive/Espresso.git
 $ cd espresso
-$ make
+$ mkdir build
+$ cd build
+$ cmake ..
+$ sudo make install
 ```
 
 ### Usage
@@ -32,7 +35,7 @@ $ make
 Create a new file called `main.cpp` and add the following code:
 
 ```c++
-#include "espresso.h"
+#include <espresso.h>
 
 int main() {
     Espresso::Server server;

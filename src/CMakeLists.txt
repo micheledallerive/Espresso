@@ -10,7 +10,6 @@ set(SOURCES
         utils.cpp)
 
 set(HEADERS Cookies.h
-        espresso.h
         HTTPMessage.h
         HTTPMethod.h
         HTTPRequest.h
@@ -24,8 +23,10 @@ set(HEADERS Cookies.h
 add_library(espresso STATIC ${SOURCES})
 
 # Add the source files to the library target
-target_sources(espresso PRIVATE ${SOURCES} ${HEADERS})
+target_sources(espresso PRIVATE ${SOURCES})
 
-# Include the headers directory for the library target
-target_include_directories(espresso PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+# Add the include directories to the library target
+target_include_directories(espresso PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Add the library target to the build tree
+add_library(espresso::espresso ALIAS espresso)
