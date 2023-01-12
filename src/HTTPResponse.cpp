@@ -147,10 +147,7 @@ void HTTPResponse::redirect(const std::string &path, int status) {
   this->setStatus(status);
 }
 void HTTPResponse::setCookie(const Cookie &cookie) {
-  if (this->cookies_.find(cookie.name) != this->cookies_.end()) {
-    this->cookies_.erase(cookie.name);
-  }
-  this->cookies_.insert({cookie.name, cookie});
+  this->cookies_[cookie.name] = cookie;
 }
 
 void HTTPResponse::setCookie(const std::string &name,
