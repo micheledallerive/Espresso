@@ -147,6 +147,14 @@ TEST(HTTPResponse, SetCookie) {
                   "Max-Age=3600; Secure; HttpOnly\r\n"
                 + "Set-Cookie: name2=value; Path=/; Max-Age=3600\r\n"
                 + "\r\n");
+  response.setCookie("name2", "value2");
+  EXPECT_EQ(response.toString(),
+            "HTTP/1.1 200 OK\r\n"
+            "Date: " + date + "\r\n"
+                + "Set-Cookie: name=value; Domain=example.com; Path=/; "
+                  "Max-Age=3600; Secure; HttpOnly\r\n"
+                + "Set-Cookie: name2=value2; Path=/; Max-Age=3600\r\n"
+                + "\r\n");
 }
 
 TEST(HTTPResponse, DeleteCookie) {
