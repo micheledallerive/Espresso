@@ -53,6 +53,14 @@ int main() {
 This will create a new Espresso server that listens on port 3000 and responds to
 GET requests to the root route (/) with "Hello, World!".
 
+The file can then be built using CMake or simply compiled with:
+
+```shell
+$ g++ main.cpp -o main -lespresso -std=c++2a
+```
+
+**Note**: the `-lespresso` flag is required to link the Espresso library.
+
 ## Notes
 
 Please note, that usage and functionality may be limited and some features that
