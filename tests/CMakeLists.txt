@@ -22,15 +22,11 @@ add_executable(
 
 target_link_libraries(
         espresso_test
-        espresso_lib
+        espresso
         GTest::gtest_main
-)
-
-target_include_directories(
-        espresso_test
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src
 )
 
 include(GoogleTest)
 gtest_discover_tests(espresso_test)
+
+#exclude all the google libraries from the project
