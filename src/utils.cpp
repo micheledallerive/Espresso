@@ -54,7 +54,7 @@ std::string getUTCDate() {
   char out[30];
   time_t t = time(nullptr);
   struct tm *tmp = gmtime(&t);
-  const char *format = "%a, %d %b %y %T GMT";
+  const char *format = "%a, %d %b %Y %T GMT";
   if (!tmp) return "";
   if (strftime(out, sizeof(out), format, tmp) == 0) return "";
   return out;
