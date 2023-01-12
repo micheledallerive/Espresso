@@ -1,17 +1,15 @@
-cmake_minimum_required(VERSION 3.24)
-project(espresso)
+# Collect all the source files in the directory
+file(GLOB_RECURSE SOURCES "*.cpp")
 
-set(CMAKE_CXX_STANDARD 20)
+# Collect all the header files in the directory
+file(GLOB_RECURSE HEADERS "*.h")
 
-set(TARGET_FILES Server.cpp HTTPMessage.cpp Server.h HTTPMessage.h HTTPRequest.cpp HTTPRequest.h Router.cpp Router.h HTTPResponse.cpp HTTPResponse.h Middleware.cpp Middleware.h HTTPMethod.cpp HTTPMethod.h utils.cpp utils.h Cookies.cpp Cookies.h)
+# Create a library target for the Espresso library
+add_library(espresso_lib STATIC ${SOURCES})
 
-add_executable(
-        espresso
-        main.cpp
-        ${TARGET_FILES}
-)
+# Add the source files to the library target
+target_sources(espresso_lib PRIVATE ${SOURCES} ${HEADERS})
 
-add_library(
-        espresso_lib
-        ${TARGET_FILES}
-)
+# Include the headers directory for the library target
+target_include_directories(espresso_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
