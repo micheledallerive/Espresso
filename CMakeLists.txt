@@ -7,5 +7,5 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(src)
 
 # Install the library
-install(TARGETS espresso_lib DESTINATION lib)
+install(TARGETS espresso DESTINATION lib EXPORT espressoConfig DESTINATION lib/cmake/espresso CONFIGURATIONS Release)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/espresso.h DESTINATION include)
