@@ -12,9 +12,9 @@
 namespace Espresso {
 std::vector<std::string> split(const std::string &s, char delim);
 
-bool urls_match(const std::string &schema,
-                const std::string &url,
-                bool ignore_params = true);
+bool urlsMatch(const std::string &schema,
+               const std::string &url,
+               bool ignore_params = true);
 
 std::string getUTCDate();
 

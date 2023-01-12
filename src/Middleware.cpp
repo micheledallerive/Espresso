@@ -27,7 +27,7 @@ void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
     if (this->middlewares_.empty()) return;
 
     while (it != this->middlewares_.end()
-        && !urls_match(it->first, request->getPath(), false)) {
+        && !urlsMatch(it->first, request->getPath(), false)) {
       ++it;
     }
     if (it == this->middlewares_.end()) return;

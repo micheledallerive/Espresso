@@ -70,7 +70,7 @@ void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
   std::vector<std::string> routePathParts;
   for (auto &route : this->routes_) {
     if (route.method != req->getMethod()) continue;
-    if (urls_match(route.path, req->getPath())) {
+    if (urlsMatch(route.path, req->getPath())) {
       matchingRoute = &route;
       routePathParts = split(route.path, '/');
       break;

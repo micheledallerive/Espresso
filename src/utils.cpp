@@ -28,9 +28,9 @@ std::vector<std::string> split(const std::string &s, char delim) {
  * @param ignore_params weather to ignore the parameters or not. (e.g. /api/:id and /api/5 will match if ignore_params is true)
  * @return
  */
-bool urls_match(const std::string &schema,
-                const std::string &url,
-                bool ignore_params = true) {
+bool urlsMatch(const std::string &schema,
+               const std::string &url,
+               bool ignore_params = true) {
   std::vector<std::string> schema_parts = split(schema, '/');
   std::vector<std::string> url_parts = split(url, '/');
   for (int i = 0; i < url_parts.size(); ++i) {
