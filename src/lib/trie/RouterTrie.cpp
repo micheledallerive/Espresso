@@ -21,7 +21,7 @@ RouterTrieNode::~RouterTrieNode() {
 }
 
 bool RouterTrieNode::isLeaf() const {
-  return this->children.empty();
+  return !this->routes.empty();
 }
 
 RouterTrie::RouterTrie(char delimiter) {
@@ -80,9 +80,14 @@ std::vector<Route> RouterTrie::search(const std::string &path) {
   for (auto &pathPart : pathParts) {
     bool found = false;
     for (auto child : currentNode->children) {
-      if (child->key == pathPart) {
+      if (child->key == pathPart
+          || child->key == "*"
+          || child->key.length() > 1 && child->key[0] == ':') {
         currentNode = child;
         found = true;
+        if (child->key == "*" && child->isLeaf()) {
+          return child->routes;
+        }
         break;
       }
     }
