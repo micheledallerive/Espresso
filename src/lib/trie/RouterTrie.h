@@ -38,12 +38,14 @@ class RouterTrie {
 
   void insert(const std::string &path, const Route &value);
   bool has(const std::string &path);
-  std::vector<Route> search(const std::string &path);
+  std::vector<Route> search(const std::string &path, HTTPMethod method);
   size_t size();
 
  private:
   char delimiter_;
   RouterTrieNode *root_;
+  static std::vector<Route> filterByMethod_(std::vector<Route> &routes,
+                                            HTTPMethod method);
 };
 
 } // Espresso

@@ -37,7 +37,7 @@ TEST(RouterTrie, Search) {
   route.method = HTTPMethod::GET;
   route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
   trie.insert(route.path, route);
-  std::vector<Route> routes = trie.search(route.path);
+  std::vector<Route> routes = trie.search(route.path, GET);
   ASSERT_EQ(routes.size(), 1);
   ASSERT_EQ(routes[0].path, route.path);
   ASSERT_EQ(routes[0].method, route.method);
@@ -52,7 +52,7 @@ TEST(RouterTrie, SearchWithParams) {
   route.method = HTTPMethod::GET;
   route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
   trie.insert(route.path, route);
-  std::vector<Route> routes = trie.search("/test/123");
+  std::vector<Route> routes = trie.search("/test/123", GET);
   ASSERT_EQ(routes.size(), 1);
   ASSERT_EQ(routes[0].path, route.path);
   ASSERT_EQ(routes[0].method, route.method);
@@ -64,9 +64,9 @@ TEST(RouterTrie, SearchWithWildcard) {
   RouterTrie trie = RouterTrie('/');
   trie.insert("/test/*", Route());
 
-  std::vector<Route> routes = trie.search("/test/123");
+  std::vector<Route> routes = trie.search("/test/123", GET);
   ASSERT_EQ(routes.size(), 1);
-  routes = trie.search("/test/123/456");
+  routes = trie.search("/test/123/456", GET);
   ASSERT_EQ(routes.size(), 1);
 }
 
