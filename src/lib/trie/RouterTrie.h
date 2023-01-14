@@ -27,7 +27,6 @@ class RouterTrieNode {
   std::string key;
   std::vector<Route> routes;
   std::vector<RouterTrieNode *> children;
-  bool terminal;
 };
 
 class RouterTrie {
@@ -38,6 +37,7 @@ class RouterTrie {
   void insert(const std::string &path, const Route &value);
   bool has(const std::string &path);
   std::vector<Route> search(const std::string &path);
+  size_t size();
 
  private:
   char delimiter_;
