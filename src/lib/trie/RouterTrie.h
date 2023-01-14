@@ -38,7 +38,10 @@ class RouterTrie {
 
   void insert(const std::string &path, const Route &value);
   bool has(const std::string &path);
-  std::vector<Route> search(const std::string &path, HTTPMethod method);
+  std::vector<Route> search(const std::string &path,
+                            HTTPMethod method,
+                            std::unordered_map<std::string,
+                                               std::string> *params = nullptr);
   size_t size();
 
  private:

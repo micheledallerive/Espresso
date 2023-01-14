@@ -75,28 +75,40 @@ bool RouterTrie::has(const std::string &path) {
 }
 
 std::vector<Route> RouterTrie::search(const std::string &path,
-                                      HTTPMethod method) {
+                                      HTTPMethod method,
+                                      std::unordered_map<std::string,
+                                                         std::string> *params) {
   std::vector<std::string> pathParts = split(path, this->delimiter_);
   RouterTrieNode *currentNode = this->root_;
   for (auto &pathPart : pathParts) {
     bool found = false;
+    bool _exit = false;
     for (auto child : currentNode->children) {
       if (child->key == pathPart
           || child->key == "*"
           || child->key.length() > 1 && child->key[0] == ':') {
         currentNode = child;
         found = true;
+        if (child->key.length() > 1 && child->key[0] == ':'
+            && params != nullptr) {
+          (*params)[child->key.substr(1)] = pathPart;
+        }
         if (child->key == "*" && child->isLeaf()) {
-          return Espresso::RouterTrie::filterByMethod_(child->routes, method);
+          _exit = true;
         }
         break;
       }
     }
+    if (_exit) break;
     if (!found) {
       return {};
     }
   }
-  return Espresso::RouterTrie::filterByMethod_(currentNode->routes, method);
+  if (currentNode->isLeaf()) {
+
+    return filterByMethod_(currentNode->routes, method);
+  }
+  return {};
 }
 
 std::vector<Route> RouterTrie::filterByMethod_(std::vector<Route> &routes,
