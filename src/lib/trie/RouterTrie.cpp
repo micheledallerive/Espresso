@@ -20,6 +20,10 @@ RouterTrieNode::~RouterTrieNode() {
   }
 }
 
+bool RouterTrieNode::isLeaf() const {
+  return this->children.empty();
+}
+
 RouterTrie::RouterTrie(char delimiter) {
   this->delimiter_ = delimiter;
   this->root_ = new RouterTrieNode();
@@ -67,7 +71,7 @@ bool RouterTrie::has(const std::string &path) {
       return false;
     }
   }
-  return currentNode->routes.size() > 0;
+  return currentNode->isLeaf();
 }
 
 std::vector<Route> RouterTrie::search(const std::string &path) {

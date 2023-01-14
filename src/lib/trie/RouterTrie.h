@@ -24,6 +24,8 @@ class RouterTrieNode {
  public:
   RouterTrieNode();
   ~RouterTrieNode();
+  [[nodiscard]] bool isLeaf() const;
+
   std::string key;
   std::vector<Route> routes;
   std::vector<RouterTrieNode *> children;
