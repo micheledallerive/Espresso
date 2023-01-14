@@ -17,6 +17,7 @@ std::string methodToString(HTTPMethod method) {
     case PATCH:return "PATCH";
     case TRACE:return "TRACE";
     case CONNECT:return "CONNECT";
+    case ALL:return "ALL";
     default:return "UNDEFINED";
   }
 }
@@ -42,6 +43,8 @@ HTTPMethod stringToMethod(std::string method) {
     return TRACE;
   } else if (method == "CONNECT") {
     return CONNECT;
+  } else if (method == "ALL") {
+    return ALL;
   } else {
     return UNDEFINED;
   }

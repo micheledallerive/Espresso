@@ -18,6 +18,7 @@ enum HTTPMethod {
   PATCH,
   TRACE,
   CONNECT,
+  ALL,
   UNDEFINED
 };
 
