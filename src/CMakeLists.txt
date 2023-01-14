@@ -7,7 +7,8 @@ set(SOURCES
         Middleware.cpp
         Router.cpp
         Server.cpp
-        utils.cpp)
+        utils.cpp
+        lib/trie/RouterTrie.cpp)
 
 set(HEADERS Cookies.h
         HTTPMessage.h
@@ -17,6 +18,7 @@ set(HEADERS Cookies.h
         Middleware.h
         Router.h
         Server.h
+        lib/trie/RouterTrie.h
         utils.h)
 
 # Create a library target for the Espresso library

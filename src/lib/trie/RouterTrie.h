@@ -1,0 +1,49 @@
+//
+// Created by michele on 14.01.23.
+//
+
+#ifndef ESPRESSO_SRC_LIB_TRIE_ROUTERTRIE_H_
+#define ESPRESSO_SRC_LIB_TRIE_ROUTERTRIE_H_
+
+#include <string>
+#include <functional>
+#include "HTTPRequest.h"
+#include "HTTPResponse.h"
+namespace Espresso {
+
+using RouteCallback = std::function<void(HTTPRequest *request,
+                                         HTTPResponse *response)>;
+
+struct Route {
+  std::string path;
+  HTTPMethod method;
+  RouteCallback callback;
+};
+
+class RouterTrieNode {
+ public:
+  RouterTrieNode();
+  ~RouterTrieNode();
+  std::string key;
+  std::vector<Route> routes;
+  std::vector<RouterTrieNode *> children;
+  bool terminal;
+};
+
+class RouterTrie {
+ public:
+  explicit RouterTrie(char delimiter);
+  ~RouterTrie();
+
+  void insert(const std::string &path, const Route &value);
+  bool has(const std::string &path);
+  std::vector<Route> search(const std::string &path);
+
+ private:
+  char delimiter_;
+  RouterTrieNode *root_;
+};
+
+} // Espresso
+
+#endif //ESPRESSO_SRC_LIB_TRIE_ROUTERTRIE_H_
