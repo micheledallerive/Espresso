@@ -10,6 +10,7 @@ TEST(MiddlewareList, SimpleUse) {
   list.use([](HTTPRequest &request,
               HTTPResponse &response,
               const std::function<void()> &next) {
+    std::cout << "executing " << std::endl;
     response.setBody("Hello World!");
     next();
   });

@@ -23,26 +23,6 @@ TEST(Utils, Split) {
 
 }
 
-TEST(Utils, UrlsMatch) {
-  ASSERT_TRUE(urlsMatch("/api/*", "/api/test"));
-  ASSERT_TRUE(urlsMatch("/api/*", "/api/test/"));
-  ASSERT_TRUE(urlsMatch("/api/*", "/api/test/1"));
-  ASSERT_TRUE(urlsMatch("/api/*", "/api"));
-  ASSERT_TRUE(urlsMatch("/api/*", "/api/"));
-  ASSERT_TRUE(urlsMatch("/api/*/test", "/api/test/test"));
-  ASSERT_TRUE(urlsMatch("/api/*/test", "/api/asdf/test"));
-
-  ASSERT_TRUE(urlsMatch("/api/:id", "/api/5"));
-  ASSERT_TRUE(urlsMatch("/api/:id", "/api/5/"));
-  ASSERT_FALSE(urlsMatch("/api/:id", "/api/5/1"));
-
-  ASSERT_FALSE(urlsMatch("/api/:id", "/api/5", false));
-  ASSERT_FALSE(urlsMatch("/api/:id", "/api/5/", false));
-  ASSERT_TRUE(urlsMatch("/api/:id", "/api/:id", false));
-
-  ASSERT_TRUE(urlsMatch("/api/test", "/api/test"));
-}
-
 TEST(Utils, GetUTCDate) {
   std::string d = getUTCDate();
   ASSERT_EQ(d.length(), 29);

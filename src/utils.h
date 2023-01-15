@@ -12,10 +12,6 @@
 namespace Espresso {
 std::vector<std::string> split(const std::string &s, char delim);
 
-bool urlsMatch(const std::string &schema,
-               const std::string &url,
-               bool ignore_params = true);
-
 std::string getUTCDate();
 
 std::string getAbsolutePath(const std::string &path);
