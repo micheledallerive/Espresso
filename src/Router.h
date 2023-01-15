@@ -12,47 +12,39 @@
 #include "HTTPMethod.h"
 #include "HTTPRequest.h"
 #include "HTTPResponse.h"
+#include "lib/trie/RouterTrie.h"
 
 namespace Espresso {
-
-using RouteCallback = std::function<void(HTTPRequest *request,
-                                         HTTPResponse *response)>;
-
-struct Route {
-  std::string path;
-  HTTPMethod method;
-  RouteCallback callback;
-};
 
 class Router {
  public:
   Router();
   ~Router();
 
-  void get(std::string path, RouteCallback callback);
-  void post(std::string path, RouteCallback callback);
-  void put(std::string path, RouteCallback callback);
-  void del(std::string path, RouteCallback callback);
-  void patch(std::string path, RouteCallback callback);
-  void options(std::string path, RouteCallback callback);
-  void head(std::string path, RouteCallback callback);
-  void connect(std::string path, RouteCallback callback);
-  void trace(std::string path, RouteCallback callback);
+  void get(const std::string & path, RouteCallback callback);
+  void post(const std::string & path, RouteCallback callback);
+  void put(const std::string & path, RouteCallback callback);
+  void del(const std::string & path, RouteCallback callback);
+  void patch(const std::string & path, RouteCallback callback);
+  void options(const std::string & path, RouteCallback callback);
+  void head(const std::string & path, RouteCallback callback);
+  void connect(const std::string & path, RouteCallback callback);
+  void trace(const std::string & path, RouteCallback callback);
   void route(const std::string &path,
              const std::vector<std::pair<HTTPMethod,
                                          RouteCallback>> &callbacks);
 
-  void addRoute(std::string path,
+  void addRoute(const std::string & path,
                 HTTPMethod method,
                 RouteCallback callback);
 
-  void addRoute(std::vector<std::string> paths,
+  void addRoute(const std::vector<std::string>& paths,
                 HTTPMethod method,
                 const RouteCallback &callback);
   void executeMatchingRoute(Espresso::HTTPRequest *req,
                             Espresso::HTTPResponse *res);
  private:
-  std::vector<Route> routes_;
+  RouterTrie routes_{'/'};
 };
 
 } // Espresso
