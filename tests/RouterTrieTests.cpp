@@ -63,11 +63,35 @@ TEST(RouterTrie, SearchWithParams) {
 TEST(RouterTrie, SearchWithWildcard) {
   RouterTrie trie = RouterTrie('/');
   trie.insert("/test/*", Route());
+  trie.insert("/test/hello/world", Route());
+  ASSERT_TRUE(trie.has("/test/123"));
 
   std::vector<Route> routes = trie.search("/test/123", GET);
   ASSERT_EQ(routes.size(), 1);
   routes = trie.search("/test/123/456", GET);
   ASSERT_EQ(routes.size(), 1);
+
+  trie.insert("/:id/*", Route());
+  ASSERT_TRUE(trie.has("/123/456"));
+  routes = trie.search("/123/456", GET);
+  ASSERT_EQ(routes.size(), 1);
+  ASSERT_TRUE(trie.has("/123/456/789"));
+  std::unordered_map<std::string, std::string> params;
+  routes = trie.search("/123/456/789", GET, &params);
+  ASSERT_EQ(routes.size(), 1);
+  ASSERT_EQ(params["id"], "123");
+}
+
+TEST(RouterTrie, SearchMultiplePaths) {
+  RouterTrie trie('/');
+  trie.insert("/test", Route());
+  trie.insert("/test/hello", Route());
+  trie.insert("/test/:id/world", Route());
+
+  ASSERT_TRUE(trie.has("/test"));
+  ASSERT_TRUE(trie.has("/test/hello"));
+  ASSERT_TRUE(trie.has("/test/123/world"));
+  ASSERT_TRUE(trie.has("/test/hello/world"));
 }
 
 TEST(RouterTrie, Has) {
