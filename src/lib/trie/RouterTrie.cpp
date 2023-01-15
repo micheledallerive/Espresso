@@ -30,6 +30,7 @@ void RouterTrie::insert(const std::string &path, const Route &route) {
     if (!found) {
       auto newNode = std::make_shared<RouterTrieNode>();
       newNode->key = pathPart;
+      newNode->parent = currentNode;
       currentNode->children.push_back(newNode);
       currentNode = newNode;
     }
