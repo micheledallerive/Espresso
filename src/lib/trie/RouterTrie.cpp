@@ -11,14 +11,10 @@ namespace Espresso {
 RouterTrieNode::RouterTrieNode() {
   this->key = "";
   this->routes = std::vector<Route>();
-  this->children = std::vector<RouterTrieNode *>();
+  this->children = std::vector<std::shared_ptr<RouterTrieNode>>();
 }
 
-RouterTrieNode::~RouterTrieNode() {
-  for (auto child : this->children) {
-    delete child;
-  }
-}
+RouterTrieNode::~RouterTrieNode() = default;
 
 bool RouterTrieNode::isLeaf() const {
   return !this->routes.empty();
@@ -26,19 +22,17 @@ bool RouterTrieNode::isLeaf() const {
 
 RouterTrie::RouterTrie(char delimiter) {
   this->delimiter_ = delimiter;
-  this->root_ = new RouterTrieNode();
+  this->root_ = std::make_shared<RouterTrieNode>();
 }
 
-RouterTrie::~RouterTrie() {
-  delete this->root_;
-}
+RouterTrie::~RouterTrie() = default;
 
 void RouterTrie::insert(const std::string &path, const Route &route) {
   std::vector<std::string> pathParts = split(path, this->delimiter_);
-  RouterTrieNode *currentNode = this->root_;
-  for (auto &pathPart : pathParts) {
+  std::shared_ptr<RouterTrieNode> currentNode = this->root_;
+  for (const auto &pathPart : pathParts) {
     bool found = false;
-    for (auto child : currentNode->children) {
+    for (const auto &child : currentNode->children) {
       if (child->key == pathPart) {
         currentNode = child;
         found = true;
@@ -46,7 +40,7 @@ void RouterTrie::insert(const std::string &path, const Route &route) {
       }
     }
     if (!found) {
-      auto *newNode = new RouterTrieNode();
+      auto newNode = std::make_shared<RouterTrieNode>();
       newNode->key = pathPart;
       currentNode->children.push_back(newNode);
       currentNode = newNode;
@@ -57,10 +51,10 @@ void RouterTrie::insert(const std::string &path, const Route &route) {
 
 bool RouterTrie::has(const std::string &path) {
   std::vector<std::string> pathParts = split(path, this->delimiter_);
-  RouterTrieNode *currentNode = this->root_;
+  std::shared_ptr<RouterTrieNode> currentNode = this->root_;
   for (auto &pathPart : pathParts) {
     bool found = false;
-    for (auto child : currentNode->children) {
+    for (const auto &child : currentNode->children) {
       if (child->key == pathPart) {
         currentNode = child;
         found = true;
@@ -79,11 +73,11 @@ std::vector<Route> RouterTrie::search(const std::string &path,
                                       std::unordered_map<std::string,
                                                          std::string> *params) {
   std::vector<std::string> pathParts = split(path, this->delimiter_);
-  RouterTrieNode *currentNode = this->root_;
+  std::shared_ptr<RouterTrieNode> currentNode = this->root_;
   for (auto &pathPart : pathParts) {
     bool found = false;
     bool _exit = false;
-    for (auto child : currentNode->children) {
+    for (const auto &child : currentNode->children) {
       if (child->key == pathPart
           || child->key == "*"
           || child->key.length() > 1 && child->key[0] == ':') {
@@ -125,14 +119,14 @@ std::vector<Route> RouterTrie::filterByMethod_(std::vector<Route> &routes,
 }
 
 size_t RouterTrie::size() {
-  std::queue<RouterTrieNode *> queue;
-  queue.push(this->root_);
   size_t size = 0;
+  std::queue<std::shared_ptr<RouterTrieNode>> queue;
+  queue.push(this->root_);
   while (!queue.empty()) {
-    RouterTrieNode *currentNode = queue.front();
+    auto currentNode = queue.front();
     queue.pop();
     size += currentNode->routes.size();
-    for (auto child : currentNode->children) {
+    for (const auto &child : currentNode->children) {
       queue.push(child);
     }
   }

@@ -28,7 +28,7 @@ class RouterTrieNode {
 
   std::string key;
   std::vector<Route> routes;
-  std::vector<RouterTrieNode *> children;
+  std::vector<std::shared_ptr<RouterTrieNode>> children;
 };
 
 class RouterTrie {
@@ -46,7 +46,7 @@ class RouterTrie {
 
  private:
   char delimiter_;
-  RouterTrieNode *root_;
+  std::shared_ptr<RouterTrieNode> root_;
   static std::vector<Route> filterByMethod_(std::vector<Route> &routes,
                                             HTTPMethod method);
 };
