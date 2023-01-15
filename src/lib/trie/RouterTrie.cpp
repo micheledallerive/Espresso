@@ -71,14 +71,20 @@ std::vector<Route> RouterTrie::search(const std::string &path,
       nextLevel.pop();
     }
   }
-  if (!currentLevel.empty()) result = currentLevel.front();
+
+  while (!currentLevel.empty() && !currentLevel.front()->isLeaf()) {
+    currentLevel.pop();
+  }
+  if (!currentLevel.empty()) {
+    result = currentLevel.front();
+  }
 
   result:
   if (result != nullptr) {
     routes = result->routes;
     if (params != nullptr) {
       auto current = result;
-      while (current != nullptr) {
+      while (!current->isRoot()) {
         if (current->key[0] == ':') {
           (*params)[current->key.substr(1)] = pathParts[current->depth - 1];
         }
