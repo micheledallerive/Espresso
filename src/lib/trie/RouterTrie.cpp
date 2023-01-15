@@ -8,18 +8,6 @@
 
 namespace Espresso {
 
-RouterTrieNode::RouterTrieNode() {
-  this->key = "";
-  this->routes = std::vector<Route>();
-  this->children = std::vector<std::shared_ptr<RouterTrieNode>>();
-}
-
-RouterTrieNode::~RouterTrieNode() = default;
-
-bool RouterTrieNode::isLeaf() const {
-  return !this->routes.empty();
-}
-
 RouterTrie::RouterTrie(char delimiter) {
   this->delimiter_ = delimiter;
   this->root_ = std::make_shared<RouterTrieNode>();

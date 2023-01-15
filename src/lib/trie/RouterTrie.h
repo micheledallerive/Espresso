@@ -9,27 +9,9 @@
 #include <functional>
 #include "HTTPRequest.h"
 #include "HTTPResponse.h"
+#include "RouterTrieNode.h"
+
 namespace Espresso {
-
-using RouteCallback = std::function<void(HTTPRequest &request,
-                                         HTTPResponse &response)>;
-
-struct Route {
-  std::string path{"/"};
-  HTTPMethod method{HTTPMethod::GET};
-  RouteCallback callback;
-};
-
-class RouterTrieNode {
- public:
-  RouterTrieNode();
-  ~RouterTrieNode();
-  [[nodiscard]] bool isLeaf() const;
-
-  std::string key;
-  std::vector<Route> routes;
-  std::vector<std::shared_ptr<RouterTrieNode>> children;
-};
 
 class RouterTrie {
  public:

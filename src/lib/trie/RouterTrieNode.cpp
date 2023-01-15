@@ -1,0 +1,24 @@
+//
+// Created by michele on 15.01.23.
+//
+
+#include "RouterTrieNode.h"
+#include "../../Route.h"
+#include <vector>
+#include <memory>
+
+namespace Espresso {
+
+RouterTrieNode::RouterTrieNode() {
+  this->key = "";
+  this->routes = std::vector<Route>();
+  this->children = std::vector<std::shared_ptr<RouterTrieNode >>();
+}
+
+RouterTrieNode::~RouterTrieNode() = default;
+
+bool RouterTrieNode::isLeaf() const {
+  return !this->routes.empty();
+}
+
+}

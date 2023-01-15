@@ -1,0 +1,25 @@
+//
+// Created by michele on 15.01.23.
+//
+
+#ifndef ESPRESSO_SRC_ROUTE_H_
+#define ESPRESSO_SRC_ROUTE_H_
+
+#include <functional>
+#include <string>
+#include "HTTPRequest.h"
+#include "HTTPResponse.h"
+
+namespace Espresso {
+
+using RouteCallback = std::function<void(HTTPRequest &request,
+                                         HTTPResponse &response)>;
+
+struct Route {
+  std::string path{"/"};
+  HTTPMethod method{HTTPMethod::GET};
+  RouteCallback callback;
+};
+
+}
+#endif //ESPRESSO_SRC_ROUTE_H_
