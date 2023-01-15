@@ -61,10 +61,10 @@ void Router::addRoute(const std::vector<std::string> &paths,
   }
 }
 
-void Router::executeMatchingRoute(Espresso::HTTPRequest *req,
-                                  Espresso::HTTPResponse *res) {
+void Router::executeMatchingRoute(HTTPRequest &req,
+                                  HTTPResponse &res) {
   auto matchingRoutes =
-      this->routes_.search(req->getPath(), req->getMethod(), &req->params);
+      this->routes_.search(req.getPath(), req.getMethod(), &req.params);
   if (matchingRoutes.empty()) {
     return;
   }

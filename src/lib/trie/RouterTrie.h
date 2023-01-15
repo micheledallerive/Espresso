@@ -11,8 +11,8 @@
 #include "HTTPResponse.h"
 namespace Espresso {
 
-using RouteCallback = std::function<void(HTTPRequest *request,
-                                         HTTPResponse *response)>;
+using RouteCallback = std::function<void(HTTPRequest &request,
+                                         HTTPResponse &response)>;
 
 struct Route {
   std::string path{"/"};

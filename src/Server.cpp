@@ -83,15 +83,15 @@ void Server::handle_connection_(int client_socket) {
   char buffer[2048] = {0};
   read(client_socket, buffer, 2048);
 
-  auto request = new Espresso::HTTPRequest(buffer);
-  auto response = new Espresso::HTTPResponse();
+  auto request = Espresso::HTTPRequest(buffer);
+  auto response = Espresso::HTTPResponse();
 
   this->middlewares.run(request, response);
 
   this->router.executeMatchingRoute(request, response);
 
-  send(client_socket, response->toString().c_str(),
-       response->toString().length(), 0);
+  send(client_socket, response.toString().c_str(),
+       response.toString().length(), 0);
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);

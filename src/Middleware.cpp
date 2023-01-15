@@ -20,14 +20,15 @@ void MiddlewareList::use(const std::string &path,
   this->middlewares_.emplace_back(path, middleware);
 }
 
-void MiddlewareList::run(HTTPRequest *request, HTTPResponse *response) {
+void MiddlewareList::run(HTTPRequest &request,
+                         HTTPResponse &response) {
   // create a next function that, if called inside the middleware, will run the next one, otherwise will do nothing
   auto it = this->middlewares_.begin();
   std::function<void(void)> next = [&]() {
     if (this->middlewares_.empty()) return;
 
     while (it != this->middlewares_.end()
-        && !urlsMatch(it->first, request->getPath(), false)) {
+        && !urlsMatch(it->first, request.getPath(), false)) {
       ++it;
     }
     if (it == this->middlewares_.end()) return;

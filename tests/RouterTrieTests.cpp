@@ -12,7 +12,7 @@ TEST(RouterTrie, Insert) {
   Route route = Route();
   route.path = "/test";
   route.method = HTTPMethod::GET;
-  route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
+  route.callback = [](HTTPRequest &request, HTTPResponse &response) {};
   trie.insert(route.path, route);
   ASSERT_TRUE(trie.has(route.path));
   ASSERT_EQ(trie.size(), 1);
@@ -35,7 +35,7 @@ TEST(RouterTrie, Search) {
   Route route = Route();
   route.path = "/test";
   route.method = HTTPMethod::GET;
-  route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
+  route.callback = [](HTTPRequest &request, HTTPResponse &response) {};
   trie.insert(route.path, route);
   std::vector<Route> routes = trie.search(route.path, GET);
   ASSERT_EQ(routes.size(), 1);
@@ -50,7 +50,7 @@ TEST(RouterTrie, SearchWithParams) {
   Route route = Route();
   route.path = "/test/:id";
   route.method = HTTPMethod::GET;
-  route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
+  route.callback = [](HTTPRequest &request, HTTPResponse &response) {};
   trie.insert(route.path, route);
   std::vector<Route> routes = trie.search("/test/123", GET);
   ASSERT_EQ(routes.size(), 1);
@@ -75,7 +75,7 @@ TEST(RouterTrie, Has) {
   Route route = Route();
   route.path = "/test";
   route.method = HTTPMethod::GET;
-  route.callback = [](HTTPRequest *request, HTTPResponse *response) {};
+  route.callback = [](HTTPRequest &request, HTTPResponse &response) {};
   trie.insert(route.path, route);
   ASSERT_TRUE(trie.has(route.path));
   ASSERT_FALSE(trie.has("/test/123"));

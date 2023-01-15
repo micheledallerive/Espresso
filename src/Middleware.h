@@ -11,8 +11,8 @@
 
 namespace Espresso {
 
-using Middleware = std::function<void(HTTPRequest *request,
-                                      HTTPResponse *response,
+using Middleware = std::function<void(HTTPRequest &request,
+                                      HTTPResponse &response,
                                       std::function<void()> next)>;
 
 class MiddlewareList {
@@ -21,7 +21,7 @@ class MiddlewareList {
   virtual ~MiddlewareList();
   void use(const Middleware &middleware);
   void use(const std::string &path, const Middleware &middleware);
-  void run(HTTPRequest *request, HTTPResponse *response);
+  void run(HTTPRequest &request, HTTPResponse &response);
 
  private:
   std::vector<std::pair<std::string, Middleware>> middlewares_;

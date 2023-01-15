@@ -89,12 +89,12 @@ void HTTPResponse::addDefaultHeaders_() {
   this->setHeader("Date", getUTCDate());
 }
 
-HTTPResponse *HTTPResponse::setStatus(int status) {
+HTTPResponse &HTTPResponse::setStatus(int status) {
   if (HTTP_REASONS.find(status) == HTTP_REASONS.end()) {
     throw std::invalid_argument("Invalid status code");
   }
   this->status_ = status;
-  return this;
+  return *this;
 }
 
 int HTTPResponse::getStatus() const {
@@ -106,7 +106,7 @@ std::string HTTPResponse::toString() {
       this->getVersion() + " " + std::to_string(this->status_) + " "
           + HTTP_REASONS[this->status_] + "\r\n";
   response += this->headersToString();
-  for (const auto& it : this->cookies_) {
+  for (const auto &it : this->cookies_) {
     response += "Set-Cookie: " + it.second.toString() + "\r\n";
   }
   response += "\r\n";

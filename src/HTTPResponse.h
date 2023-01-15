@@ -20,7 +20,7 @@ class HTTPResponse : public HTTPMessage {
   ~HTTPResponse() override;
   std::string toString();
 
-  HTTPResponse *setStatus(int status);
+  HTTPResponse &setStatus(int status);
   [[nodiscard]] int getStatus() const;
 
   void send(const std::string &body);
