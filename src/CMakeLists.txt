@@ -8,7 +8,8 @@ set(SOURCES
         Router.cpp
         Server.cpp
         utils.cpp
-        lib/trie/RouterTrie.cpp lib/trie/RouterTrieNode.cpp Route.h)
+        PathRegex.cpp
+        lib/trie/RouterTrie.cpp lib/trie/RouterTrieNode.cpp)
 
 set(HEADERS Cookies.h
         HTTPMessage.h
@@ -19,6 +20,8 @@ set(HEADERS Cookies.h
         Router.h
         Server.h
         lib/trie/RouterTrie.h lib/trie/RouterTrieNode.h
+        PathRegex.h
+        Route.h
         utils.h)
 
 # Create a library target for the Espresso library
