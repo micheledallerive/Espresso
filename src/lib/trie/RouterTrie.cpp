@@ -28,7 +28,7 @@ void RouterTrie::insert(const std::string &path, const Route &route) {
       }
     }
     if (!found) {
-      auto newNode = std::make_shared<RouterTrieNode>();
+      auto newNode = std::make_shared<RouterTrieNode>(currentNode->depth + 1);
       newNode->key = pathPart;
       newNode->parent = currentNode;
       currentNode->children.push_back(newNode);
@@ -47,32 +47,46 @@ std::vector<Route> RouterTrie::search(const std::string &path,
                                       std::unordered_map<std::string,
                                                          std::string> *params) {
   std::vector<std::string> pathParts = split(path, this->delimiter_);
-  std::shared_ptr<RouterTrieNode> currentNode = this->root_;
-  for (auto &pathPart : pathParts) {
-    bool found = false;
-    bool _exit = false;
-    for (const auto &child : currentNode->children) {
-      if (child->key == pathPart
-          || child->key == "*"
-          || child->key.length() > 1 && child->key[0] == ':') {
-        currentNode = child;
-        found = true;
-        if (child->key.length() > 1 && child->key[0] == ':'
-            && params != nullptr) {
-          (*params)[child->key.substr(1)] = pathPart;
+  std::queue<std::shared_ptr<RouterTrieNode>> currentLevel;
+  std::queue<std::shared_ptr<RouterTrieNode>> nextLevel;
+  currentLevel.push(this->root_);
+  std::vector<Route> routes;
+  std::shared_ptr<RouterTrieNode> result = nullptr;
+  for (const auto &pathPart : pathParts) {
+    while (!currentLevel.empty()) {
+      auto currentNode = currentLevel.front();
+      currentLevel.pop();
+      for (const auto &child : currentNode->children) {
+        if (child->matches(pathPart)) {
+          if (child->key == "*") {
+            result = child;
+            goto result;
+          }
+          nextLevel.push(child);
         }
-        if (child->key == "*" && child->isLeaf()) {
-          _exit = true;
-        }
-        break;
       }
     }
-    if (_exit) break;
-    if (!found) {
-      return {};
+    currentLevel = nextLevel;
+    while (!nextLevel.empty()) {
+      nextLevel.pop();
     }
   }
-  return filterByMethod_(currentNode->routes, method);
+  if (!currentLevel.empty()) result = currentLevel.front();
+
+  result:
+  if (result != nullptr) {
+    routes = result->routes;
+    if (params != nullptr) {
+      auto current = result;
+      while (current != nullptr) {
+        if (current->key[0] == ':') {
+          (*params)[current->key.substr(1)] = pathParts[current->depth - 1];
+        }
+        current = current->parent;
+      }
+    }
+  }
+  return filterByMethod_(routes, method);
 }
 
 std::vector<Route> RouterTrie::filterByMethod_(std::vector<Route> &routes,
