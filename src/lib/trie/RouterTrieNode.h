@@ -13,16 +13,17 @@ namespace Espresso {
 
 class RouterTrieNode {
  public:
-  RouterTrieNode();
+  explicit RouterTrieNode(size_t depth = 0);
   ~RouterTrieNode();
   [[nodiscard]] bool isLeaf() const;
   [[nodiscard]] bool isRoot() const;
-  bool matches(const std::string &otherKey) const;
+  [[nodiscard]] bool matches(const std::string &otherKey) const;
 
   std::string key;
   std::vector<Route> routes;
   std::vector<std::shared_ptr<RouterTrieNode>> children;
   std::shared_ptr<RouterTrieNode> parent;
+  size_t depth;
 };
 
 }

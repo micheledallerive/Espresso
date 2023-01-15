@@ -9,11 +9,12 @@
 
 namespace Espresso {
 
-RouterTrieNode::RouterTrieNode() {
+RouterTrieNode::RouterTrieNode(size_t depth) {
   this->key = "";
   this->routes = std::vector<Route>();
   this->children = std::vector<std::shared_ptr<RouterTrieNode >>();
   this->parent = nullptr;
+  this->depth = depth;
 }
 
 RouterTrieNode::~RouterTrieNode() = default;
