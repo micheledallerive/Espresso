@@ -26,4 +26,10 @@ bool RouterTrieNode::isRoot() const {
   return this->parent == nullptr;
 }
 
+bool RouterTrieNode::matches(const std::string &otherKey) const {
+  return this->key == otherKey
+      || (this->key.length() > 1 && this->key[0] == ':')
+      || (this->key == "*" && !otherKey.empty());
+}
+
 }

@@ -17,6 +17,7 @@ class RouterTrieNode {
   ~RouterTrieNode();
   [[nodiscard]] bool isLeaf() const;
   [[nodiscard]] bool isRoot() const;
+  bool matches(const std::string &otherKey) const;
 
   std::string key;
   std::vector<Route> routes;
