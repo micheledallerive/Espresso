@@ -16,10 +16,12 @@ class RouterTrieNode {
   RouterTrieNode();
   ~RouterTrieNode();
   [[nodiscard]] bool isLeaf() const;
+  [[nodiscard]] bool isRoot() const;
 
   std::string key;
   std::vector<Route> routes;
   std::vector<std::shared_ptr<RouterTrieNode>> children;
+  std::shared_ptr<RouterTrieNode> parent;
 };
 
 }

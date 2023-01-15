@@ -13,12 +13,17 @@ RouterTrieNode::RouterTrieNode() {
   this->key = "";
   this->routes = std::vector<Route>();
   this->children = std::vector<std::shared_ptr<RouterTrieNode >>();
+  this->parent = nullptr;
 }
 
 RouterTrieNode::~RouterTrieNode() = default;
 
 bool RouterTrieNode::isLeaf() const {
   return !this->routes.empty();
+}
+
+bool RouterTrieNode::isRoot() const {
+  return this->parent == nullptr;
 }
 
 }
