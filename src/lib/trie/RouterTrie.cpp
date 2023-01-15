@@ -5,6 +5,7 @@
 #include <queue>
 #include "RouterTrie.h"
 #include "../../utils.h"
+#include "../../PathRegex.h"
 
 namespace Espresso {
 
@@ -16,7 +17,8 @@ RouterTrie::RouterTrie(char delimiter) {
 RouterTrie::~RouterTrie() = default;
 
 void RouterTrie::insert(const std::string &path, const Route &route) {
-  std::vector<std::string> pathParts = split(path, this->delimiter_);
+  std::vector<std::string>
+      pathParts = split(PathRegex::pathToRegex(path), this->delimiter_);
   std::shared_ptr<RouterTrieNode> currentNode = this->root_;
   for (const auto &pathPart : pathParts) {
     bool found = false;
@@ -58,7 +60,7 @@ std::vector<Route> RouterTrie::search(const std::string &path,
       currentLevel.pop();
       for (const auto &child : currentNode->children) {
         if (child->matches(pathPart)) {
-          if (child->key == "*") {
+          if (child->key == ".*") {
             result = child;
             goto result;
           }

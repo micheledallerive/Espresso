@@ -4,6 +4,7 @@
 
 #include "RouterTrieNode.h"
 #include "../../Route.h"
+#include "../../PathRegex.h"
 #include <vector>
 #include <memory>
 
@@ -28,9 +29,7 @@ bool RouterTrieNode::isRoot() const {
 }
 
 bool RouterTrieNode::matches(const std::string &otherKey) const {
-  return this->key == otherKey
-      || (this->key.length() > 1 && this->key[0] == ':')
-      || (this->key == "*" && !otherKey.empty());
+  return PathRegex::urlPartMatch(this->key, otherKey);
 }
 
 }
