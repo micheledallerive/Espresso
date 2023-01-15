@@ -64,6 +64,10 @@ TEST(PathRegex, UrlsMatch) {
   EXPECT_FALSE(f("/test/:id", "/test2/1"));
   EXPECT_FALSE(f("/test/:id", "/test/2/2"));
 
+  EXPECT_TRUE(f("/*", "/"));
+  EXPECT_TRUE(f("/*", "/hello"));
+  EXPECT_TRUE(f("/*", "/hello/world"));
+
   EXPECT_TRUE(f("/test/*", "/test/1"));
   EXPECT_TRUE(f("/test/*", "/test/2"));
   EXPECT_TRUE(f("/test/*", "/test/2/2"));

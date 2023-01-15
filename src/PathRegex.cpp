@@ -13,15 +13,13 @@ bool PathRegex::urlsMatch(const std::string &schema,
   std::vector<std::string> schema_parts = split(schema, '/');
   std::vector<std::string> url_parts = split(url, '/');
 
-  for (size_t i = 0; i < schema_parts.size(); i++) {
+  for (size_t i = 0; i < schema_parts.size() && i < url_parts.size(); i++) {
     if (schema_parts[i][0] == ':') continue;
 
     if (!urlPartMatch(schema_parts[i], url_parts[i])) return false;
   }
-  if (schema_parts.size() < url_parts.size() && schema_parts.back() != ".*") {
-    return false;
-  }
-  return true;
+  return schema_parts.size() == url_parts.size() || (schema_parts.size() < url_parts.size() && schema_parts.back() == ".*")
+  || (schema_parts.size() == url_parts.size() + 1 && schema_parts.back() == ".*");
 }
 
 bool PathRegex::urlPartMatch(const std::string &schemaPart,
