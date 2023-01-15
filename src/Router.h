@@ -33,6 +33,7 @@ class Router {
   void route(const std::string &path,
              const std::vector<std::pair<HTTPMethod,
                                          RouteCallback>> &callbacks);
+  void all(const std::string &path, RouteCallback callback);
 
   void addRoute(const std::string &path,
                 HTTPMethod method,

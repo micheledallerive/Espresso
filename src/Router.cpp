@@ -47,6 +47,10 @@ void Router::trace(const std::string &path, RouteCallback callback) {
   this->addRoute((path), HTTPMethod::TRACE, std::move(callback));
 }
 
+void Router::all(const std::string &path, RouteCallback callback) {
+  this->addRoute((path), HTTPMethod::ALL, std::move(callback));
+}
+
 void Router::addRoute(const std::string &path,
                       HTTPMethod method,
                       RouteCallback callback) {
