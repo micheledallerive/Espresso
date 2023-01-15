@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(
         espresso_test
-        RouterTests.cpp CookiesTests.cpp HTTPMessageTests.cpp HTTPMethodTests.cpp HTTPRequestTests.cpp HTTPResponseTests.cpp MiddlewareTests.cpp ServerTests.cpp UtilsTests.cpp RouterTrieTests.cpp)
+        RouterTests.cpp CookiesTests.cpp HTTPMessageTests.cpp HTTPMethodTests.cpp HTTPRequestTests.cpp HTTPResponseTests.cpp MiddlewareTests.cpp ServerTests.cpp UtilsTests.cpp RouterTrieTests.cpp RouterTrieNodeTests.cpp)
 
 target_link_libraries(
         espresso_test
