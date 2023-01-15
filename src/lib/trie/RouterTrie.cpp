@@ -39,22 +39,7 @@ void RouterTrie::insert(const std::string &path, const Route &route) {
 }
 
 bool RouterTrie::has(const std::string &path) {
-  std::vector<std::string> pathParts = split(path, this->delimiter_);
-  std::shared_ptr<RouterTrieNode> currentNode = this->root_;
-  for (auto &pathPart : pathParts) {
-    bool found = false;
-    for (const auto &child : currentNode->children) {
-      if (child->key == pathPart) {
-        currentNode = child;
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      return false;
-    }
-  }
-  return currentNode->isLeaf();
+  return !this->search(path, HTTPMethod::ALL).empty();
 }
 
 std::vector<Route> RouterTrie::search(const std::string &path,
@@ -87,11 +72,7 @@ std::vector<Route> RouterTrie::search(const std::string &path,
       return {};
     }
   }
-  if (currentNode->isLeaf()) {
-
-    return filterByMethod_(currentNode->routes, method);
-  }
-  return {};
+  return filterByMethod_(currentNode->routes, method);
 }
 
 std::vector<Route> RouterTrie::filterByMethod_(std::vector<Route> &routes,
