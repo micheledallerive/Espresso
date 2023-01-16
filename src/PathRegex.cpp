@@ -10,46 +10,53 @@ namespace Espresso {
 
 bool PathRegex::urlsMatch(const std::string &schema,
                           const std::string &url) {
-  std::vector<std::string> schema_parts = split(schema, '/');
-  std::vector<std::string> url_parts = split(url, '/');
-
-  for (size_t i = 0; i < schema_parts.size() && i < url_parts.size(); i++) {
-    if (schema_parts[i][0] == ':') continue;
-
-    if (!urlPartMatch(schema_parts[i], url_parts[i])) return false;
-  }
-  return schema_parts.size() == url_parts.size() || (schema_parts.size() < url_parts.size() && schema_parts.back() == ".*")
-  || (schema_parts.size() == url_parts.size() + 1 && schema_parts.back() == ".*");
+  std::regex regex(schema);
+  return std::regex_match(url, regex);
 }
 
-bool PathRegex::urlPartMatch(const std::string &schemaPart,
-                             const std::string &urlPart) {
-  if (schemaPart.length() > 1 && schemaPart[0] == ':') return true;
+bool PathRegex::retrieveParams(const std::string &schema,
+                               const std::string &url,
+                               std::map<std::string, std::string> &params) {
+  std::regex regex(schema);
+  std::smatch match;
 
-  std::regex r(schemaPart);
-  if (!std::regex_match(urlPart, r)) return false;
-  return true;
+  if (std::regex_match(url, match, regex)) {
+    for (int i = 1; i < match.size(); ++i) {
+      std::string param = match[i];
+      std::string key = schema.substr(schema.find(':') + 1,
+                                      schema.find(')') - schema.find(':') - 1);
+      params[key] = param;
+    }
+    return true;
+  }
+  return false;
 }
 
 std::string PathRegex::pathToRegex(const std::string &path) {
   std::vector<std::string> parts = split(path, '/');
   std::string regexPath;
-  for (const std::string &part : parts) {
+  for (const auto &part : parts) {
+    if (part.empty()) continue;
+
     std::string regex;
-    for (const char &c : part) {
-      switch (c) {
-        case '*':regex += ".*";
-          break;
-        case '?':regex += ".?";
-          break;
-        case '+':regex += ".+";
-          break;
-        default:regex += c;
+    if (part[0] == ':') {
+      regex = "(?<p:" + part.substr(1) + "[^/]+)";
+    } else {
+      for (const char &c : part) {
+        switch (c) {
+          case '*':regex += ".*";
+            break;
+          case '?':regex += ".?";
+            break;
+          case '+':regex += ".+";
+            break;
+          default:regex += c;
+        }
       }
     }
-    regexPath += (regexPath.empty() ? "" : "/") + regex;
+    regexPath += "/" + regex;
   }
-  return "/" + regexPath;
+  return regexPath;
 }
 
 } // Espresso

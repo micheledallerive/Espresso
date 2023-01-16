@@ -12,7 +12,7 @@
 #include "HTTPMethod.h"
 #include "HTTPRequest.h"
 #include "HTTPResponse.h"
-#include "lib/trie/RouterTrie.h"
+#include "Route.h"
 
 namespace Espresso {
 
@@ -45,7 +45,7 @@ class Router {
   void executeMatchingRoute(HTTPRequest &req,
                             HTTPResponse &res);
  private:
-  RouterTrie routes_{'/'};
+  std::vector<Route> routes_;
 };
 
 } // Espresso

@@ -3,6 +3,7 @@
 //
 
 #include "Router.h"
+#include "PathRegex.h"
 #include "utils.h"
 
 #include <utility>
@@ -54,7 +55,7 @@ void Router::all(const std::string &path, RouteCallback callback) {
 void Router::addRoute(const std::string &path,
                       HTTPMethod method,
                       RouteCallback callback) {
-  this->routes_.insert(path, {path, method, std::move(callback)});
+  this->routes_.push_back({path, method, std::move(callback)});
 }
 
 void Router::addRoute(const std::vector<std::string> &paths,
@@ -67,14 +68,11 @@ void Router::addRoute(const std::vector<std::string> &paths,
 
 void Router::executeMatchingRoute(HTTPRequest &req,
                                   HTTPResponse &res) {
-  auto matchingRoutes =
-      this->routes_.search(req.getPath(), req.getMethod(), &req.params);
-  if (matchingRoutes.empty()) {
-    return;
-  }
-
-  for (auto &route : matchingRoutes) {
-    route.callback(req, res);
+  for (auto &route : this->routes_) {
+    if (PathRegex::urlsMatch(route.path, req.getPath())) {
+      route.callback(req, res);
+      return;
+    }
   }
 }
 
