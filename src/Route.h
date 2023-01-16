@@ -17,6 +17,7 @@ using RouteCallback = std::function<void(HTTPRequest &request,
 
 struct Route {
   std::string path{"/"};
+  std::vector<std::string> params;
   HTTPMethod method{HTTPMethod::GET};
   RouteCallback callback;
 };
