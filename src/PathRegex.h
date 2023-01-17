@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "Route.h"
 
 namespace Espresso {
 
@@ -15,11 +16,9 @@ class PathRegex {
   static bool urlsMatch(const std::string &schema,
                         const std::string &url);
   static std::string pathToRegex(const std::string &path);
-  static bool urlPartMatch(const std::string &schemaPart,
-                           const std::string &urlPart);
-  bool retrieveParams(const std::string &schema,
+  static bool retrieveParams(const Route &route,
                       const std::string &url,
-                      std::map<std::string, std::string> &params);
+                      std::unordered_map<std::string, std::string> &params);
 };
 
 } // Espresso

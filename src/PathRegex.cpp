@@ -14,18 +14,19 @@ bool PathRegex::urlsMatch(const std::string &schema,
   return std::regex_match(url, regex);
 }
 
-bool PathRegex::retrieveParams(const std::string &schema,
+bool PathRegex::retrieveParams(const Route &route,
                                const std::string &url,
-                               std::map<std::string, std::string> &params) {
-  std::regex regex(schema);
+                               std::unordered_map<std::string, std::string> &params) {
+  std::regex regex(route.path);
   std::smatch match;
 
   if (std::regex_match(url, match, regex)) {
+    if (route.params.size() != match.size() - 1) {
+      return false;
+    }
     for (int i = 1; i < match.size(); ++i) {
       std::string param = match[i];
-      std::string key = schema.substr(schema.find(':') + 1,
-                                      schema.find(')') - schema.find(':') - 1);
-      params[key] = param;
+      params[route.params[i - 1]] = param;
     }
     return true;
   }
@@ -40,7 +41,9 @@ std::string PathRegex::pathToRegex(const std::string &path) {
 
     std::string regex;
     if (part[0] == ':') {
-      regex = "(?<p:" + part.substr(1) + "[^/]+)";
+      std::string paramName = part.substr(1);
+
+      regex = "([^/]+)";
     } else {
       for (const char &c : part) {
         switch (c) {
