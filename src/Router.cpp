@@ -69,7 +69,9 @@ void Router::addRoute(const std::vector<std::string> &paths,
 void Router::executeMatchingRoute(HTTPRequest &req,
                                   HTTPResponse &res) {
   for (auto &route : this->routes_) {
-    if (PathRegex::urlsMatch(route.path, req.getPath())) {
+    if (req.getMethod() == route.method
+        && PathRegex::urlsMatch(route.path, req.getPath())) {
+      PathRegex::retrieveParams(route, req.getPath(), req.params);
       route.callback(req, res);
       return;
     }
