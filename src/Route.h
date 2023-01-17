@@ -15,7 +15,11 @@ namespace Espresso {
 using RouteCallback = std::function<void(HTTPRequest &request,
                                          HTTPResponse &response)>;
 
-struct Route {
+class Route {
+ public:
+  Route(const std::string &path, HTTPMethod method, RouteCallback callback);
+  ~Route();
+
   std::string path{"/"};
   std::vector<std::string> params;
   HTTPMethod method{HTTPMethod::GET};

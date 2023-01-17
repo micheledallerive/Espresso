@@ -8,7 +8,7 @@ set(SOURCES
         Router.cpp
         Server.cpp
         utils.cpp
-        PathRegex.cpp)
+        PathRegex.cpp Route.cpp)
 
 set(HEADERS Cookies.h
         HTTPMessage.h
