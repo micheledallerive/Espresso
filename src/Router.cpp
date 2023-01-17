@@ -55,7 +55,8 @@ void Router::all(const std::string &path, RouteCallback callback) {
 void Router::addRoute(const std::string &path,
                       HTTPMethod method,
                       RouteCallback callback) {
-  this->routes_.push_back({path, {}, method, std::move(callback)});
+  this->routes_.emplace_back(path, method,
+                             std::move(callback));
 }
 
 void Router::addRoute(const std::vector<std::string> &paths,

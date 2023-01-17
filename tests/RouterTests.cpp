@@ -204,11 +204,13 @@ TEST(Router, MultiHandlers) {
 TEST(Router, UrlParams) {
   Router router;
   router.get("/test/:id", [](HTTPRequest &request, HTTPResponse &response) {
+    response.setStatus(400);
     response.send(request.params["id"]);
   });
   HTTPRequest request = generateReq(GET, "/test/123");
   HTTPResponse response;
   router.executeMatchingRoute(request, response);
+  ASSERT_EQ(response.getStatus(), 400);
   ASSERT_EQ(response.getBody(), "123");
   ASSERT_FALSE(request.params.empty());
   ASSERT_EQ(request.params.size(), 1);
