@@ -19,7 +19,7 @@ set(HEADERS Cookies.h
         Router.h
         Server.h
         PathRegex.h
-        Route.h
+        Route.h orm/database/DatabaseManager.h
         utils.h)
 
 # Create a library target for the Espresso library
