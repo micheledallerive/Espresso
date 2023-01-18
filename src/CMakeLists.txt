@@ -28,6 +28,7 @@ set(HEADERS Cookies.h
 
         orm/database/DatabaseManager.h
         orm/database/SQLiteDatabaseManager.h
+        orm/exceptions.h
         )
 
 # Create a library target for the Espresso library
