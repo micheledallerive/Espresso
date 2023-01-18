@@ -12,4 +12,8 @@ void SQLiteDatabaseManager::connect(const ConnectionOptions &options) {
   sqlite3_open(sqliteOptions.databasePath.c_str(), &db);
 }
 
+void SQLiteDatabaseManager::disconnect() {
+  sqlite3_close(db);
+}
+
 }
