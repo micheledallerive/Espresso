@@ -8,7 +8,11 @@ set(SOURCES
         Router.cpp
         Server.cpp
         utils.cpp
-        PathRegex.cpp Route.cpp)
+        PathRegex.cpp
+        Route.cpp
+
+        orm/database/SQLiteDatabaseManager.cpp
+        )
 
 set(HEADERS Cookies.h
         HTTPMessage.h
@@ -19,8 +23,12 @@ set(HEADERS Cookies.h
         Router.h
         Server.h
         PathRegex.h
-        Route.h orm/database/DatabaseManager.h
-        utils.h)
+        Route.h
+        utils.h
+
+        orm/database/DatabaseManager.h
+        orm/database/SQLiteDatabaseManager.h
+        )
 
 # Create a library target for the Espresso library
 add_library(espresso STATIC ${SOURCES})
