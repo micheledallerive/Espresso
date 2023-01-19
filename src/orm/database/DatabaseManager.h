@@ -12,10 +12,6 @@ namespace Espresso {
 class ConnectionOptions {
  public:
   virtual ~ConnectionOptions() = default;
-  std::string host;
-  std::string username;
-  std::string password;
-  std::string databaseName;
 };
 
 class DatabaseManager {

@@ -10,7 +10,7 @@
 
 namespace Espresso {
 
-class SQLiteConnectionOptions : private ConnectionOptions {
+class SQLiteConnectionOptions : public ConnectionOptions {
  public:
   ~SQLiteConnectionOptions() override = default;
   std::string databasePath;
@@ -24,7 +24,7 @@ class SQLiteDatabaseManager : public DatabaseManager {
 
   bool connected = false;
  private:
-  sqlite3 *db;
+  sqlite3 *db{nullptr};
 };
 
 }
