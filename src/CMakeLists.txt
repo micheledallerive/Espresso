@@ -27,6 +27,7 @@ set(HEADERS Cookies.h
         Route.h
         utils.h
 
+        orm/sql/SQLTypes.h
         orm/database/DatabaseManager.h
         orm/database/SQLiteDatabaseManager.h
         orm/exceptions.h
