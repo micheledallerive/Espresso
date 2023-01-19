@@ -9,9 +9,15 @@
 
 namespace Espresso {
 
-class sql_exception : public std::runtime_error {
+class sql_error : public std::runtime_error {
  public:
-  explicit sql_exception(const std::string &message) : std::runtime_error(
+  explicit sql_error(const std::string &message) : std::runtime_error(
+      message) {}
+};
+
+class db_error : public std::runtime_error {
+ public:
+  explicit db_error(const std::string &message) : std::runtime_error(
       message) {}
 };
 
