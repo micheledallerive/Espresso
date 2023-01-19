@@ -5,6 +5,7 @@
 #include "SQLiteDatabaseManager.h"
 #include <sqlite3.h>
 #include "../exceptions.h"
+#include "orm/sql/SQLGenerator.h"
 
 namespace Espresso {
 
@@ -28,6 +29,14 @@ void SQLiteDatabaseManager::execute(const std::string &query) {
   if (error != nullptr) {
     throw Espresso::sql_error(error);
   }
+}
+
+template<class T>
+void SQLiteDatabaseManager::registerModel(const std::string &tableName,
+                                          const std::vector<std::pair<std::string,
+                                                                      std::string T::*>>
+                                          &fields) {
+
 }
 
 }
