@@ -12,6 +12,7 @@ set(SOURCES
         Route.cpp
 
         orm/database/SQLiteDatabaseManager.cpp
+        orm/models/SQLGenerator.cpp
         )
 
 set(HEADERS Cookies.h
@@ -29,6 +30,7 @@ set(HEADERS Cookies.h
         orm/database/DatabaseManager.h
         orm/database/SQLiteDatabaseManager.h
         orm/exceptions.h
+        orm/models/SQLGenerator.h
         )
 
 # Create a library target for the Espresso library
