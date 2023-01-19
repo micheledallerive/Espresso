@@ -8,6 +8,7 @@ SET(CMAKE_C_LINK_EXECUTABLE ${CMAKE_CXX_LINK_EXECUTABLE})
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(examples)
+add_subdirectory(extern)
 
 # Install the library target
 install(TARGETS espresso
