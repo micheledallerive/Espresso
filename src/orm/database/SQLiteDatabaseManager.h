@@ -23,7 +23,7 @@ class SQLiteDatabaseManager : public DatabaseManager {
  public:
   void connect(const ConnectionOptions &options) override;
   void disconnect() override;
-  void execute(const std::string &query) override;
+  void execute(const std::string &query, QueryCallback callback) override;
 
   bool connected = false;
  private:

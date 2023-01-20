@@ -5,7 +5,6 @@
 #include "SQLiteDatabaseManager.h"
 #include <sqlite3.h>
 #include "../exceptions.h"
-#include "orm/sql/SQLGenerator.h"
 
 namespace Espresso {
 
@@ -23,9 +22,20 @@ void SQLiteDatabaseManager::disconnect() {
   sqlite3_close(db);
 }
 
-void SQLiteDatabaseManager::execute(const std::string &query) {
+void SQLiteDatabaseManager::execute(const std::string &query,
+                                    QueryCallback callback) {
   const char *error;
-  sqlite3_exec(db, query.c_str(), nullptr, nullptr, (char **) &error);
+  sqlite3_exec(db,
+               query.c_str(),
+               [](void *unused, int cols, char **values, char **columns) {
+                 std::vector<std::pair<std::string, std::string>> result;
+                 for (int i = 0; i < cols; i++) {
+                   result.emplace_back(columns[i], values[i]);
+                 }
+                 return 0;
+               },
+               nullptr,
+               (char **) &error);
   if (error != nullptr) {
     throw Espresso::sql_error(error);
   }
