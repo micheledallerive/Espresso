@@ -16,7 +16,7 @@ void SQLiteDatabaseManager::connect(const ConnectionOptions &options) {
     throw db_error("Could not connect to database");
   }
 
-  connected = true;
+  this->connected = true;
 }
 
 void SQLiteDatabaseManager::disconnect() {
@@ -29,14 +29,6 @@ void SQLiteDatabaseManager::execute(const std::string &query) {
   if (error != nullptr) {
     throw Espresso::sql_error(error);
   }
-}
-
-template<class T>
-void SQLiteDatabaseManager::registerModel(const std::string &tableName,
-                                          const std::vector<std::pair<std::string,
-                                                                      std::string T::*>>
-                                          &fields) {
-
 }
 
 }
