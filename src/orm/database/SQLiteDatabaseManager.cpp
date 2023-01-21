@@ -25,20 +25,27 @@ void SQLiteDatabaseManager::disconnect() {
 void SQLiteDatabaseManager::execute(const std::string &query,
                                     QueryCallback callback) {
   const char *error;
-  sqlite3_exec(db,
-               query.c_str(),
-               [](void *unused, int cols, char **values, char **columns) {
-                 std::vector<std::pair<std::string, std::string>> result;
-                 for (int i = 0; i < cols; i++) {
-                   result.emplace_back(columns[i], values[i]);
-                 }
-                 return 0;
-               },
-               nullptr,
-               (char **) &error);
-  if (error != nullptr) {
-    throw Espresso::sql_error(error);
+  sqlite3_stmt *stmt;
+  const char *sql = query.c_str();
+  int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+  if (rc != SQLITE_OK) {
+    throw Espresso::sql_error("Could not prepare statement");
+    return;
   }
+  while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    std::vector<std::pair<std::string, std::string>> rowResult;
+    // for each column
+    for (int i = 0; i < sqlite3_column_count(stmt); i++) {
+      std::string columnName = sqlite3_column_name(stmt, i);
+      std::string columnValue = (const char *) sqlite3_column_text(stmt, i);
+      rowResult.emplace_back(columnName, columnValue);
+    }
+    callback(rowResult);
+  }
+  if (rc != SQLITE_DONE) {
+    throw Espresso::sql_error("Could not execute statement");
+  }
+  sqlite3_finalize(stmt);
 }
 
 }
