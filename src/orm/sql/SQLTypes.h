@@ -5,7 +5,7 @@
 #ifndef ESPRESSO_SRC_ORM_SQL_SQLTYPES_H_
 #define ESPRESSO_SRC_ORM_SQL_SQLTYPES_H_
 
-namespace Espresso {
+namespace Espresso::ORM {
 
 enum class SQLType {
   INTEGER,

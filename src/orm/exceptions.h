@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-namespace Espresso {
+namespace Espresso::ORM {
 
 class sql_error : public std::runtime_error {
  public:

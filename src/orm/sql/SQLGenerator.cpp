@@ -4,7 +4,7 @@
 
 #include "SQLGenerator.h"
 
-namespace Espresso {
+namespace Espresso::ORM {
 
 std::string SQLGenerator::createTable(const std::string &table_name,
                                       const std::vector<std::string> &columns,

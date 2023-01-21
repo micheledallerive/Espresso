@@ -8,7 +8,7 @@
 #include <string>
 
 #include <functional>
-namespace Espresso {
+namespace Espresso::ORM {
 
 using QueryCallback = std::function<void(std::vector<std::pair<std::string,
                                                                std::string>>)>;

@@ -11,7 +11,7 @@
 #include <vector>
 #include "DatabaseManager.h"
 
-namespace Espresso {
+namespace Espresso::ORM {
 
 class SQLiteConnectionOptions : public ConnectionOptions {
  public:

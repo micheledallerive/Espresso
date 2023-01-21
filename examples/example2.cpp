@@ -8,8 +8,8 @@
 
 
 int main() {
-  Espresso::SQLiteDatabaseManager manager;
-  Espresso::SQLiteConnectionOptions options;
+  Espresso::ORM::SQLiteDatabaseManager manager;
+  Espresso::ORM::SQLiteConnectionOptions options;
   options.databasePath = "test.db";
   manager.connect(options);
 

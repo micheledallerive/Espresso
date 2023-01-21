@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-namespace Espresso {
+namespace Espresso::ORM {
 
 class SQLGenerator {
  public:
