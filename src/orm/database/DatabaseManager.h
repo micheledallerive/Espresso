@@ -8,10 +8,11 @@
 #include <string>
 
 #include <functional>
+#include <memory>
 namespace Espresso::ORM {
 
 using QueryCallback = std::function<void(std::vector<std::pair<std::string,
-                                                               std::string>>)>;
+                                                               std::string>>&)>;
 
 class ConnectionOptions {
  public:
@@ -20,12 +21,15 @@ class ConnectionOptions {
 
 class DatabaseManager {
  public:
+  DatabaseManager() = default;
   virtual void connect(const ConnectionOptions &options) = 0;
   virtual void disconnect() = 0;
   virtual void execute(const std::string &query,
                        QueryCallback callback) = 0;
 
 };
+
+extern std::shared_ptr<DatabaseManager> dbManager;
 
 }
 
