@@ -6,13 +6,14 @@
 #define ESPRESSO_SRC_ORM_DATABASEMANAGER_H_
 
 #include <string>
+#include <unordered_map>
 
 #include <functional>
 #include <memory>
 namespace Espresso::ORM {
 
-using QueryCallback = std::function<void(std::vector<std::pair<std::string,
-                                                               std::string>>&)>;
+using QueryCallback = std::function<void(std::unordered_map<std::string,
+                                                            std::string> &)>;
 
 class ConnectionOptions {
  public:

@@ -33,12 +33,12 @@ void SQLiteDatabaseManager::execute(const std::string &query,
     return;
   }
   while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-    std::vector<std::pair<std::string, std::string>> rowResult;
+    std::unordered_map<std::string, std::string> rowResult;
     // for each column
     for (int i = 0; i < sqlite3_column_count(stmt); i++) {
       std::string columnName = sqlite3_column_name(stmt, i);
       std::string columnValue = (const char *) sqlite3_column_text(stmt, i);
-      rowResult.emplace_back(columnName, columnValue);
+      rowResult.emplace(columnName, columnValue);
     }
     callback(rowResult);
   }
