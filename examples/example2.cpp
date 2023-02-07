@@ -24,7 +24,10 @@ int main() {
   manager.connect(options);
 
   std::string tableName = "users";
-  ModelManager::registerModel<User>(tableName);
+  ModelManager::registerModel<User>(tableName,
+                                    std::make_pair("name", &User::name),
+                                    std::make_pair("age", &User::age)
+  );
 
   manager.disconnect();
   return 0;

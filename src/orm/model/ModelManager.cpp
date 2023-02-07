@@ -16,8 +16,9 @@ void ModelManager::registerModel(const string &tableName, Args... args) {
 
 template<class T, class... Args>
 void ModelManager::registerFields(T field, Args ... args) {
-  ModelField modelField = {field, SQLType::TEXT};
-  models[typeid(T).name()].fields.emplace(typeid(field).name(), modelField);
+  // T will be a pair<string, T> where T is the type of the field
+  ModelField modelField = {&field.second, SQLType::TEXT};
+  models[typeid(T).name()].fields.emplace(field.first, modelField);
   registerFields(args...);
 }
 

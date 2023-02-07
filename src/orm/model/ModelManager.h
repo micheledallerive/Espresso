@@ -36,7 +36,7 @@ class ModelManager {
   template<class T, class... Args>
   static void registerFields(T field, Args ... args);
 
- private:
+ public:
   static void registerFields() {}
   static unordered_map<string, ModelData>
       models; // the type name of the model and the data
