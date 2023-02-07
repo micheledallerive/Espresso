@@ -18,10 +18,10 @@ class User {
 };
 
 int main() {
-  Espresso::ORM::SQLiteDatabaseManager manager;
+  dbManager = std::make_shared<SQLiteDatabaseManager>();
   Espresso::ORM::SQLiteConnectionOptions options;
   options.databasePath = "test.db";
-  manager.connect(options);
+  dbManager->connect(options);
 
   std::string tableName = "users";
   ModelManager::registerModel<User>(tableName,
@@ -29,6 +29,6 @@ int main() {
                                     std::make_pair("age", &User::age)
   );
 
-  manager.disconnect();
+  dbManager->disconnect();
   return 0;
 }
