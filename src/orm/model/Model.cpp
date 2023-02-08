@@ -19,14 +19,31 @@ T Model<T>::get(int id) {
                      [&data, &instance](std::unordered_map<std::string,
                                                            std::string> &result) {
                        for (auto &modelField : data.fields) {
-                         std::cout << modelField.first << " "
-                                   << result[modelField.first] << std::endl;
-                         auto fieldPtr =
-                             std::any_cast<std::string T::*>(modelField.second.field);
-                         instance.*(fieldPtr) = "espkere";
+                         setField(instance,
+                                  modelField.second,
+                                  result[modelField.first]);
                        }
                      });
   return instance;
+}
+
+template<class T>
+void Model<T>::setField(T &instance,
+                        const ModelField &fieldData,
+                        const std::string &value) {
+  if (fieldData.ctype == typeid(std::string).name()) {
+    instance.*std::any_cast<std::string T::*>(fieldData.field) = value;
+  } else if (fieldData.ctype == typeid(int).name()) {
+    instance.*std::any_cast<int T::*>(fieldData.field) = std::stoi(value);
+  } else if (fieldData.ctype == typeid(float).name()) {
+    instance.*std::any_cast<float T::*>(fieldData.field) = std::stof(value);
+  } else if (fieldData.ctype == typeid(double).name()) {
+    instance.*std::any_cast<double T::*>(fieldData.field) = std::stod(value);
+  } else if (fieldData.ctype == typeid(bool).name()) {
+    instance.*std::any_cast<bool T::*>(fieldData.field) = std::stoi(value);
+  } else {
+    throw std::runtime_error("Unknown type");
+  }
 }
 
 } // ORM

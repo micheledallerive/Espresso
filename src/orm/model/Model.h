@@ -14,6 +14,10 @@ class Model {
   ~Model() = default;
 
   static T get(int id);
+ private:
+  static void setField(T &instance,
+                       const ModelField &fieldData,
+                       const std::string &value);
 };
 
 } // ORM
