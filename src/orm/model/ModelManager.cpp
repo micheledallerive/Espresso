@@ -2,10 +2,16 @@
 // Created by michele on 07.02.23.
 //
 
-#include "ModelManager.h"
-#include "../exceptions.h"
 #include <mutex>
 #include <set>
+#include <vector>
+#include <iostream>
+
+#include <orm/database/DatabaseManager.h>
+#include <orm/sql/SQLGenerator.h>
+#include "ModelManager.h"
+#include "../exceptions.h"
+
 
 namespace Espresso::ORM {
 
@@ -105,13 +111,17 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                       modelFields.begin(), modelFields.end(),
                       std::inserter(toRemove, toRemove.begin()));
 
-  // add to toModify only the columns that have same name but are not equal
+  vector<SQLColumnInfo> intersection;
   std::set_intersection(modelFields.begin(), modelFields.end(),
                         dbFields.begin(), dbFields.end(),
-                        std::inserter(toModify, toModify.begin()),
-                        [](const SQLColumnInfo &a, const SQLColumnInfo &b) {
-                          return a.name == b.name && !a.equals(b);
-                        });
+                        std::inserter(intersection, intersection.begin()));
+  // add in toModify the elements that are not in the intersection
+  for (const auto &field : modelFields) {
+    if (std::find(intersection.begin(), intersection.end(), field) ==
+        intersection.end()) {
+      toModify.push_back(field);
+    }
+  }
 
   if (toAdd.size() + toRemove.size() + toModify.size() > 0) {
     std::cout << "Migrating model " << tableName << std::endl;
@@ -121,6 +131,7 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                                           toAdd,
                                           toRemove,
                                           toModify,
+                                          intersection,
                                           vector<SQLColumnInfo>(modelFields.begin(),
                                                                 modelFields.end()));
     dbManager->execute(sql);
