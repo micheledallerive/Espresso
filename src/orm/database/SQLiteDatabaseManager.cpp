@@ -38,8 +38,9 @@ void SQLiteDatabaseManager::execute(const std::string &query,
     // for each column
     for (int i = 0; i < sqlite3_column_count(stmt); i++) {
       std::string columnName = sqlite3_column_name(stmt, i);
-      std::string columnValue = (const char *) sqlite3_column_text(stmt, i);
-      rowResult.emplace(columnName, columnValue);
+      const char *columnValue = (const char *) sqlite3_column_text(stmt, i);
+      rowResult.emplace(columnName,
+                        columnValue == nullptr ? "" : std::string(columnValue));
     }
     if (callback) callback(rowResult);
   }
