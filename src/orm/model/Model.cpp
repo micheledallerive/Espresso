@@ -6,6 +6,7 @@
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
 #include <iostream>
+#include <orm/sql/SQLGenerator.h>
 
 namespace Espresso::ORM {
 
@@ -32,35 +33,26 @@ template<class T>
 void Model<T>::save() {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   T *instance = static_cast<T *>(this);
-  if (instance->id == -1) {
-    string query = "INSERT INTO " + data.tableName + " (";
-    for (auto &modelField : data.fields) {
-      query += modelField.first + ", ";
-    }
-    query.pop_back();
-    query.pop_back();
-    query += ") VALUES (";
-    for (auto &modelField : data.fields) {
-      query += "'" + getField(*instance, modelField.second) + "', ";
-    }
-    query.pop_back();
-    query.pop_back();
-    query += ")";
+
+  std::vector<string> fields;
+  std::vector<string> values;
+  for (auto &modelField : data.fields) {
+    fields.push_back(modelField.first);
+    values.push_back(getField(*instance, modelField.second));
+  }
+
+  if (instance->id == -1) { // instance does not exist: insert
+    string query = SQLGenerator::insert(data.tableName, fields, values);
     dbManager->execute(query,
                        [&instance](std::unordered_map<std::string,
                                                       std::string> &result) {
                          instance->id = std::stoll(result["id"]);
                        });
-  } else {
-    string query = "UPDATE " + data.tableName + " SET ";
-    for (auto &modelField : data.fields) {
-      query +=
-          modelField.first + " = '" + getField(*instance, modelField.second)
-              + "', ";
-    }
-    query.pop_back();
-    query.pop_back();
-    query += " WHERE id = " + std::to_string(instance->id);
+  } else { // already exists: update it todo improve this check lmao
+    string query = SQLGenerator::update(data.tableName,
+                                        fields,
+                                        values,
+                                        {{"id", std::to_string(instance->id)}});
     dbManager->execute(query, nullptr);
   }
 }
