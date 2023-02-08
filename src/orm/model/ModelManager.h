@@ -18,11 +18,12 @@ using std::unordered_map;
 struct ModelField {
   std::any field;
   SQLType type;
+  std::string ctype;
 };
 
 struct ModelData {
   string tableName; // the name of the table for the model
-  unordered_map<string, ModelField> fields;
+  unordered_map<string, ModelField> fields; // field name and data
 };
 
 class ModelManager {

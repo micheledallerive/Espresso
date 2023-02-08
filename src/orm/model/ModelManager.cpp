@@ -14,13 +14,22 @@ void ModelManager::registerModel(const string &tableName, Args... args) {
   registerFields<T>(args...);
 }
 
+template<typename T>
+struct pointer_value;
+template<typename Class, typename Value>
+struct pointer_value<Value Class::*> {
+  using type = Value;
+};
+
 template<class T, class A, class... Args>
 void ModelManager::registerFields(A arg, Args ... args) {
   if (models.find(typeid(T).name()) == models.end()) {
     throw std::runtime_error("Model not registered");
   }
   // create a void pointer to args.second
-  ModelField modelField = {std::any(arg.second), SQLType::TEXT};
+  ModelField modelField =
+      {std::any(arg.second), SQLType::TEXT,
+          typeid(typename pointer_value<decltype(arg.second)>::type).name()};
   models[typeid(T).name()].fields.emplace(arg.first, modelField);
   registerFields<T>(args...);
 }
