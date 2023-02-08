@@ -26,7 +26,7 @@ class DatabaseManager {
   virtual void connect(const ConnectionOptions &options) = 0;
   virtual void disconnect() = 0;
   virtual void execute(const std::string &query,
-                       QueryCallback callback) = 0;
+                       QueryCallback callback = nullptr) = 0;
 
   bool isConnected();
  protected:
