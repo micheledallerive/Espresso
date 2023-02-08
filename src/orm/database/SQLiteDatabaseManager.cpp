@@ -42,6 +42,12 @@ void SQLiteDatabaseManager::execute(const std::string &query,
     }
     if (callback) callback(rowResult);
   }
+  if (query.find("INSERT") != std::string::npos) {
+    std::string last_id = std::to_string(sqlite3_last_insert_rowid(db));
+    std::unordered_map<std::string, std::string> rowResult;
+    rowResult.emplace("id", last_id);
+    if (callback) callback(rowResult);
+  }
   if (rc != SQLITE_DONE) {
     throw sql_error("Could not execute statement");
   }
