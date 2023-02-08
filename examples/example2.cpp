@@ -24,7 +24,7 @@ int main() {
   options.databasePath = "test.db";
   dbManager->connect(options);
 
-  ModelManager::registerModel<User>("test",
+  ModelManager::getInstance().registerModel<User>("test",
                                     std::make_pair("name", &User::name),
                                     std::make_pair("age", &User::age)
   );

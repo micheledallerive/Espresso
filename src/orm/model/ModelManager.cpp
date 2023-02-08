@@ -6,6 +6,16 @@
 
 namespace Espresso::ORM {
 
+ModelManager &ModelManager::getInstance() {
+  static ModelManager m;
+  return m;
+}
+
+template<class T>
+ModelData &ModelManager::getModel() {
+  return this->models[typeid(T).name()];
+}
+
 template<class T, class... Args>
 void ModelManager::registerModel(const string &tableName, Args... args) {
   ModelData data;
@@ -31,7 +41,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
       {std::any(arg.second),
           typeid(typename pointer_value<decltype(arg.second)>::type).name()};
   models[typeid(T).name()].fields.emplace(arg.first, modelField);
-  registerFields < T >(args...);
+  registerFields<T>(args...);
 }
 
 } // ORM

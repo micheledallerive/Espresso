@@ -11,7 +11,7 @@ namespace Espresso::ORM {
 
 template<class T>
 T Model<T>::get(long long id) {
-  ModelData &data = ModelManager::models[typeid(T).name()];
+  ModelData &data = ModelManager::getInstance().getModel<T>();
   string query =
       "SELECT * FROM " + data.tableName + " WHERE id = " + std::to_string(id);
   T instance;
@@ -30,7 +30,7 @@ T Model<T>::get(long long id) {
 
 template<class T>
 void Model<T>::save() {
-  ModelData &data = ModelManager::models[typeid(T).name()];
+  ModelData &data = ModelManager::getInstance().getModel<T>();
   T *instance = static_cast<T *>(this);
   if (instance->id == -1) {
     string query = "INSERT INTO " + data.tableName + " (";

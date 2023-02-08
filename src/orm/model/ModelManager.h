@@ -27,24 +27,31 @@ struct ModelData {
 
 class ModelManager {
  public:
-  ModelManager() = delete;
-  ~ModelManager() = delete;
+  static ModelManager &getInstance();
 
   template<class T, class... Args>
-  static void registerModel(const string &tableName, Args... args);
+  void registerModel(const string &tableName, Args... args);
+
+  template<class T>
+  ModelData &getModel();
 
  protected:
   template<class T, class A, class... Args>
-  static void registerFields(A, Args ... args);
+  void registerFields(A, Args ... args);
+
+ private:
+  ModelManager() = default;
+
+  template<class T>
+  void registerFields() {}
+
+  unordered_map<string, ModelData>
+      models; // the type name of the model and the data
 
  public:
-  template<class T>
-  static void registerFields() {}
-  static unordered_map<string, ModelData>
-      models; // the type name of the model and the data
+  ModelManager(ModelManager const &) = delete;
+  void operator=(ModelManager const &) = delete;
 };
-
-unordered_map<string, ModelData> ModelManager::models;
 
 } // ORM
 
