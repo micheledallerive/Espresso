@@ -8,7 +8,7 @@
 
 namespace Espresso::ORM {
 
-static std::string createTable(const std::string &table_name,
+std::string SQLGenerator::createTable(const std::string &table_name,
                                const std::vector<std::string> &columns,
                                const std::vector<std::string> &types,
                                const std::unordered_map<std::string,
@@ -54,7 +54,7 @@ std::string SQLGenerator::insert(const std::string &table_name,
   return sql.str();
 }
 
-static std::string select(const std::string &table_name,
+std::string SQLGenerator::select(const std::string &table_name,
                           const std::vector<std::string> &columns,
                           const std::vector<std::string> &constraints) {
   std::ostringstream sql;
