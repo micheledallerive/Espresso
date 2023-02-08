@@ -6,4 +6,8 @@
 
 namespace Espresso::ORM {
 std::shared_ptr<DatabaseManager> dbManager = nullptr;
+
+bool DatabaseManager::isConnected() {
+  return this->connected;
+}
 }

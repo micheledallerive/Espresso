@@ -28,6 +28,9 @@ class DatabaseManager {
   virtual void execute(const std::string &query,
                        QueryCallback callback) = 0;
 
+  bool isConnected();
+ protected:
+  bool connected{false};
 };
 
 extern std::shared_ptr<DatabaseManager> dbManager;

@@ -24,8 +24,6 @@ class SQLiteDatabaseManager : public DatabaseManager {
   void connect(const ConnectionOptions &options) override;
   void disconnect() override;
   void execute(const std::string &query, QueryCallback callback) override;
-
-  bool connected = false;
  private:
   sqlite3 *db{nullptr};
 };
