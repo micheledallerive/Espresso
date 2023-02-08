@@ -34,10 +34,11 @@ class ModelManager {
   static void registerModel(const string &tableName, Args... args);
 
  protected:
-  template<class T, class... Args>
-  static void registerFields(Args ... args);
+  template<class T, class A, class... Args>
+  static void registerFields(A, Args ... args);
 
  public:
+  template<class T>
   static void registerFields() {}
   static unordered_map<string, ModelData>
       models; // the type name of the model and the data
