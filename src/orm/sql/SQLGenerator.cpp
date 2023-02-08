@@ -9,10 +9,10 @@
 namespace Espresso::ORM {
 
 std::string SQLGenerator::createTable(const std::string &table_name,
-                               const std::vector<std::string> &columns,
-                               const std::vector<std::string> &types,
-                               const std::unordered_map<std::string,
-                                                        std::string> &constraints) {
+                                      const std::vector<std::string> &columns,
+                                      const std::vector<std::string> &types,
+                                      const std::unordered_map<std::string,
+                                                               std::string> &constraints) {
   std::ostringstream sql;
   sql << "CREATE TABLE " << table_name << " (";
   for (int i = 0; i < columns.size(); i++) {
@@ -55,8 +55,8 @@ std::string SQLGenerator::insert(const std::string &table_name,
 }
 
 std::string SQLGenerator::select(const std::string &table_name,
-                          const std::vector<std::string> &columns,
-                          const std::vector<std::string> &constraints) {
+                                 const std::vector<std::string> &columns,
+                                 const std::vector<std::string> &constraints) {
   std::ostringstream sql;
   sql << "SELECT ";
   if (columns.empty()) {
@@ -104,6 +104,45 @@ std::string SQLGenerator::update(const std::string &table_name,
       sql << " AND ";
     }
     ++i;
+  }
+  sql << ";";
+  return sql.str();
+}
+std::string SQLGenerator::alterTable(const std::string &table_name,
+                                     const std::vector<SQLColumnInfo> &toAdd,
+                                     const std::vector<SQLColumnInfo> &toRemove,
+                                     const std::vector<SQLColumnInfo> &toModify) {
+  std::ostringstream sql;
+  sql << "ALTER TABLE " << table_name;
+  if (!toAdd.empty()) {
+    sql << " ADD (";
+    for (int i = 0; i < toAdd.size(); ++i) {
+      sql << toAdd[i].name << " " << to_string(toAdd[i].type);
+      if (i < toAdd.size() - 1) {
+        sql << ", ";
+      }
+    }
+    sql << ")";
+  }
+  if (!toRemove.empty()) {
+    sql << " DROP (";
+    for (int i = 0; i < toRemove.size(); ++i) {
+      sql << toRemove[i].name;
+      if (i < toRemove.size() - 1) {
+        sql << ", ";
+      }
+    }
+    sql << ")";
+  }
+  if (!toModify.empty()) {
+    sql << " MODIFY (";
+    for (int i = 0; i < toModify.size(); ++i) {
+      sql << toModify[i].name << " " << to_string(toModify[i].type);
+      if (i < toModify.size() - 1) {
+        sql << ", ";
+      }
+    }
+    sql << ")";
   }
   sql << ";";
   return sql.str();

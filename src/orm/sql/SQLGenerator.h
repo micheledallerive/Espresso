@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <orm/sql/SQLTypes.h>
 
 namespace Espresso::ORM {
 
@@ -24,6 +25,11 @@ class SQLGenerator {
                                  const std::vector<std::string> &types,
                                  const std::unordered_map<std::string,
                                                           std::string> &constraints);
+  static std::string alterTable(const std::string &table_name,
+                                const std::vector<SQLColumnInfo> &toAdd,
+                                const std::vector<SQLColumnInfo> &toRemove,
+                                const std::vector<SQLColumnInfo> &toModify);
+
   static std::string dropTable(const std::string &table_name);
   static std::string insert(const std::string &table_name,
                             const std::vector<std::string> &columns,
