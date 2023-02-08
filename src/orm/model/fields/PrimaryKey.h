@@ -5,12 +5,16 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_PRIMARYKEY_H_
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_PRIMARYKEY_H_
 
+#include "ModelField.h"
 namespace Espresso::ORM {
 
-class PrimaryKey {
+template<typename T>
+class PrimaryKey : public ModelField<T> {
 
 };
 
 } // ORM
+
+#include "PrimaryKey.cpp"
 
 #endif //ESPRESSO_SRC_ORM_MODEL_FIELDS_PRIMARYKEY_H_

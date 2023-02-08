@@ -13,6 +13,9 @@ class ModelField {
   ModelField() = default;
   virtual ~ModelField() = default;
 
+  using type = T;
+ private:
+  T value;
 };
 
 } // ORM
