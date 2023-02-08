@@ -4,6 +4,7 @@
 #include <iostream>
 #include <orm/database/DatabaseManager.h>
 #include <orm/database/SQLiteDatabaseManager.h>
+#include <orm/sql/SQLiteSQLGenerator.h>
 #include "orm/model/ModelManager.h"
 #include "orm/model/Model.h"
 
@@ -25,8 +26,10 @@ int main() {
   dbManager->connect(options);
 
   ModelManager::getInstance().registerModel<User>("test",
-                                    std::make_pair("name", &User::name),
-                                    std::make_pair("age", &User::age)
+                                                  std::make_pair("name",
+                                                                 &User::name),
+                                                  std::make_pair("age",
+                                                                 &User::age)
   );
   User u = User::get(1);
 

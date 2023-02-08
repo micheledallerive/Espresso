@@ -17,6 +17,7 @@ class SQLGenerator {
   SQLGenerator(SQLGenerator &&) = delete;
   SQLGenerator &operator=(const SQLGenerator &) = delete;
   SQLGenerator &operator=(SQLGenerator &&) = delete;
+
   static std::string createTable(const std::string &table_name,
                                  const std::vector<std::string> &columns,
                                  const std::vector<std::string> &types,
