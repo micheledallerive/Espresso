@@ -11,13 +11,17 @@ template<class T>
 class Model {
  public:
   Model() = default;
-  ~Model() = default;
+  virtual ~Model() = default;
+  void save();
 
-  static T get(int id);
+  static T get(long long id);
+  long long id{-1};
  private:
   static void setField(T &instance,
                        const ModelField &fieldData,
                        const std::string &value);
+  static std::string getField(T &instance,
+                              const ModelField &fieldData);
 };
 
 } // ORM

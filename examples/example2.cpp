@@ -24,14 +24,22 @@ int main() {
   options.databasePath = "test.db";
   dbManager->connect(options);
 
-  std::cout << typeid(&User::name).name() << std::endl;
   ModelManager::registerModel<User>("test",
-                                    std::make_pair("name", &User::name)
-      //std::make_pair("age", &User::age)
+                                    std::make_pair("name", &User::name),
+                                    std::make_pair("age", &User::age)
   );
-  std::cout << &User::name << std::endl;
-  User u = User::get(2);
+  User u = User::get(1);
+
   std::cout << "Name: " << u.name << std::endl;
+  std::cout << "Age: " << u.age << std::endl;
+
+  u.age = 69;
+  u.save();
+
+  User u2 = User();
+  u2.name = "provone";
+  u2.age = 420;
+  u2.save();
 
   dbManager->disconnect();
   return 0;
