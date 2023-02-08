@@ -10,6 +10,8 @@
 
 namespace Espresso::ORM {
 
+using ConstraintMap = std::unordered_map<std::string, std::string>;
+
 enum class SQLType {
   INTEGER,
   REAL,

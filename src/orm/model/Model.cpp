@@ -11,10 +11,9 @@
 namespace Espresso::ORM {
 
 template<class T>
-T Model<T>::get(long long id) {
+T Model<T>::get(ConstraintMap constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
-  string query =
-      "SELECT * FROM " + data.tableName + " WHERE id = " + std::to_string(id);
+  string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
   T instance;
   dbManager->execute(query,
                      [&data, &instance](std::unordered_map<std::string,

@@ -11,8 +11,7 @@ namespace Espresso::ORM {
 std::string SQLGenerator::createTable(const std::string &table_name,
                                       const std::vector<std::string> &columns,
                                       const std::vector<std::string> &types,
-                                      const std::unordered_map<std::string,
-                                                               std::string> &constraints) {
+                                      const ConstraintMap &constraints) {
   std::ostringstream sql;
   sql << "CREATE TABLE " << table_name << " (";
   for (int i = 0; i < columns.size(); i++) {
@@ -56,7 +55,7 @@ std::string SQLGenerator::insert(const std::string &table_name,
 
 std::string SQLGenerator::select(const std::string &table_name,
                                  const std::vector<std::string> &columns,
-                                 const std::vector<std::string> &constraints) {
+                                 const ConstraintMap &constraints) {
   std::ostringstream sql;
   sql << "SELECT ";
   if (columns.empty()) {
@@ -72,11 +71,13 @@ std::string SQLGenerator::select(const std::string &table_name,
   sql << " FROM " << table_name;
   if (!constraints.empty()) {
     sql << " WHERE ";
-    for (int i = 0; i < constraints.size(); i++) {
-      sql << constraints[i];
+    int i = 0;
+    for (const auto &pair : constraints) {
+      sql << pair.first << "='" << pair.second << "'";
       if (i < constraints.size() - 1) {
         sql << " AND ";
       }
+      i++;
     }
   }
   sql << ";";
@@ -86,8 +87,7 @@ std::string SQLGenerator::select(const std::string &table_name,
 std::string SQLGenerator::update(const std::string &table_name,
                                  const std::vector<std::string> &columns,
                                  const std::vector<std::string> &values,
-                                 const std::unordered_map<std::string,
-                                                          std::string> &constraints) {
+                                 const ConstraintMap &constraints) {
   std::ostringstream sql;
   sql << "UPDATE " << table_name << " SET ";
   for (int i = 0; i < columns.size(); ++i) {

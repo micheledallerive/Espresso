@@ -18,7 +18,7 @@ class Model {
   virtual ~Model() = default;
   void save();
 
-  static T get(long long id);
+  static T get(ConstraintMap);
   long long id{-1};
  private:
   static void setField(T &instance,

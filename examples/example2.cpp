@@ -10,43 +10,32 @@
 
 using namespace Espresso::ORM;
 
-class User : public Model<User> {
+class Dog : public Model<Dog> {
  public:
-  User() = default;
-  ~User() = default;
+  Dog() = default;
+  ~Dog() = default;
 
   std::string name;
-  std::string surname;
+  std::string breed;
   int age{};
 };
 
 int main() {
+  using std::make_pair;
   dbManager = std::make_shared<SQLiteDatabaseManager>();
-  Espresso::ORM::SQLiteConnectionOptions options;
+  SQLiteConnectionOptions options;
   options.databasePath = "test.db";
   dbManager->connect(options);
 
-  ModelManager::getInstance().registerModel<User>("test",
-                                                  std::make_pair("id",
-                                                                 &User::id),
-                                                  std::make_pair("name",
-                                                                 &User::name),
-                                                  std::make_pair("age",
-                                                                 &User::age)
+  ModelManager::getInstance().registerModel<Dog>(
+      "dogs",
+      make_pair("name", &Dog::name),
+      make_pair("breed", &Dog::breed),
+      make_pair("age", &Dog::age)
   );
 
-//  User u = User::get(1);
-//
-//  std::cout << "Name: " << u.name << std::endl;
-//  std::cout << "Age: " << u.age << std::endl;
-//
-//  u.age = 69;
-//  u.save();
-//
-//  User u2 = User();
-//  u2.name = "provone";
-//  u2.age = 420;
-//  u2.save();
+
+  Dog dog = Dog::get();
 
   dbManager->disconnect();
   return 0;

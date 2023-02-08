@@ -20,12 +20,11 @@ class SQLGenerator {
   SQLGenerator &operator=(const SQLGenerator &) = delete;
   SQLGenerator &operator=(SQLGenerator &&) = delete;
 
-  static std::string createTable(const std::string &table_name,
+  static std::string createTable(const std::string &,
                                  const std::vector<std::string> &columns,
                                  const std::vector<std::string> &types,
-                                 const std::unordered_map<std::string,
-                                                          std::string> &constraints);
-  static std::string alterTable(const std::string &table_name,
+                                 const ConstraintMap &);
+  static std::string alterTable(const std::string &,
                                 const std::vector<SQLColumnInfo> &toAdd,
                                 const std::vector<SQLColumnInfo> &toRemove,
                                 const std::vector<SQLColumnInfo> &toModify,
@@ -38,12 +37,11 @@ class SQLGenerator {
                             const std::vector<std::string> &values);
   static std::string select(const std::string &table_name,
                             const std::vector<std::string> &columns,
-                            const std::vector<std::string> &constraints);
+                            const ConstraintMap &);
   static std::string update(const std::string &table_name,
                             const std::vector<std::string> &columns,
                             const std::vector<std::string> &values,
-                            const std::unordered_map<std::string,
-                                                     std::string> &constraints);
+                            const ConstraintMap &constraints);
 
 };
 
