@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 #include <any>
+#include <mutex>
+#include <shared_mutex>
 #include "orm/sql/SQLTypes.h"
 
 namespace Espresso::ORM {
@@ -45,8 +47,10 @@ class ModelManager {
   template<class T>
   void registerFields() {}
 
+  mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>
       models; // the type name of the model and the data
+
 
  public:
   ModelManager(ModelManager const &) = delete;

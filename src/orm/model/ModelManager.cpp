@@ -3,6 +3,7 @@
 //
 
 #include "ModelManager.h"
+#include <mutex>
 
 namespace Espresso::ORM {
 
@@ -13,14 +14,18 @@ ModelManager &ModelManager::getInstance() {
 
 template<class T>
 ModelData &ModelManager::getModel() {
+  std::shared_lock lock(this->mutex_);
   return this->models[typeid(T).name()];
 }
 
 template<class T, class... Args>
 void ModelManager::registerModel(const string &tableName, Args... args) {
-  ModelData data;
-  data.tableName = tableName;
-  models[typeid(T).name()] = data;
+  {
+    std::unique_lock lock(this->mutex_);
+    ModelData data;
+    data.tableName = tableName;
+    models[typeid(T).name()] = data;
+  }
   registerFields<T>(args...);
 }
 
@@ -33,14 +38,17 @@ struct pointer_value<Value Class::*> {
 
 template<class T, class A, class... Args>
 void ModelManager::registerFields(A arg, Args ... args) {
-  if (models.find(typeid(T).name()) == models.end()) {
-    throw std::runtime_error("Model not registered");
+  {
+    std::unique_lock lock(this->mutex_);
+    if (models.find(typeid(T).name()) == models.end()) {
+      throw std::runtime_error("Model not registered");
+    }
+    // create a void pointer to args.second
+    ModelField modelField =
+        {std::any(arg.second),
+            typeid(typename pointer_value<decltype(arg.second)>::type).name()};
+    models[typeid(T).name()].fields.emplace(arg.first, modelField);
   }
-  // create a void pointer to args.second
-  ModelField modelField =
-      {std::any(arg.second),
-          typeid(typename pointer_value<decltype(arg.second)>::type).name()};
-  models[typeid(T).name()].fields.emplace(arg.first, modelField);
   registerFields<T>(args...);
 }
 
