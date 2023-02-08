@@ -34,8 +34,8 @@ int main() {
       make_pair("age", &Dog::age)
   );
 
-
-  Dog dog = Dog::get();
+  Dog dog = Dog::get({{"name", "Loredana"}, {"breed", "Labrador"}});
+  std::cout << dog.age << std::endl;
 
   dbManager->disconnect();
   return 0;

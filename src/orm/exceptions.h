@@ -21,6 +21,8 @@ create_exception(sql_error);
 create_exception(db_error);
 create_exception(model_error);
 
+create_exception(object_not_found);
+
 }
 
 #endif //ESPRESSO_SRC_ORM_EXCEPTIONS_H_

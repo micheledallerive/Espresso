@@ -5,8 +5,10 @@
 #include "Model.h"
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
-#include <iostream>
 #include <orm/sql/SQLGenerator.h>
+#include <orm/exceptions.h>
+
+#include <iostream>
 
 namespace Espresso::ORM {
 
@@ -15,16 +17,20 @@ T Model<T>::get(ConstraintMap constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
   T instance;
+  bool found = false;
   dbManager->execute(query,
-                     [&data, &instance](std::unordered_map<std::string,
-                                                           std::string> &result) {
+                     [&data, &instance, &found](std::unordered_map<std::string,
+                                                                   std::string> &result) {
+                       if (!data.fields.empty()) found = true;
                        for (auto &ModelDataField : data.fields) {
                          setField(instance,
                                   ModelDataField.second,
                                   result[ModelDataField.first]);
                        }
                      });
-  instance.id = id;
+  if (!found) {
+    throw object_not_found("Object not found");
+  }
   return instance;
 }
 
