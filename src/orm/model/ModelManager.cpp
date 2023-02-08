@@ -28,10 +28,10 @@ void ModelManager::registerFields(A arg, Args ... args) {
   }
   // create a void pointer to args.second
   ModelField modelField =
-      {std::any(arg.second), SQLType::TEXT,
+      {std::any(arg.second),
           typeid(typename pointer_value<decltype(arg.second)>::type).name()};
   models[typeid(T).name()].fields.emplace(arg.first, modelField);
-  registerFields<T>(args...);
+  registerFields < T >(args...);
 }
 
 } // ORM

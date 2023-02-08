@@ -17,7 +17,6 @@ using std::unordered_map;
 
 struct ModelField {
   std::any field;
-  SQLType type;
   std::string ctype;
 };
 
