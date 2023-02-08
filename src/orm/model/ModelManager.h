@@ -44,6 +44,8 @@ class ModelManager {
   template<class T, class A, class... Args>
   void registerFields(A, Args ... args);
 
+  void migrateModel(const std::string &typeInfo);
+
  private:
   ModelManager() = default;
 

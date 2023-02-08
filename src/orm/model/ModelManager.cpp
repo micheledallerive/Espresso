@@ -3,6 +3,7 @@
 //
 
 #include "ModelManager.h"
+#include "../exceptions.h"
 #include <mutex>
 
 namespace Espresso::ORM {
@@ -27,6 +28,9 @@ void ModelManager::registerModel(const string &tableName, Args... args) {
     models[typeid(T).name()] = data;
   }
   registerFields<T>(args...);
+  if (this->autoMigrate) {
+    this->migrateModel(typeid(T).name());
+  }
 }
 
 template<typename T>
@@ -49,7 +53,22 @@ void ModelManager::registerFields(A arg, Args ... args) {
             typeid(typename pointer_value<decltype(arg.second)>::type).name()};
     models[typeid(T).name()].fields.emplace(arg.first, modelField);
   }
-  registerFields<T>(args...);
+  registerFields < T >(args...);
+}
+
+void ModelManager::migrateModel(const std::string &typeInfo) {
+  const ModelData &data = this->models[typeInfo];
+  if (data.migrated) {
+    return;
+  }
+
+  const string &tableName = data.tableName;
+  dbManager->execute("PRAGMA table_info(" + tableName + ")",
+                     [](const unordered_map<string, string> &result) {
+                       for (const auto p : result) {
+                         std::cout << p.first << " " << p.second << std::endl;
+                       }
+                     });
 }
 
 void ModelManager::setAutomaticMigrations(bool automatic) {

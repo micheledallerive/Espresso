@@ -7,19 +7,19 @@
 
 #include <stdexcept>
 
+#define create_exception(name) \
+  class name : public std::runtime_error \
+  {                                                                     \
+    public:                                                               \
+      explicit name(const std::string &message)                         \
+        : std::runtime_error(message) {}; \
+  }
+
 namespace Espresso::ORM {
 
-class sql_error : public std::runtime_error {
- public:
-  explicit sql_error(const std::string &message) : std::runtime_error(
-      message) {}
-};
-
-class db_error : public std::runtime_error {
- public:
-  explicit db_error(const std::string &message) : std::runtime_error(
-      message) {}
-};
+create_exception(sql_error);
+create_exception(db_error);
+create_exception(model_error);
 
 }
 
