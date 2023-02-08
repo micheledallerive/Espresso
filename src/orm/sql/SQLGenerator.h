@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace Espresso::ORM {
 
@@ -21,7 +22,8 @@ class SQLGenerator {
   static std::string createTable(const std::string &table_name,
                                  const std::vector<std::string> &columns,
                                  const std::vector<std::string> &types,
-                                 const std::vector<std::string> &constraints);
+                                 const std::unordered_map<std::string,
+                                                          std::string> &constraints);
   static std::string dropTable(const std::string &table_name);
   static std::string insert(const std::string &table_name,
                             const std::vector<std::string> &columns,
@@ -29,6 +31,11 @@ class SQLGenerator {
   static std::string select(const std::string &table_name,
                             const std::vector<std::string> &columns,
                             const std::vector<std::string> &constraints);
+  static std::string update(const std::string &table_name,
+                            const std::vector<std::string> &columns,
+                            const std::vector<std::string> &values,
+                            const std::unordered_map<std::string,
+                                                     std::string> &constraints);
 
 };
 
