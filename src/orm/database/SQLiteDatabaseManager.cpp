@@ -20,6 +20,7 @@ void SQLiteDatabaseManager::connect(const ConnectionOptions &options) {
 
 void SQLiteDatabaseManager::disconnect() {
   sqlite3_close(db);
+  this->connected = false;
 }
 
 void SQLiteDatabaseManager::execute(const std::string &query,
