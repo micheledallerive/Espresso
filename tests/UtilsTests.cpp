@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "utils.cpp"
 
-namespace Espresso {
+using namespace Espresso;
 
 TEST(Utils, Split) {
   std::string test_string = "Hello World";
@@ -61,6 +61,4 @@ TEST(Utils, GetAbsolutePath) {
   ASSERT_EQ(getAbsolutePath("hello"), "/test/hello");
   ASSERT_EQ(getAbsolutePath("hello/"), "/test/hello/");
   ASSERT_EQ(getAbsolutePath("hello/test"), "/test/hello/test");
-}
-
 }

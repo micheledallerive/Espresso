@@ -8,7 +8,7 @@
 #include "Server.h"
 #include "config.h"
 
-namespace Espresso {
+using namespace Espresso;
 
 TEST(HTTPResponse, Constructor) {
   HTTPResponse response;
@@ -165,6 +165,4 @@ TEST(HTTPResponse, DeleteCookie) {
             "Date: " + getUTCDate() + "\r\n"
                 + "Set-Cookie: name=; Max-Age=0\r\n"
                 + "\r\n");
-}
-
 }

@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <HTTPRequest.h>
 
-namespace Espresso {
+using namespace Espresso;
 
 const std::string base_request =
     "GET /test HTTP/1.1\r\n"
@@ -141,6 +141,4 @@ TEST(HTTPRequest, InvalidQuery) {
   ASSERT_EQ(request.query.size(), 2);
   ASSERT_EQ(request.query["t"], "");
   ASSERT_EQ(request.query["c"], "b");
-}
-
 }

@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include "Middleware.h"
 
-namespace Espresso {
+using namespace Espresso;
 TEST(MiddlewareList, SimpleUse) {
   MiddlewareList list;
   list.use([](HTTPRequest &request,
@@ -105,7 +105,4 @@ TEST(MiddlewareList, UseWithPathAndNext) {
   ASSERT_EQ(response.getBody(), "");
   list.run(request, response);
   ASSERT_EQ(response.getBody(), "Hello! World!");
-}
-
-
 }

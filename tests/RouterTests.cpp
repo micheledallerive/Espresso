@@ -7,7 +7,7 @@
 #include <utility>
 #include "Router.h"
 
-namespace Espresso {
+using namespace Espresso;
 
 HTTPRequest generateReq(HTTPMethod method, std::string path) {
   return {method, std::move(path), "HTTP/1.1", "", ""};
@@ -214,6 +214,4 @@ TEST(Router, UrlParams) {
   ASSERT_EQ(response.getBody(), "123");
   ASSERT_FALSE(request.params.empty());
   ASSERT_EQ(request.params.size(), 1);
-}
-
 }

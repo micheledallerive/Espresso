@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "Server.cpp"
 
-namespace Espresso {
+using namespace Espresso;
 
 TEST(Server, Constructor) {
   Server server;
@@ -24,6 +24,4 @@ TEST(Server, SettingsConstructor) {
             "/path");
   EXPECT_EQ(std::any_cast<std::string>(server_settings["TEST"]),
             "test");
-}
-
 }

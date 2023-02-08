@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <HTTPMessage.h>
 
-namespace Espresso {
+using namespace Espresso;
 
 HTTPMessage generate() {
   return {
@@ -86,5 +86,3 @@ TEST(HTTPMessage, HeadersToString) {
   EXPECT_EQ(message.headersToString(),
             "Content-Length: 420\r\nContent-Type: text/plain\r\n");
 }
-
-} // namespace Espresso
