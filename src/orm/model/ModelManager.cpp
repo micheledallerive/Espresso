@@ -52,4 +52,8 @@ void ModelManager::registerFields(A arg, Args ... args) {
   registerFields<T>(args...);
 }
 
+void ModelManager::setAutomaticMigrations(bool automatic) {
+  this->autoMigrate = automatic;
+}
+
 } // ORM

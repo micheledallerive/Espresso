@@ -37,6 +37,8 @@ class ModelManager {
   template<class T>
   ModelData &getModel();
 
+  void setAutomaticMigrations(bool);
+
  protected:
   template<class T, class A, class... Args>
   void registerFields(A, Args ... args);
@@ -50,7 +52,7 @@ class ModelManager {
   mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>
       models; // the type name of the model and the data
-
+  bool autoMigrate{true};
 
  public:
   ModelManager(ModelManager const &) = delete;
