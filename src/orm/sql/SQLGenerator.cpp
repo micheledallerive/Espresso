@@ -112,6 +112,7 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
                                      const std::vector<SQLColumnInfo> &toAdd,
                                      const std::vector<SQLColumnInfo> &toRemove,
                                      const std::vector<SQLColumnInfo> &toModify,
+                                     const std::vector<SQLColumnInfo> &intersectionColumns,
                                      const std::vector<SQLColumnInfo> &modelColumns) {
   // write the sql statement for sqlite to alter the table
   std::ostringstream sql;
@@ -129,9 +130,9 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
   }
   sql << createTable(table_name, columns, types, {});
   sql << "INSERT INTO " << table_name << " SELECT ";
-  for (int i = 0; i < columns.size(); i++) {
-    sql << columns[i];
-    if (i < columns.size() - 1) {
+  for (int i = 0; i < intersectionColumns.size(); i++) {
+    sql << intersectionColumns[i].name;
+    if (i < intersectionColumns.size() - 1) {
       sql << ", ";
     }
   }
