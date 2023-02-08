@@ -14,6 +14,15 @@ enum class SQLType {
   BLOB
 };
 
+std::string to_string(SQLType type) {
+  switch (type) {
+    case SQLType::INTEGER:return "INTEGER";
+    case SQLType::REAL:return "REAL";
+    case SQLType::TEXT:return "TEXT";
+    case SQLType::BLOB:return "BLOB";
+  }
+}
+
 SQLType getSQLType(const std::string &type) {
   if (type == typeid(int).name()) {
     return SQLType::INTEGER;
