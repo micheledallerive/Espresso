@@ -71,6 +71,9 @@ void Model<T>::setField(T &instance,
     instance.*std::any_cast<double T::*>(fieldData.field) = std::stod(value);
   } else if (fieldData.ctype == typeid(bool).name()) {
     instance.*std::any_cast<bool T::*>(fieldData.field) = std::stoi(value);
+  } else if (fieldData.ctype == typeid(long long).name()) {
+    instance.*std::any_cast<long long T::*>(fieldData.field) =
+        std::stoll(value);
   } else {
     throw std::runtime_error("Unknown type");
   }
@@ -90,6 +93,9 @@ std::string Model<T>::getField(T &instance,
         instance.*std::any_cast<double T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(bool).name()) {
     return std::to_string(instance.*std::any_cast<bool T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(long long).name()) {
+    return std::to_string(
+        instance.*std::any_cast<long long T::*>(fieldData.field));
   } else {
     throw std::runtime_error("Unknown type");
   }
