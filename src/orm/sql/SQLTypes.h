@@ -38,12 +38,22 @@ struct SQLColumnInfo {
   std::string defaultValue;
 
   bool operator==(const SQLColumnInfo &other) const {
+    return name == other.name;
+  }
+
+  [[nodiscard]] bool equals(const SQLColumnInfo &other) const {
     return name == other.name && type == other.type && notNull == other.notNull
-        && primaryKey == other.primaryKey && defaultValue == other.defaultValue;
+        &&
+            primaryKey == other.primaryKey
+        && defaultValue == other.defaultValue;
   }
 
   bool operator!=(const SQLColumnInfo &other) const {
     return !(*this == other);
+  }
+
+  bool operator<(const SQLColumnInfo &other) const {
+    return name < other.name;
   }
 
   explicit SQLColumnInfo(const std::unordered_map<std::string,
