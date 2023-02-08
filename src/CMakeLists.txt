@@ -13,7 +13,10 @@ set(SOURCES
 
         orm/database/SQLiteDatabaseManager.cpp
         orm/sql/SQLGenerator.cpp
-        orm/database/DatabaseManager.cpp orm/sql/SQLiteSQLGenerator.cpp orm/sql/SQLTypes.cpp)
+        orm/database/DatabaseManager.cpp
+        orm/sql/SQLiteSQLGenerator.cpp
+        orm/sql/SQLTypes.cpp
+        )
 
 set(HEADERS Cookies.h
         HTTPMessage.h
