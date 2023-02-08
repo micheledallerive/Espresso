@@ -25,6 +25,7 @@ struct ModelField {
 struct ModelData {
   string tableName; // the name of the table for the model
   unordered_map<string, ModelField> fields; // field name and data
+  bool migrated{false}; // whether the model was migrated
 };
 
 class ModelManager {
