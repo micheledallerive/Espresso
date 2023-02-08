@@ -7,6 +7,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <any>
 #include "orm/sql/SQLTypes.h"
 
 namespace Espresso::ORM {
@@ -15,7 +16,7 @@ using std::string;
 using std::unordered_map;
 
 struct ModelField {
-  void *field;
+  std::any field;
   SQLType type;
 };
 
@@ -34,7 +35,7 @@ class ModelManager {
 
  protected:
   template<class T, class... Args>
-  static void registerFields(T field, Args ... args);
+  static void registerFields(Args ... args);
 
  public:
   static void registerFields() {}

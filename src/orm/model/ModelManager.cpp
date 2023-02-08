@@ -10,16 +10,20 @@ template<class T, class... Args>
 void ModelManager::registerModel(const string &tableName, Args... args) {
   ModelData data;
   data.tableName = tableName;
-  models.emplace(typeid(T).name(), data);
-  registerFields(args...);
+  models[typeid(T).name()] = data;
+  registerFields<T>(args...);
 }
 
 template<class T, class... Args>
-void ModelManager::registerFields(T field, Args ... args) {
-  // T will be a pair<string, T> where T is the type of the field
-  ModelField modelField = {&field.second, SQLType::TEXT};
-  models[typeid(T).name()].fields.emplace(field.first, modelField);
-  registerFields(args...);
+void ModelManager::registerFields(Args ... args) {
+  for (const auto &arg : {args...}) {
+    if (models.find(typeid(T).name()) == models.end()) {
+      throw std::runtime_error("Model not registered");
+    }
+    // create a void pointer to args.second
+    ModelField modelField = {std::any(arg.second), SQLType::TEXT};
+    models[typeid(T).name()].fields.emplace(arg.first, modelField);
+  }
 }
 
 } // ORM
