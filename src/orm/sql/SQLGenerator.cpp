@@ -111,40 +111,32 @@ std::string SQLGenerator::update(const std::string &table_name,
 std::string SQLGenerator::alterTable(const std::string &table_name,
                                      const std::vector<SQLColumnInfo> &toAdd,
                                      const std::vector<SQLColumnInfo> &toRemove,
-                                     const std::vector<SQLColumnInfo> &toModify) {
+                                     const std::vector<SQLColumnInfo> &toModify,
+                                     const std::vector<SQLColumnInfo> &modelColumns) {
+  // write the sql statement for sqlite to alter the table
   std::ostringstream sql;
-  sql << "ALTER TABLE " << table_name;
-  if (!toAdd.empty()) {
-    sql << " ADD (";
-    for (int i = 0; i < toAdd.size(); ++i) {
-      sql << toAdd[i].name << " " << to_string(toAdd[i].type);
-      if (i < toAdd.size() - 1) {
-        sql << ", ";
-      }
-    }
-    sql << ")";
+  // create a new table with a temporary name and modelColumns fields
+  // copy the data from the old table to the new one
+  // drop the old table
+  // rename the new table to the old table name
+  sql << "ALTER TABLE " << table_name << " RENAME TO " << table_name
+      << "_temp;";
+  std::vector<std::string> columns;
+  std::vector<std::string> types;
+  for (const auto &column : modelColumns) {
+    columns.push_back(column.name);
+    types.push_back(to_string(column.type));
   }
-  if (!toRemove.empty()) {
-    sql << " DROP (";
-    for (int i = 0; i < toRemove.size(); ++i) {
-      sql << toRemove[i].name;
-      if (i < toRemove.size() - 1) {
-        sql << ", ";
-      }
+  sql << createTable(table_name, columns, types, {});
+  sql << "INSERT INTO " << table_name << " SELECT ";
+  for (int i = 0; i < columns.size(); i++) {
+    sql << columns[i];
+    if (i < columns.size() - 1) {
+      sql << ", ";
     }
-    sql << ")";
   }
-  if (!toModify.empty()) {
-    sql << " MODIFY (";
-    for (int i = 0; i < toModify.size(); ++i) {
-      sql << toModify[i].name << " " << to_string(toModify[i].type);
-      if (i < toModify.size() - 1) {
-        sql << ", ";
-      }
-    }
-    sql << ")";
-  }
-  sql << ";";
+  sql << " FROM " << table_name << "_temp;";
+  sql << dropTable(table_name + "_temp");
   return sql.str();
 }
 
