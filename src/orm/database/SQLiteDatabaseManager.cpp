@@ -5,6 +5,7 @@
 #include "SQLiteDatabaseManager.h"
 #include <sqlite3.h>
 #include "../exceptions.h"
+#include "utils.h"
 
 namespace Espresso::ORM {
 
@@ -25,6 +26,16 @@ void SQLiteDatabaseManager::disconnect() {
 
 void SQLiteDatabaseManager::execute(const std::string &query,
                                     QueryCallback callback) {
+  if (!this->connected) {
+    throw db_error("Not connected to database");
+  }
+  auto pos = query.find_first_of(';');
+  if (pos != std::string::npos && pos != query.size() - 1) {
+    for (auto &q : Espresso::split(query, ';')) {
+      execute(q, callback);
+    }
+    return;
+  }
   const char *error;
   sqlite3_stmt *stmt;
   const char *sql = query.c_str();
