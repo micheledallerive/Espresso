@@ -40,7 +40,7 @@ void SQLiteDatabaseManager::execute(const std::string &query,
       std::string columnValue = (const char *) sqlite3_column_text(stmt, i);
       rowResult.emplace(columnName, columnValue);
     }
-    callback(rowResult);
+    if (callback) callback(rowResult);
   }
   if (rc != SQLITE_DONE) {
     throw sql_error("Could not execute statement");
