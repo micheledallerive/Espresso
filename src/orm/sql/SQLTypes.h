@@ -5,6 +5,9 @@
 #ifndef ESPRESSO_SRC_ORM_SQL_SQLTYPES_H_
 #define ESPRESSO_SRC_ORM_SQL_SQLTYPES_H_
 
+#include <unordered_map>
+#include <string>
+
 namespace Espresso::ORM {
 
 enum class SQLType {
@@ -14,30 +17,9 @@ enum class SQLType {
   BLOB
 };
 
-std::string to_string(SQLType type) {
-  switch (type) {
-    case SQLType::INTEGER:return "INTEGER";
-    case SQLType::REAL:return "REAL";
-    case SQLType::TEXT:return "TEXT";
-    case SQLType::BLOB:return "BLOB";
-  }
-}
+std::string to_string(SQLType type);
 
-SQLType getSQLType(const std::string &type) {
-  if (type == typeid(int).name()) {
-    return SQLType::INTEGER;
-  } else if (type == typeid(float).name()) {
-    return SQLType::REAL;
-  } else if (type == typeid(double).name()) {
-    return SQLType::REAL;
-  } else if (type == typeid(std::string).name()) {
-    return SQLType::TEXT;
-  } else if (type == typeid(bool).name()) {
-    return SQLType::INTEGER;
-  } else {
-    return SQLType::BLOB;
-  }
-}
+SQLType getSQLType(const std::string &type);
 
 struct SQLColumnInfo {
   std::string name;
