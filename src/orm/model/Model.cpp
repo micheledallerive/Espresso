@@ -19,10 +19,10 @@ T Model<T>::get(long long id) {
   dbManager->execute(query,
                      [&data, &instance](std::unordered_map<std::string,
                                                            std::string> &result) {
-                       for (auto &modelField : data.fields) {
+                       for (auto &ModelDataField : data.fields) {
                          setField(instance,
-                                  modelField.second,
-                                  result[modelField.first]);
+                                  ModelDataField.second,
+                                  result[ModelDataField.first]);
                        }
                      });
   instance.id = id;
@@ -36,9 +36,9 @@ void Model<T>::save() {
 
   std::vector<string> fields;
   std::vector<string> values;
-  for (auto &modelField : data.fields) {
-    fields.push_back(modelField.first);
-    values.push_back(getField(*instance, modelField.second));
+  for (auto &ModelDataField : data.fields) {
+    fields.push_back(ModelDataField.first);
+    values.push_back(getField(*instance, ModelDataField.second));
   }
 
   if (instance->id == -1) { // instance does not exist: insert
@@ -59,7 +59,7 @@ void Model<T>::save() {
 
 template<class T>
 void Model<T>::setField(T &instance,
-                        const ModelField &fieldData,
+                        const ModelDataField &fieldData,
                         const std::string &value) {
   if (fieldData.ctype == typeid(std::string).name()) {
     instance.*std::any_cast<std::string T::*>(fieldData.field) = value;
@@ -81,7 +81,7 @@ void Model<T>::setField(T &instance,
 
 template<class T>
 std::string Model<T>::getField(T &instance,
-                               const ModelField &fieldData) {
+                               const ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
     return instance.*std::any_cast<std::string T::*>(fieldData.field);
   } else if (fieldData.ctype == typeid(int).name()) {

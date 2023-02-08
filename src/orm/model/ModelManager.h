@@ -17,14 +17,14 @@ namespace Espresso::ORM {
 using std::string;
 using std::unordered_map;
 
-struct ModelField {
+struct ModelDataField {
   std::any field;
   std::string ctype;
 };
 
 struct ModelData {
   string tableName; // the name of the table for the model
-  unordered_map<string, ModelField> fields; // field name and data
+  unordered_map<string, ModelDataField> fields; // field name and data
   bool migrated{false}; // whether the model was migrated
 };
 

@@ -55,10 +55,10 @@ void ModelManager::registerFields(A arg, Args ... args) {
       throw std::runtime_error("Model not registered");
     }
     // create a void pointer to args.second
-    ModelField modelField =
+    ModelDataField ModelDataField =
         {std::any(arg.second),
             typeid(typename pointer_value<decltype(arg.second)>::type).name()};
-    models[typeid(T).name()].fields.emplace(arg.first, modelField);
+    models[typeid(T).name()].fields.emplace(arg.first, ModelDataField);
   }
   registerFields < T >(args...);
 }
@@ -91,32 +91,32 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
     return;
   }
 
-  set<SQLColumnInfo> modelFields;
+  set<SQLColumnInfo> ModelDataFields;
   for (const auto &field : data.fields) {
     SQLColumnInfo info;
     info.name = field.first;
     info.type = getSQLType(field.second.ctype);
-    modelFields.insert(info);
+    ModelDataFields.insert(info);
   }
 
   vector<SQLColumnInfo> toAdd;
   vector<SQLColumnInfo> toRemove;
   vector<SQLColumnInfo> toModify;
 
-  std::set_difference(modelFields.begin(), modelFields.end(),
+  std::set_difference(ModelDataFields.begin(), ModelDataFields.end(),
                       dbFields.begin(), dbFields.end(),
                       std::inserter(toAdd, toAdd.begin()));
 
   std::set_difference(dbFields.begin(), dbFields.end(),
-                      modelFields.begin(), modelFields.end(),
+                      ModelDataFields.begin(), ModelDataFields.end(),
                       std::inserter(toRemove, toRemove.begin()));
 
   vector<SQLColumnInfo> intersection;
-  std::set_intersection(modelFields.begin(), modelFields.end(),
+  std::set_intersection(ModelDataFields.begin(), ModelDataFields.end(),
                         dbFields.begin(), dbFields.end(),
                         std::inserter(intersection, intersection.begin()));
   // add in toModify the elements that are not in the intersection
-  for (const auto &field : modelFields) {
+  for (const auto &field : ModelDataFields) {
     if (std::find(intersection.begin(), intersection.end(), field) ==
         intersection.end()) {
       toModify.push_back(field);
@@ -132,8 +132,8 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                                           toRemove,
                                           toModify,
                                           intersection,
-                                          vector<SQLColumnInfo>(modelFields.begin(),
-                                                                modelFields.end()));
+                                          vector<SQLColumnInfo>(ModelDataFields.begin(),
+                                                                ModelDataFields.end()));
     dbManager->execute(sql);
   }
 

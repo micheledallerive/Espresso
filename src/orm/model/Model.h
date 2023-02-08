@@ -5,6 +5,10 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_MODEL_H_
 #define ESPRESSO_SRC_ORM_MODEL_MODEL_H_
 
+#include <orm/database/DatabaseManager.h>
+#include <orm/model/ModelManager.h>
+#include <string>
+
 namespace Espresso::ORM {
 
 template<class T>
@@ -18,10 +22,10 @@ class Model {
   long long id{-1};
  private:
   static void setField(T &instance,
-                       const ModelField &fieldData,
+                       const ModelDataField &fieldData,
                        const std::string &value);
   static std::string getField(T &instance,
-                              const ModelField &fieldData);
+                              const ModelDataField &fieldData);
 };
 
 } // ORM
