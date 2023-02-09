@@ -56,6 +56,15 @@ void ModelManager::registerFields(A arg, Args ... args) {
     }
 
     ModelDataField modelField = fieldToDataField(arg.second);
+    if (modelField.primaryKey) {
+      if (!models[typeid(T).name()].primaryKey.empty()) {
+        std::string msg =
+            "Multiple primary keys: cannot set '" + string(arg.first)
+                + "' as primary key";
+        throw model_error(msg);
+      }
+      models[typeid(T).name()].primaryKey = arg.first;
+    }
 
     models[typeid(T).name()].fields.emplace(arg.first, modelField);
   }

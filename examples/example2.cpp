@@ -20,6 +20,7 @@ class Dog : public Model<Dog> {
   ModelField<std::string> breed;
   ModelField<int> age;
   PrimaryKey<int> pk;
+  PrimaryKey<int> pk2;
 };
 
 int main() {
@@ -32,6 +33,7 @@ int main() {
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
       make_pair("pk", &Dog::pk),
+      make_pair("pk2", &Dog::pk),
       make_pair("name", &Dog::name),
       make_pair("breed", &Dog::breed)
   );
