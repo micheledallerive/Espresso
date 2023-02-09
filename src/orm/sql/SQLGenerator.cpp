@@ -152,4 +152,23 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
   return sql.str();
 }
 
+std::string SQLGenerator::remove(const std::string &table_name,
+                                 const ConstraintMap &constraints) {
+  std::ostringstream sql;
+  sql << "DELETE FROM " << table_name;
+  if (!constraints.empty()) {
+    sql << " WHERE ";
+    int i = 0;
+    for (const auto &pair : constraints) {
+      sql << pair.first << "='" << pair.second << "'";
+      if (i < constraints.size() - 1) {
+        sql << " AND ";
+      }
+      i++;
+    }
+  }
+  sql << ";";
+  return sql.str();
+}
+
 } // Espresso

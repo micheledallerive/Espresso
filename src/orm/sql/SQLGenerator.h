@@ -42,6 +42,8 @@ class SQLGenerator {
                             const std::vector<std::string> &columns,
                             const std::vector<std::string> &values,
                             const ConstraintMap &constraints);
+  static std::string remove(const std::string &table_name,
+                            const ConstraintMap &constraints);
 
 };
 

@@ -38,7 +38,25 @@ T Model<T>::get(ConstraintMap constraints) {
   if (!found) {
     throw object_not_found("Object not found");
   }
+  instance.wasSaved = true;
   return instance;
+}
+
+template<class T>
+bool Model<T>::remove() {
+  ModelData &data = ModelManager::getInstance().getModel<T>();
+  T *instance = static_cast<T *>(this);
+  if (!instance->wasSaved) {
+    throw model_error("Cannot remove an unsaved object");
+  }
+  std::string
+      primaryKeyField = ModelManager::getInstance().getModel<T>().primaryKey;
+  std::string primaryKeyValue = getFieldValue(*instance,
+                                              data.fields[primaryKeyField]);
+  string query = SQLGenerator::remove(data.tableName,
+                                      {{primaryKeyField, primaryKeyValue}});
+  dbManager->execute(query);
+  return true;
 }
 
 template<class T>

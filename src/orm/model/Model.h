@@ -17,6 +17,7 @@ class Model {
   Model() = default;
   virtual ~Model() = default;
   void save();
+  bool remove();
 
   static T get(ConstraintMap);
  protected:

@@ -40,12 +40,16 @@ int main() {
       make_pair(Field{.name="age"}, &Dog::age)
   );
 
-//  try {
-//    Dog dog2 = Dog::get({{"name", "Loredana"}});
-//    std::cout << dog2.age << std::endl;
-//  } catch (std::exception &e) {
-//    std::cerr << "Error: " << e.what() << std::endl;
-//  }
+  try {
+    Dog dog2 = Dog::get({{"name", "Loredana"}});
+    std::cout << dog2.age << std::endl;
+    dog2.remove();
+
+    Dog dog = Dog();
+    dog.remove();
+  } catch (std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+  }
 
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;
