@@ -16,6 +16,7 @@ set(SOURCES
         orm/database/DatabaseManager.cpp
         orm/sql/SQLiteSQLGenerator.cpp
         orm/sql/SQLTypes.cpp
+        orm/model/fields/BaseModelField.cpp
         )
 
 set(HEADERS Cookies.h
