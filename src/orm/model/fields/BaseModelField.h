@@ -9,6 +9,8 @@ namespace Espresso::ORM {
 
 class BaseModelField {
  public:
+  template<class G>
+  friend class Model;
   virtual ~BaseModelField() = default;
  protected:
   bool dirty{false};
