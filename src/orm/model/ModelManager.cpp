@@ -73,11 +73,15 @@ void ModelManager::registerFields(A arg, Args ... args) {
 
 template<class Class, class Type>
 // Type Class::*field
-ModelDataField ModelManager::fieldToDataField(const Type Class::* field) {
+ModelDataField ModelManager::fieldToDataField(Type Class::* field) {
   string fieldType =
       typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
   ModelDataField modelField;
-  modelField.field = field;
+  // every field must be converted to a ModelField in order to be recasted back later
+  // primary keys foreign keys etc are stored in the ModelDataField, so can be
+  // upcasted to a ModelField
+  modelField.field =
+      reinterpret_cast<ModelField<typename Type::value_type> Class::*>(field);
   modelField.primaryKey = isPrimaryKey(field);
   modelField.ctype = fieldType;
   return modelField;

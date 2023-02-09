@@ -41,9 +41,9 @@ void Model<T>::save() {
 
   std::vector<string> fields;
   std::vector<string> values;
-  for (auto &ModelDataField : data.fields) {
-    fields.push_back(ModelDataField.first);
-    values.push_back(getField(*instance, ModelDataField.second));
+  for (auto &modelField : data.fields) {
+    fields.push_back(modelField.first);
+    values.push_back(getField(*instance, modelField.second));
   }
 
   if (instance->id == -1) { // instance does not exist: insert

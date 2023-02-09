@@ -70,7 +70,7 @@ class ModelManager {
 
   template<class Class, class Type>
   // Type Class::*field
-  ModelDataField fieldToDataField(const Type Class::* field);
+  ModelDataField fieldToDataField(Type Class::* field);
 
   mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>

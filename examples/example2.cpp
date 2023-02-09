@@ -21,7 +21,7 @@ class Dog : public Model<Dog> {
   ModelField<int> age;
 
   PrimaryKey<int> pk;
-  ForeignKey<Dog> mother;
+  //ForeignKey<Dog> mother;
 };
 
 int main() {
@@ -37,6 +37,12 @@ int main() {
       make_pair("name", &Dog::name),
       make_pair("breed", &Dog::breed)
   );
+
+  Dog dog;
+  dog.name = "Loredana";
+  dog.breed = "Pitbull";
+  dog.age = 3;
+  dog.save();
 
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;
