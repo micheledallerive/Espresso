@@ -11,6 +11,7 @@ namespace Espresso::ORM {
 template<typename T>
 class ModelField : public PrimitiveWrapper<T> {
  public:
+  typedef T value_type;
   ModelField() = default;
   virtual ~ModelField() = default;
 
