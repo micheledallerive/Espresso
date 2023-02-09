@@ -23,7 +23,8 @@ std::string to_string(SQLType type);
 
 SQLType getSQLType(const std::string &type);
 
-struct SQLColumnInfo {
+class SQLColumnInfo {
+ public:
   std::string name;
   SQLType type{SQLType::BLOB};
   bool notNull{false};
