@@ -13,6 +13,8 @@ class ModelField : public PrimitiveWrapper<T> {
  public:
   typedef T value_type;
   ModelField() = default;
+  ModelField(const ModelField &wrapper) : PrimitiveWrapper<T>(wrapper) {}
+  explicit ModelField(T val) : PrimitiveWrapper<T>(val) {}
   virtual ~ModelField() = default;
 
   ModelField &operator=(const ModelField &wrapper) {

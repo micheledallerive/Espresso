@@ -12,10 +12,12 @@ template<typename T>
 class PrimitiveWrapper {
  protected:
   T value;
- public:
   bool dirty{false};
+ public:
   typedef T value_type;
   PrimitiveWrapper() = default;
+  virtual ~PrimitiveWrapper() = default;
+  
   explicit PrimitiveWrapper(T val) : value(val), dirty(true) {}
   explicit PrimitiveWrapper(const T &val) : value(val), dirty(true) {}
   PrimitiveWrapper(const PrimitiveWrapper &wrapper)
@@ -23,8 +25,8 @@ class PrimitiveWrapper {
   PrimitiveWrapper(PrimitiveWrapper &&wrapper) noexcept
       : value(wrapper.value), dirty(true) {}
 
-  PrimitiveWrapper<T> &operator=(const T &value) {
-    this->value = value;
+  PrimitiveWrapper<T> &operator=(const T &val) {
+    this->value = val;
     dirty = true;
     return *this;
   }
