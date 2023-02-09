@@ -64,7 +64,7 @@ void Model<T>::save() {
 
 template<class T>
 void Model<T>::setField(T &instance,
-                        const ModelDataField &fieldData,
+                        ModelDataField &fieldData,
                         const std::string &value) {
   if (fieldData.ctype == typeid(std::string).name()) {
     instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field) =
@@ -116,7 +116,7 @@ void Model<T>::setField(T &instance,
 
 template<class T>
 std::string Model<T>::getField(T &instance,
-                               const ModelDataField &fieldData) {
+                               ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
     return instance
         .*std::any_cast<ModelField<std::string> T::*>(fieldData.field);

@@ -16,9 +16,7 @@ class PrimitiveWrapper {
  public:
   typedef T value_type;
   PrimitiveWrapper() = default;
-  explicit PrimitiveWrapper(T val) : value(val) {
-    dirty = true;
-  }
+  explicit PrimitiveWrapper(T val) : value(val), dirty(true) {}
   explicit PrimitiveWrapper(const T &val) : value(val), dirty(true) {}
   PrimitiveWrapper(const PrimitiveWrapper &wrapper)
       : value(wrapper.value), dirty(true) {}
@@ -170,6 +168,8 @@ class PrimitiveWrapper {
   }
 
   explicit operator T() const { return value; }
+  operator T &() { return value; }
+  operator const T &() const { return value; }
 
   T get() const { return value; }
 };

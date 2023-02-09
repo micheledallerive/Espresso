@@ -22,10 +22,10 @@ class Model {
   long long id{-1};
  private:
   static void setField(T &instance,
-                       const ModelDataField &fieldData,
+                       ModelDataField &fieldData,
                        const std::string &value);
   static std::string getField(T &instance,
-                              const ModelDataField &fieldData);
+                              ModelDataField &fieldData);
 };
 
 } // ORM
