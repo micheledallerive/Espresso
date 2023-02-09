@@ -27,8 +27,15 @@ std::string SQLGenerator::createTable(const std::string &table_name,
   return sql.str();
 }
 
-std::string SQLGenerator::dropTable(const std::string &table_name) {
-  return "DROP TABLE " + table_name + ";";
+std::string SQLGenerator::dropTable(const std::string &table_name,
+                                    bool ifExists) {
+  std::ostringstream sql;
+  sql << "DROP TABLE ";
+  if (ifExists) {
+    sql << "IF EXISTS ";
+  }
+  sql << table_name << ";";
+  return sql.str();
 }
 
 std::string SQLGenerator::insert(const std::string &table_name,
@@ -120,6 +127,9 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
   // copy the data from the old table to the new one
   // drop the old table
   // rename the new table to the old table name
+
+  // first of all drop the temporary table if it exists
+  sql << dropTable(table_name + "_temp", true);
   sql << "ALTER TABLE " << table_name << " RENAME TO " << table_name
       << "_temp;";
   std::vector<std::string> columns;
