@@ -19,6 +19,11 @@ T Model<T>::get(ConstraintMap constraints) {
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
   T instance;
   bool found = false;
+  for (const auto &constraint : constraints) {
+    if (!data.fields.contains(constraint.first)) {
+      throw model_error("Field " + constraint.first + " does not exist");
+    }
+  }
   dbManager->execute(query,
                      [&data, &instance, &found](std::unordered_map<std::string,
                                                                    std::string> &result) {
