@@ -13,25 +13,10 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-struct Field {
-  std::string name;
-  bool primaryKey{false};
-  bool autoIncrement{false};
-};
-class ModelDataField : public Field {
- public:
-  std::any field;
-  std::string ctype;
+#include <orm/model/fields/Field.h>
 
-  ModelDataField() = default;
-  // create a constructor for the assignment ModelDataField = Field
-  // Field does not have a constructor
-  ModelDataField(const Field &f) {
-    this->name = f.name;
-    this->primaryKey = f.primaryKey;
-    this->autoIncrement = f.autoIncrement;
-  }
-};
+namespace Espresso::ORM {
+
 struct ModelData {
   std::string tableName; // the name of the table for the model
   std::unordered_map<std::string, ModelDataField> fields; // field name and data
@@ -42,15 +27,11 @@ struct ModelData {
   std::vector<Espresso::ORM::SQLColumnInfo> getColumns() const {
     std::vector<Espresso::ORM::SQLColumnInfo> columns;
     for (const auto &field : fields) {
-      columns.emplace_back(field.first,
-                           Espresso::ORM::getSQLType(field.second.ctype),
-                           false,
-                           field.second.primaryKey);
+      columns.emplace_back(field.second);
     }
     return columns;
   }
 };
-namespace Espresso::ORM {
 
 } // ORM
 

@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
+#include "orm/model/fields/Field.h"
 
 namespace Espresso::ORM {
 
@@ -24,13 +25,11 @@ std::string to_string(SQLType type);
 
 SQLType getSQLType(const std::string &type);
 
-class SQLColumnInfo {
+class SQLColumnInfo;
+
+class SQLColumnInfo : public Field {
  public:
-  std::string name;
   SQLType type{SQLType::BLOB};
-  bool notNull{false};
-  bool primaryKey{false};
-  std::string defaultValue;
 
   bool operator==(const SQLColumnInfo &other) const {
     return name == other.name;
@@ -68,12 +67,15 @@ class SQLColumnInfo {
     defaultValue = data.at("dflt_value");
   }
 
-  SQLColumnInfo(std::string name, SQLType type, bool notNull=false,
-                bool primaryKey=false, std::string defaultValue="")
-      : name(std::move(name)), type(type), notNull(notNull), primaryKey(primaryKey),
-        defaultValue(std::move(defaultValue)) {}
-
   SQLColumnInfo() = default;
+  explicit SQLColumnInfo(const ModelDataField &field) {
+    name = field.name;
+    type = getSQLType(field.ctype);
+    primaryKey = field.primaryKey;
+    autoIncrement = field.autoIncrement;
+    notNull = field.notNull;
+    defaultValue = field.defaultValue;
+  }
 };
 
 }
