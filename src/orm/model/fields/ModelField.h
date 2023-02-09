@@ -5,7 +5,7 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELFIELD_H_
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELFIELD_H_
 
-#include "orm/utils/PrimitiveWrapper.h"
+#include <orm/utils/PrimitiveWrapper.h>
 namespace Espresso::ORM {
 
 template<typename T>

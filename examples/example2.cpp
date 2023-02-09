@@ -7,7 +7,7 @@
 #include <orm/sql/SQLiteSQLGenerator.h>
 #include "orm/model/ModelManager.h"
 #include "orm/model/Model.h"
-#include "orm/utils/PrimitiveWrapper.h"
+#include "orm/model/fields/ForeignKey.h"
 
 using namespace Espresso::ORM;
 
@@ -19,8 +19,9 @@ class Dog : public Model<Dog> {
   ModelField<std::string> name;
   ModelField<std::string> breed;
   ModelField<int> age;
+
   PrimaryKey<int> pk;
-  PrimaryKey<int> pk2;
+  ForeignKey<Dog> mother;
 };
 
 int main() {
@@ -33,7 +34,6 @@ int main() {
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
       make_pair("pk", &Dog::pk),
-      make_pair("pk2", &Dog::pk),
       make_pair("name", &Dog::name),
       make_pair("breed", &Dog::breed)
   );

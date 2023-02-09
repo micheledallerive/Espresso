@@ -8,6 +8,7 @@
 #include <memory>
 
 namespace Espresso::ORM {
+
 template<typename T>
 class PrimitiveWrapper {
  protected:
@@ -40,6 +41,14 @@ class PrimitiveWrapper {
   }
 
 };
+
+template<typename T>
+using PrimitiveWrapperType = std::conditional_t<
+    std::is_same_v<T, int> || std::is_same_v<T, float> ||
+        std::is_same_v<T, double> || std::is_same_v<T, long> ||
+        std::is_same_v<T, long long> || std::is_same_v<T, short>,
+    PrimitiveWrapper<T>, T>;
+
 } // ORM
 
 #endif //ESPRESSO_SRC_ORM_UTILS_PRIMITIVEWRAPPER_H_
