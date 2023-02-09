@@ -22,11 +22,11 @@ class Model {
  protected:
   bool wasSaved{false};
  private:
-  static void setField(T &instance,
-                       ModelDataField &fieldData,
-                       const std::string &value);
-  static std::string getField(T &instance,
-                              ModelDataField &fieldData);
+  static void setFieldValue(T &instance,
+                            ModelDataField &fieldData,
+                            const std::string &value);
+  static std::string getFieldValue(T &instance,
+                                   ModelDataField &fieldData);
 };
 
 } // ORM

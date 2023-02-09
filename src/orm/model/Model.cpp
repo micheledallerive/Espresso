@@ -23,9 +23,9 @@ T Model<T>::get(ConstraintMap constraints) {
                                                                    std::string> &result) {
                        if (!data.fields.empty()) found = true;
                        for (auto &ModelDataField : data.fields) {
-                         setField(instance,
-                                  ModelDataField.second,
-                                  result[ModelDataField.first]);
+                         setFieldValue(instance,
+                                       ModelDataField.second,
+                                       result[ModelDataField.first]);
                        }
                      });
   if (!found) {
@@ -45,7 +45,7 @@ void Model<T>::save() {
     if (modelField.second.primaryKey) continue;
 
     fields.push_back(modelField.first);
-    values.push_back(getField(*instance, modelField.second));
+    values.push_back(getFieldValue(*instance, modelField.second));
   }
 
   if (!wasSaved) { // instance does not exist: insert
@@ -54,16 +54,16 @@ void Model<T>::save() {
     dbManager->execute(query,
                        [&instance, &data](std::unordered_map<std::string,
                                                       std::string> &result) {
-                         setField(*instance,
-                                  data.fields[data.primaryKey],
-                                  result["id"]);
+                         setFieldValue(*instance,
+                                       data.fields[data.primaryKey],
+                                       result["id"]);
                        });
     wasSaved = true;
   } else { // already exists: update it todo improve this check lmao
     std::string
         primaryKeyField = ModelManager::getInstance().getModel<T>().primaryKey;
-    std::string primaryKeyValue = getField(*instance,
-                                           data.fields[primaryKeyField]);
+    std::string primaryKeyValue = getFieldValue(*instance,
+                                                data.fields[primaryKeyField]);
     string query = SQLGenerator::update(data.tableName,
                                         fields,
                                         values,
@@ -73,9 +73,9 @@ void Model<T>::save() {
 }
 
 template<class T>
-void Model<T>::setField(T &instance,
-                        ModelDataField &fieldData,
-                        const std::string &value) {
+void Model<T>::setFieldValue(T &instance,
+                             ModelDataField &fieldData,
+                             const std::string &value) {
   if (fieldData.ctype == typeid(std::string).name()) {
     instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field) =
         value;
@@ -125,8 +125,8 @@ void Model<T>::setField(T &instance,
 }
 
 template<class T>
-std::string Model<T>::getField(T &instance,
-                               ModelDataField &fieldData) {
+std::string Model<T>::getFieldValue(T &instance,
+                                    ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
     return instance
         .*std::any_cast<ModelField<std::string> T::*>(fieldData.field);
