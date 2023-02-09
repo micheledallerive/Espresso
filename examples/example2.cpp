@@ -10,6 +10,7 @@
 #include "orm/model/fields/ForeignKey.h"
 
 using namespace Espresso::ORM;
+using namespace std;
 
 class Dog : public Model<Dog> {
  public:
@@ -33,20 +34,15 @@ int main() {
 
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
-      make_pair("name", &Dog::name),
-      make_pair("breed", &Dog::breed),
-      make_pair("age", &Dog::age),
-      make_pair("pk", &Dog::pk)
+      make_pair(Field{.name="name"}, &Dog::name),
+      make_pair(Field{.name="breed"}, &Dog::breed),
+      make_pair(Field{.name="age"}, &Dog::age),
+      make_pair(Field{.name="pk"}, &Dog::pk)
   );
 
   Dog dog;
-  dog.name = "Loredana";
-  dog.breed = "Pitbull";
-  dog.age = 3;
-  dog.save();
-
-  dog.age = 5;
-  dog.save();
+  dog.age = 10;
+  //dog.save();
 
   Dog dog2 = Dog::get({{"name", "Loredana"}});
   std::cout << dog2.age << std::endl;

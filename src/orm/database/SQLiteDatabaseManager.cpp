@@ -41,8 +41,8 @@ void SQLiteDatabaseManager::execute(const std::string &query,
   const char *sql = query.c_str();
   int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
   if (rc != SQLITE_OK) {
-    throw sql_error("Could not prepare statement");
-    return;
+    throw sql_error(
+        "Could not prepare statement: '" + std::string(sqlite3_errmsg(db)) + "'");
   }
   while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
     std::unordered_map<std::string, std::string> rowResult;
@@ -62,7 +62,8 @@ void SQLiteDatabaseManager::execute(const std::string &query,
     if (callback) callback(rowResult);
   }
   if (rc != SQLITE_DONE) {
-    throw sql_error("Could not execute statement");
+    throw sql_error("Could not execute statement '" + query + "': " +
+                    std::string(sqlite3_errmsg(db)));
   }
   sqlite3_finalize(stmt);
 }

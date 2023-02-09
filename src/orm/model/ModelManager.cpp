@@ -58,17 +58,19 @@ void ModelManager::registerFields(A arg, Args ... args) {
     }
 
     ModelDataField modelField = fieldToDataField(arg.second);
+    Field fieldParamData = arg.first;
+    const std::string fieldName = fieldParamData.name;
     if (modelField.primaryKey) {
       if (!getModel<T>().primaryKey.empty()) {
         std::string msg =
-            "Multiple primary keys: cannot set '" + string(arg.first)
+            "Multiple primary keys: cannot set '" + string(fieldName)
                 + "' as primary key";
         throw model_error(msg);
       }
-      getModel<T>().primaryKey = arg.first;
+      getModel<T>().primaryKey = fieldName;
     }
 
-    getModel<T>().fields.emplace(arg.first, modelField);
+    getModel<T>().fields.emplace(fieldName, modelField);
   }
   registerFields < T >(args...);
 }

@@ -17,11 +17,15 @@ namespace Espresso::ORM {
 using std::string;
 using std::unordered_map;
 
-struct ModelDataField {
-  std::any field;
-  std::string ctype;
+struct Field {
+  std::string name;
   bool primaryKey{false};
   bool autoIncrement{false};
+};
+
+struct ModelDataField : public Field {
+  std::any field;
+  std::string ctype;
 };
 
 struct ModelData {
