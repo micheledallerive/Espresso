@@ -74,6 +74,15 @@ ModelDataField ModelManager::fieldToDataField(const Type Class::* field) {
   return modelField;
 }
 
+void ModelManager::migrateModels() {
+  for (const auto &model : this->models) {
+    if (model.second.migrated) {
+      continue;
+    }
+    this->migrateModel(model.first);
+  }
+}
+
 void ModelManager::migrateModel(const std::string &typeInfo) {
   using std::set, std::vector, std::string;
   const ModelData &data = this->models[typeInfo];

@@ -41,6 +41,8 @@ class ModelManager {
 
   void setAutomaticMigrations(bool);
 
+  void migrateModels();
+
  protected:
   template<class T, class A, class... Args>
   void registerFields(A, Args ... args);
