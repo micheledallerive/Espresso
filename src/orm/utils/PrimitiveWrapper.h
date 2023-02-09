@@ -33,7 +33,7 @@ class PrimitiveWrapper {
     valueChanged();
   }
 
-  PrimitiveWrapper<T> &operator=(const T &val) {
+  virtual PrimitiveWrapper<T> &operator=(const T &val) {
     this->value = val;
     valueChanged();
     return *this;
