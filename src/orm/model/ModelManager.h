@@ -20,6 +20,7 @@ using std::unordered_map;
 struct ModelDataField {
   std::any field;
   std::string ctype;
+  bool primaryKey{false};
 };
 
 struct ModelData {
@@ -51,6 +52,9 @@ class ModelManager {
 
   template<class T>
   void registerFields() {}
+
+  template<class Class, class Type> // Type Class::*field
+  ModelDataField fieldToDataField(const Type Class::* field);
 
   mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>

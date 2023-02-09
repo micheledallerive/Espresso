@@ -54,15 +54,24 @@ void ModelManager::registerFields(A arg, Args ... args) {
     if (models.find(typeid(T).name()) == models.end()) {
       throw std::runtime_error("Model not registered");
     }
-    // create a void pointer to args.second
-    string fieldType =
-        typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
 
-    ModelDataField modelField = {std::any(arg.second), fieldType};
+    ModelDataField modelField = fieldToDataField(arg.second);
 
     models[typeid(T).name()].fields.emplace(arg.first, modelField);
   }
   registerFields < T >(args...);
+}
+
+template<class Class, class Type>
+// Type Class::*field
+ModelDataField ModelManager::fieldToDataField(const Type Class::* field) {
+  string fieldType =
+      typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
+  ModelDataField modelField;
+  modelField.field = field;
+  modelField.primaryKey = isPrimaryKey(field);
+  modelField.ctype = fieldType;
+  return modelField;
 }
 
 void ModelManager::migrateModel(const std::string &typeInfo) {

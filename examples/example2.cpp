@@ -19,6 +19,7 @@ class Dog : public Model<Dog> {
   ModelField<std::string> name;
   ModelField<std::string> breed;
   ModelField<int> age;
+  PrimaryKey<int> pk;
 };
 
 int main() {
@@ -30,13 +31,13 @@ int main() {
 
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
+      make_pair("pk", &Dog::pk),
       make_pair("name", &Dog::name),
-      make_pair("breed", &Dog::breed),
-      make_pair("age", &Dog::age)
+      make_pair("breed", &Dog::breed)
   );
 
-  Dog dog = Dog::get({{"name", "Loredana"}});
-  std::cout << dog.age << std::endl;
+//  Dog dog = Dog::get({{"name", "Loredana"}});
+//  std::cout << dog.age << std::endl;
 
   dbManager->disconnect();
   return 0;
