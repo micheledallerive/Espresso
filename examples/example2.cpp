@@ -24,10 +24,10 @@ class Dog : public Model<Dog> {
 
 int main() {
   using std::make_pair;
-  dbManager = std::make_shared<SQLiteDatabaseManager>();
+
   SQLiteConnectionOptions options;
   options.databasePath = "test.db";
-  dbManager->connect(options);
+  DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",

@@ -35,6 +35,18 @@ class DatabaseManager {
 
 extern std::shared_ptr<DatabaseManager> dbManager;
 
+template<class DM>
+class DatabaseManagerFactory {
+ public:
+  static void create() {
+    dbManager = std::make_shared<DM>();
+  }
+  static void createAndConnect(const ConnectionOptions &options) {
+    create();
+    dbManager->connect(options);
+  }
+};
+
 }
 
 #endif //ESPRESSO_SRC_ORM_DATABASEMANAGER_H_
