@@ -40,12 +40,6 @@ int main() {
       make_pair(Field{.name="age"}, &Dog::age)
   );
 
-  Dog dog;
-  dog.name = "Loredana";
-  dog.breed = "Pitbull";
-  dog.age = 10;
-  dog.save();
-
 //  try {
 //    Dog dog2 = Dog::get({{"name", "Loredana"}});
 //    std::cout << dog2.age << std::endl;

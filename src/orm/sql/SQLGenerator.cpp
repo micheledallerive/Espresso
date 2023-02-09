@@ -19,6 +19,9 @@ std::string SQLGenerator::createTable(const std::string &table_name,
     if (columns[i].primaryKey) {
       sql << " PRIMARY KEY";
     }
+    if (columns[i].autoIncrement) {
+      sql << " AUTOINCREMENT";
+    }
     if (i < columns.size() - 1) {
       sql << ", ";
     }

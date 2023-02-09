@@ -74,9 +74,10 @@ void Model<T>::save() {
     dbManager->execute(query,
                        [&instance, &data](std::unordered_map<std::string,
                                                              std::string> &result) {
-                         setFieldValue(*instance,
-                                       data.fields[data.primaryKey],
-                                       result["id"]);
+                         if (result.contains("id") && !data.primaryKey.empty())
+                           setFieldValue(*instance,
+                                         data.fields[data.primaryKey],
+                                         result["id"]);
                        });
     wasSaved = true;
   } else { // already exists: update it
