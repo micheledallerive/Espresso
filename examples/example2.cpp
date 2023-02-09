@@ -17,11 +17,10 @@ class Dog : public Model<Dog> {
   Dog() = default;
   ~Dog() = default;
 
+  PrimaryKey<int> pk;
   ModelField<std::string> name;
   ModelField<std::string> breed;
   ModelField<int> age;
-
-  PrimaryKey<int> pk;
   //ForeignKey<Dog> mother;
 };
 
@@ -34,18 +33,25 @@ int main() {
 
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
+      make_pair(Field{.name="pk", .primaryKey=true, .autoIncrement=true},
+                &Dog::pk),
       make_pair(Field{.name="name"}, &Dog::name),
       make_pair(Field{.name="breed"}, &Dog::breed),
-      make_pair(Field{.name="age"}, &Dog::age),
-      make_pair(Field{.name="pk"}, &Dog::pk)
+      make_pair(Field{.name="age"}, &Dog::age)
   );
 
   Dog dog;
+  dog.name = "Loredana";
+  dog.breed = "Pitbull";
   dog.age = 10;
-  //dog.save();
+  dog.save();
 
-  Dog dog2 = Dog::get({{"name", "Loredana"}});
-  std::cout << dog2.age << std::endl;
+//  try {
+//    Dog dog2 = Dog::get({{"name", "Loredana"}});
+//    std::cout << dog2.age << std::endl;
+//  } catch (std::exception &e) {
+//    std::cerr << "Error: " << e.what() << std::endl;
+//  }
 
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;

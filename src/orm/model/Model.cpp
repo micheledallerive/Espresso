@@ -3,6 +3,7 @@
 //
 
 #include "Model.h"
+#include "ModelData.h"
 #include <orm/model/fields/BaseModelField.h>
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>

@@ -34,5 +34,6 @@ class Model {
 } // ORM
 
 #include "Model.cpp"
+#include "ModelData.h"
 
 #endif //ESPRESSO_SRC_ORM_MODEL_MODEL_H_

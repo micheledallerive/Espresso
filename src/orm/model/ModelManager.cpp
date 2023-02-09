@@ -12,6 +12,7 @@
 #include <orm/model/fields/PrimaryKey.h>
 #include "ModelManager.h"
 #include "../exceptions.h"
+#include "ModelData.h"
 
 namespace Espresso::ORM {
 
@@ -57,8 +58,10 @@ void ModelManager::registerFields(A arg, Args ... args) {
       throw std::runtime_error("Model not registered");
     }
 
-    ModelDataField modelField = fieldToDataField(arg.second);
-    Field fieldParamData = arg.first;
+    const Field &fieldParamData = arg.first;
+    ModelDataField modelField(fieldParamData);
+    setDataFieldTypes(arg.second, modelField);
+
     const std::string fieldName = fieldParamData.name;
     if (modelField.primaryKey) {
       if (!getModel<T>().primaryKey.empty()) {
@@ -76,17 +79,16 @@ void ModelManager::registerFields(A arg, Args ... args) {
 }
 
 template<class Class, class Type>
-// Type Class::*field
-ModelDataField ModelManager::fieldToDataField(Type Class::* field) {
+ModelDataField ModelManager::setDataFieldTypes(Type Class::* field,
+                                               ModelDataField &modelField) {
   string fieldType =
       typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
-  ModelDataField modelField;
+
   // every field must be converted to a ModelField in order to be recasted back later
   // primary keys foreign keys etc are stored in the ModelDataField, so can be
   // upcasted to a ModelField
   modelField.field =
       reinterpret_cast<ModelField<typename Type::value_type> Class::*>(field);
-  modelField.primaryKey = isPrimaryKey(field);
   modelField.ctype = fieldType;
   return modelField;
 }

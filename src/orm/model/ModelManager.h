@@ -10,42 +10,14 @@
 #include <any>
 #include <mutex>
 #include <shared_mutex>
+#include <utility>
+#include <orm/model/ModelData.h>
 #include "orm/sql/SQLTypes.h"
 
 namespace Espresso::ORM {
 
 using std::string;
 using std::unordered_map;
-
-struct Field {
-  std::string name;
-  bool primaryKey{false};
-  bool autoIncrement{false};
-};
-
-struct ModelDataField : public Field {
-  std::any field;
-  std::string ctype;
-};
-
-struct ModelData {
-  string tableName; // the name of the table for the model
-  unordered_map<string, ModelDataField> fields; // field name and data
-  bool migrated{false}; // whether the model was migrated
-  // the name of the primary key (can be accessed by the field name in the map)
-  std::string primaryKey;
-
-  std::vector<SQLColumnInfo> getColumns() const {
-    std::vector<SQLColumnInfo> columns;
-    for (const auto &field : fields) {
-      columns.emplace_back(field.first,
-                           getSQLType(field.second.ctype),
-                           false,
-                           field.second.primaryKey);
-    }
-    return columns;
-  }
-};
 
 class ModelManager {
  public:
@@ -74,8 +46,8 @@ class ModelManager {
   void registerFields() {}
 
   template<class Class, class Type>
-  // Type Class::*field
-  ModelDataField fieldToDataField(Type Class::* field);
+  ModelDataField setDataFieldTypes(Type Class::* field,
+                                   ModelDataField &modelField);
 
   mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>
@@ -90,5 +62,6 @@ class ModelManager {
 } // ORM
 
 #include "ModelManager.cpp"
+#include "ModelData.h"
 
 #endif //ESPRESSO_SRC_ORM_MODEL_MODELMANAGER_H_
