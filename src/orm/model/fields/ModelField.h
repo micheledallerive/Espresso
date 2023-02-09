@@ -12,14 +12,13 @@ namespace Espresso::ORM {
 template<typename T>
 class ModelField : public PrimitiveWrapper<T>, public BaseModelField {
  protected:
-  bool dirty{false};
-
   void valueChanged() override;
  public:
   typedef T value_type;
   ModelField() = default;
-  ModelField(const ModelField &wrapper) : PrimitiveWrapper<T>(wrapper) {}
-  explicit ModelField(T val) : PrimitiveWrapper<T>(val) {}
+  ModelField(const ModelField &wrapper)
+      : PrimitiveWrapper<T>(wrapper), BaseModelField(wrapper) {}
+  explicit ModelField(T val) : PrimitiveWrapper<T>(val), BaseModelField() {}
   ~ModelField() override = default;
 
   ModelField &operator=(const ModelField &wrapper) {
@@ -27,7 +26,7 @@ class ModelField : public PrimitiveWrapper<T>, public BaseModelField {
     PrimitiveWrapper<T>::operator=(wrapper);
     return *this;
   }
-  ModelField &operator=(const T &value) {
+  virtual ModelField &operator=(const T &value) {
     // use super class operator
     PrimitiveWrapper<T>::operator=(value);
     return *this;
