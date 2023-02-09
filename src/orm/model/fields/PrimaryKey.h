@@ -13,6 +13,17 @@ class PrimaryKey : public ModelField<T> {
 
 };
 
+// write functions to check if a field is a primary key
+template<typename T, typename U>
+bool isPrimaryKey(const ModelField<T> U::*field) {
+  return false;
+}
+
+template<typename T, typename U>
+bool isPrimaryKey(const PrimaryKey<T> U::*field) {
+  return true;
+}
+
 } // ORM
 
 #include "PrimaryKey.cpp"
