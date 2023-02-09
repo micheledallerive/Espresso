@@ -9,9 +9,7 @@
 namespace Espresso::ORM {
 
 template<typename T>
-class PrimaryKey : public ModelField<T> {
-
-};
+class PrimaryKey : public ModelField<T> {};
 
 // write functions to check if a field is a primary key
 template<typename T, typename U>
