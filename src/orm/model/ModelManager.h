@@ -27,6 +27,17 @@ struct ModelData {
   string tableName; // the name of the table for the model
   unordered_map<string, ModelDataField> fields; // field name and data
   bool migrated{false}; // whether the model was migrated
+
+  std::vector<SQLColumnInfo> getColumns() const {
+    std::vector<SQLColumnInfo> columns;
+    for (const auto &field : fields) {
+      columns.emplace_back(field.first,
+                           getSQLType(field.second.ctype),
+                           false,
+                           field.second.primaryKey);
+    }
+    return columns;
+  }
 };
 
 class ModelManager {
@@ -55,7 +66,8 @@ class ModelManager {
   template<class T>
   void registerFields() {}
 
-  template<class Class, class Type> // Type Class::*field
+  template<class Class, class Type>
+  // Type Class::*field
   ModelDataField fieldToDataField(const Type Class::* field);
 
   mutable std::shared_mutex mutex_;

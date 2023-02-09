@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <utility>
 
 namespace Espresso::ORM {
 
@@ -66,6 +67,11 @@ class SQLColumnInfo {
     primaryKey = data.at("pk") == "1";
     defaultValue = data.at("dflt_value");
   }
+
+  SQLColumnInfo(std::string name, SQLType type, bool notNull=false,
+                bool primaryKey=false, std::string defaultValue="")
+      : name(std::move(name)), type(type), notNull(notNull), primaryKey(primaryKey),
+        defaultValue(std::move(defaultValue)) {}
 
   SQLColumnInfo() = default;
 };

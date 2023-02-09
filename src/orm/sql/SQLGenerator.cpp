@@ -9,15 +9,15 @@
 namespace Espresso::ORM {
 
 std::string SQLGenerator::createTable(const std::string &table_name,
-                                      const std::vector<std::string> &columns,
-                                      const std::vector<std::string> &types,
+                                      const std::vector<SQLColumnInfo> &columns,
                                       const ConstraintMap &constraints) {
   std::ostringstream sql;
   sql << "CREATE TABLE " << table_name << " (";
+  // add columns with name type and primary key
   for (int i = 0; i < columns.size(); i++) {
-    sql << columns[i] << " " << types[i];
-    if (constraints.count(columns[i])) {
-      sql << " " << constraints.at(columns[i]);
+    sql << columns[i].name << " " << to_string(columns[i].type);
+    if (columns[i].primaryKey) {
+      sql << " PRIMARY KEY";
     }
     if (i < columns.size() - 1) {
       sql << ", ";
@@ -130,15 +130,12 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
 
   // first of all drop the temporary table if it exists
   sql << dropTable(table_name + "_temp", true);
+
   sql << "ALTER TABLE " << table_name << " RENAME TO " << table_name
       << "_temp;";
-  std::vector<std::string> columns;
-  std::vector<std::string> types;
-  for (const auto &column : modelColumns) {
-    columns.push_back(column.name);
-    types.push_back(to_string(column.type));
-  }
-  sql << createTable(table_name, columns, types, {});
+
+  sql << createTable(table_name, modelColumns, {});
+
   sql << "INSERT INTO " << table_name << " SELECT ";
   for (int i = 0; i < intersectionColumns.size(); i++) {
     sql << intersectionColumns[i].name;
@@ -147,6 +144,7 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
     }
   }
   sql << " FROM " << table_name << "_temp;";
+
   sql << dropTable(table_name + "_temp");
   return sql.str();
 }

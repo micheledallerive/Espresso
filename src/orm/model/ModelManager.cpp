@@ -98,45 +98,49 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                        dbFields.insert(info);
                      });
 
+  vector<SQLColumnInfo> modelFieldsList = std::move(data.getColumns());
   if (dbFields.empty()) {
     // create the table
-    vector<string> fields;
-    vector<string> types;
-    for (const auto &field : data.fields) {
-      fields.push_back(field.first);
-      types.push_back(to_string(getSQLType(field.second.ctype)));
-    }
-    string query = SQLGenerator::createTable(tableName, fields, types, {});
+    string query = SQLGenerator::createTable(tableName, modelFieldsList, {});
     dbManager->execute(query);
     return;
   }
 
-  set<SQLColumnInfo> ModelDataFields;
+  set<SQLColumnInfo> modelFields = set<SQLColumnInfo>(modelFieldsList.begin(),
+                                                      modelFieldsList.end());
   for (const auto &field : data.fields) {
     SQLColumnInfo info;
     info.name = field.first;
     info.type = getSQLType(field.second.ctype);
-    ModelDataFields.insert(info);
+    modelFields.insert(info);
   }
 
   vector<SQLColumnInfo> toAdd;
   vector<SQLColumnInfo> toRemove;
   vector<SQLColumnInfo> toModify;
 
-  std::set_difference(ModelDataFields.begin(), ModelDataFields.end(),
+  std::set_difference(modelFields.begin(), modelFields.end(),
                       dbFields.begin(), dbFields.end(),
                       std::inserter(toAdd, toAdd.begin()));
 
   std::set_difference(dbFields.begin(), dbFields.end(),
-                      ModelDataFields.begin(), ModelDataFields.end(),
+                      modelFields.begin(), modelFields.end(),
                       std::inserter(toRemove, toRemove.begin()));
 
   vector<SQLColumnInfo> intersection;
-  std::set_intersection(ModelDataFields.begin(), ModelDataFields.end(),
+  std::set_intersection(modelFields.begin(), modelFields.end(),
                         dbFields.begin(), dbFields.end(),
-                        std::inserter(intersection, intersection.begin()));
+                        std::inserter(intersection, intersection.begin()),
+                        [](const SQLColumnInfo &a, const SQLColumnInfo &b) {
+                          return a.name == b.name && !a.equals(b);
+                        });
+  vector<SQLColumnInfo> nameIntersection;
+  std::set_intersection(modelFields.begin(), modelFields.end(),
+                        dbFields.begin(), dbFields.end(),
+                        std::inserter(nameIntersection,
+                                      nameIntersection.begin()));
   // add in toModify the elements that are not in the intersection
-  for (const auto &field : ModelDataFields) {
+  for (const auto &field : modelFields) {
     if (std::find(intersection.begin(), intersection.end(), field) ==
         intersection.end()) {
       toModify.push_back(field);
@@ -151,10 +155,10 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                                           toAdd,
                                           toRemove,
                                           toModify,
-                                          intersection,
+                                          nameIntersection,
                                           vector<SQLColumnInfo>(
-                                              ModelDataFields.begin(),
-                                              ModelDataFields.end()));
+                                              modelFields.begin(),
+                                              modelFields.end()));
     dbManager->execute(sql);
   }
 
