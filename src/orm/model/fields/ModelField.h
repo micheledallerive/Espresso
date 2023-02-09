@@ -6,16 +6,21 @@
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELFIELD_H_
 
 #include <orm/utils/PrimitiveWrapper.h>
+#include "BaseModelField.h"
 namespace Espresso::ORM {
 
 template<typename T>
-class ModelField : public PrimitiveWrapper<T> {
+class ModelField : public PrimitiveWrapper<T>, public BaseModelField {
+ protected:
+  bool dirty{false};
+
+  void valueChanged() override;
  public:
   typedef T value_type;
   ModelField() = default;
   ModelField(const ModelField &wrapper) : PrimitiveWrapper<T>(wrapper) {}
   explicit ModelField(T val) : PrimitiveWrapper<T>(val) {}
-  virtual ~ModelField() = default;
+  ~ModelField() override = default;
 
   ModelField &operator=(const ModelField &wrapper) {
     // use super class operator
