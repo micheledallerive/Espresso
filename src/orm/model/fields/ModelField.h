@@ -16,11 +16,13 @@ class ModelField : public PrimitiveWrapper<T> {
   virtual ~ModelField() = default;
 
   ModelField &operator=(const ModelField &wrapper) {
-    this->value = wrapper.value;
+    // use super class operator
+    PrimitiveWrapper<T>::operator=(wrapper);
     return *this;
   }
   ModelField &operator=(const T &value) {
-    this->value = value;
+    // use super class operator
+    PrimitiveWrapper<T>::operator=(value);
     return *this;
   }
 };

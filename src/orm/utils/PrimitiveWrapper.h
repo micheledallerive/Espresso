@@ -12,8 +12,8 @@ template<typename T>
 class PrimitiveWrapper {
  protected:
   T value;
-  bool dirty{false};
  public:
+  bool dirty{false};
   typedef T value_type;
   PrimitiveWrapper() = default;
   explicit PrimitiveWrapper(T val) : value(val), dirty(true) {}
@@ -24,17 +24,17 @@ class PrimitiveWrapper {
       : value(wrapper.value), dirty(true) {}
 
   PrimitiveWrapper<T> &operator=(const T &value) {
-    value = value;
+    this->value = value;
     dirty = true;
     return *this;
   }
   PrimitiveWrapper<T> &operator=(const PrimitiveWrapper<T> &other) {
-    value = other.value;
+    this->value = other.value;
     dirty = true;
     return *this;
   }
   PrimitiveWrapper<T> &operator=(PrimitiveWrapper<T> &&other) noexcept {
-    value = std::move(other.value);
+    this->value = std::move(other.value);
     dirty = true;
     return *this;
   }
@@ -84,94 +84,94 @@ class PrimitiveWrapper {
   }
 
   PrimitiveWrapper<T> &operator+=(const PrimitiveWrapper<T> &other) {
-    value += other.value;
+    this->value += other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator-=(const PrimitiveWrapper<T> &other) {
-    value -= other.value;
+    this->value -= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator*=(const PrimitiveWrapper<T> &other) {
-    value *= other.value;
+    this->value *= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator/=(const PrimitiveWrapper<T> &other) {
-    value /= other.value;
+    this->value /= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator%=(const PrimitiveWrapper<T> &other) {
-    value %= other.value;
+    this->value %= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator^=(const PrimitiveWrapper<T> &other) {
-    value ^= other.value;
+    this->value ^= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator&=(const PrimitiveWrapper<T> &other) {
-    value &= other.value;
+    this->value &= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator|=(const PrimitiveWrapper<T> &other) {
-    value |= other.value;
+    this->value |= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator<<=(const PrimitiveWrapper<T> &other) {
-    value <<= other.value;
+    this->value <<= other.value;
     dirty = true;
     return *this;
   }
 
   PrimitiveWrapper<T> &operator>>=(const PrimitiveWrapper<T> &other) {
-    value >>= other.value;
+    this->value >>= other.value;
     dirty = true;
     return *this;
   }
 
   bool operator<(const PrimitiveWrapper<T> &other) const {
-    return value < other.value;
+    return this->value < other.value;
   }
 
   bool operator>(const PrimitiveWrapper<T> &other) const {
-    return value > other.value;
+    return this->value > other.value;
   }
 
   bool operator<=(const PrimitiveWrapper<T> &other) const {
-    return value <= other.value;
+    return this->value <= other.value;
   }
 
   bool operator>=(const PrimitiveWrapper<T> &other) const {
-    return value >= other.value;
+    return this->value >= other.value;
   }
 
   bool operator==(const PrimitiveWrapper<T> &other) const {
-    return value == other.value;
+    return this->value == other.value;
   }
 
   bool operator!=(const PrimitiveWrapper<T> &other) const {
-    return value != other.value;
+    return this->value != other.value;
   }
 
-  explicit operator T() const { return value; }
-  operator T &() { return value; }
-  operator const T &() const { return value; }
+  explicit operator T() const { return this->value; }
+  operator T &() { return this->value; }
+  operator const T &() const { return this->value; }
 
-  T get() const { return value; }
+  T get() const { return this->value; }
 };
 
 #include "PrimitiveWrapper.h"
