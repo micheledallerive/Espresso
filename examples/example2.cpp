@@ -33,9 +33,10 @@ int main() {
 
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
-      make_pair("pk", &Dog::pk),
       make_pair("name", &Dog::name),
-      make_pair("breed", &Dog::breed)
+      make_pair("breed", &Dog::breed),
+      make_pair("age", &Dog::age),
+      make_pair("pk", &Dog::pk)
   );
 
   Dog dog;
@@ -43,6 +44,12 @@ int main() {
   dog.breed = "Pitbull";
   dog.age = 3;
   dog.save();
+
+  dog.age = 5;
+  dog.save();
+
+  Dog dog2 = Dog::get({{"name", "Loredana"}});
+  std::cout << dog2.age << std::endl;
 
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;

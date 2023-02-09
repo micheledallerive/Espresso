@@ -34,6 +34,9 @@ void ModelManager::registerModel(const string &tableName, Args... args) {
     models[typeid(T).name()] = data;
   }
   registerFields<T>(args...);
+  if (models[typeid(T).name()].primaryKey.empty()) {
+    throw model_error("No primary key set");
+  }
   if (this->autoMigrate) {
     this->migrateModel(typeid(T).name());
   }
