@@ -3,6 +3,7 @@
 //
 
 #include "Model.h"
+#include <orm/model/fields/BaseModelField.h>
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
 #include <orm/sql/SQLGenerator.h>
@@ -42,24 +43,37 @@ void Model<T>::save() {
   std::vector<string> fields;
   std::vector<string> values;
   for (auto &modelField : data.fields) {
-    if (modelField.second.primaryKey) continue;
+    BaseModelField *baseField = getField(*instance, modelField.second);
+    bool dirty = baseField->dirty;
+    if (modelField.second.primaryKey) {
+      if (wasSaved && dirty) {
+        throw model_error("Cannot change primary key of an existing object");
+      }
+      if (!wasSaved && !dirty && !modelField.second.autoIncrement) {
+        throw model_error("Non autoincrement primary key must be set");
+      }
+      if (!wasSaved && !dirty && modelField.second.autoIncrement) {
+        continue;
+      }
+    }
+
+    if (!dirty) continue;
 
     fields.push_back(modelField.first);
     values.push_back(getFieldValue(*instance, modelField.second));
   }
 
   if (!wasSaved) { // instance does not exist: insert
-    // i do not want to save the primary key
     string query = SQLGenerator::insert(data.tableName, fields, values);
     dbManager->execute(query,
                        [&instance, &data](std::unordered_map<std::string,
-                                                      std::string> &result) {
+                                                             std::string> &result) {
                          setFieldValue(*instance,
                                        data.fields[data.primaryKey],
                                        result["id"]);
                        });
     wasSaved = true;
-  } else { // already exists: update it todo improve this check lmao
+  } else { // already exists: update it
     std::string
         primaryKeyField = ModelManager::getInstance().getModel<T>().primaryKey;
     std::string primaryKeyValue = getFieldValue(*instance,
@@ -173,6 +187,60 @@ std::string Model<T>::getFieldValue(T &instance,
         instance.*std::any_cast<ModelField<short> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(char).name()) {
     return std::to_string(
+        instance.*std::any_cast<ModelField<char> T::*>(fieldData.field));
+  } else {
+    throw std::runtime_error("Unknown type");
+  }
+}
+
+template<class T>
+BaseModelField *Model<T>::getField(T &instance, ModelDataField &fieldData) {
+  if (fieldData.ctype == typeid(std::string).name()) {
+    return new ModelField<std::string>(
+        instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(int).name()) {
+    return new ModelField<int>(
+        instance.*std::any_cast<ModelField<int> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(float).name()) {
+    return new ModelField<float>(
+        instance.*std::any_cast<ModelField<float> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(double).name()) {
+    return new ModelField<double>(
+        instance.*std::any_cast<ModelField<double> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(bool).name()) {
+    return new ModelField<bool>(
+        instance.*std::any_cast<ModelField<bool> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(long long).name()) {
+    return new ModelField<long long>(
+        instance.*std::any_cast<ModelField<long long> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(unsigned long long).name()) {
+    return new ModelField<unsigned long long>(
+        instance
+            .*std::any_cast<ModelField<unsigned long long> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(unsigned int).name()) {
+    return new ModelField<unsigned int>(
+        instance
+            .*std::any_cast<ModelField<unsigned int> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(unsigned short).name()) {
+    return new ModelField<unsigned short>(
+        instance
+            .*std::any_cast<ModelField<unsigned short> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(unsigned char).name()) {
+    return new ModelField<unsigned char>(
+        instance
+            .*std::any_cast<ModelField<unsigned char> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(long).name()) {
+    return new ModelField<long>(
+        instance.*std::any_cast<ModelField<long> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(unsigned long).name()) {
+    return new ModelField<unsigned long>(
+        instance
+            .*std::any_cast<ModelField<unsigned long> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(short).name()) {
+    return new ModelField<short>(
+        instance.*std::any_cast<ModelField<short> T::*>(fieldData.field));
+  } else if (fieldData.ctype == typeid(char).name()) {
+    return new ModelField<char>(
         instance.*std::any_cast<ModelField<char> T::*>(fieldData.field));
   } else {
     throw std::runtime_error("Unknown type");

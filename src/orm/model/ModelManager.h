@@ -21,6 +21,7 @@ struct ModelDataField {
   std::any field;
   std::string ctype;
   bool primaryKey{false};
+  bool autoIncrement{false};
 };
 
 struct ModelData {

@@ -27,6 +27,8 @@ class Model {
                             const std::string &value);
   static std::string getFieldValue(T &instance,
                                    ModelDataField &fieldData);
+  static BaseModelField *getField(T &instance,
+                                  ModelDataField &fieldData);
 };
 
 } // ORM
