@@ -5,17 +5,23 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELFIELD_H_
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELFIELD_H_
 
+#include "orm/utils/PrimitiveWrapper.h"
 namespace Espresso::ORM {
 
 template<typename T>
-class ModelField {
+class ModelField : public PrimitiveWrapper<T> {
  public:
   ModelField() = default;
   virtual ~ModelField() = default;
 
-  using type = T;
- private:
-  T value;
+  ModelField &operator=(const ModelField &wrapper) {
+    this->value = wrapper.value;
+    return *this;
+  }
+  ModelField &operator=(const T &value) {
+    this->value = value;
+    return *this;
+  }
 };
 
 } // ORM

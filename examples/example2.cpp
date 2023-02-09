@@ -7,6 +7,7 @@
 #include <orm/sql/SQLiteSQLGenerator.h>
 #include "orm/model/ModelManager.h"
 #include "orm/model/Model.h"
+#include "orm/utils/PrimitiveWrapper.h"
 
 using namespace Espresso::ORM;
 
@@ -15,9 +16,9 @@ class Dog : public Model<Dog> {
   Dog() = default;
   ~Dog() = default;
 
-  std::string name;
-  std::string breed;
-  int age{};
+  ModelField<std::string> name;
+  ModelField<std::string> breed;
+  ModelField<int> age;
 };
 
 int main() {
@@ -34,7 +35,7 @@ int main() {
       make_pair("age", &Dog::age)
   );
 
-  Dog dog = Dog::get({{"name", "Loredana"}, {"breed", "Labrador"}});
+  Dog dog = Dog::get({{"name", "Loredana"}});
   std::cout << dog.age << std::endl;
 
   dbManager->disconnect();

@@ -9,9 +9,9 @@
 
 #include <orm/database/DatabaseManager.h>
 #include <orm/sql/SQLGenerator.h>
+#include <orm/model/fields/PrimaryKey.h>
 #include "ModelManager.h"
 #include "../exceptions.h"
-
 
 namespace Espresso::ORM {
 
@@ -44,7 +44,7 @@ template<typename T>
 struct pointer_value;
 template<typename Class, typename Value>
 struct pointer_value<Value Class::*> {
-  using type = Value;
+  using valType = Value;
 };
 
 template<class T, class A, class... Args>
@@ -55,10 +55,12 @@ void ModelManager::registerFields(A arg, Args ... args) {
       throw std::runtime_error("Model not registered");
     }
     // create a void pointer to args.second
-    ModelDataField ModelDataField =
-        {std::any(arg.second),
-            typeid(typename pointer_value<decltype(arg.second)>::type).name()};
-    models[typeid(T).name()].fields.emplace(arg.first, ModelDataField);
+    string fieldType =
+        typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
+
+    ModelDataField modelField = {std::any(arg.second), fieldType};
+
+    models[typeid(T).name()].fields.emplace(arg.first, modelField);
   }
   registerFields < T >(args...);
 }
@@ -132,8 +134,9 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                                           toRemove,
                                           toModify,
                                           intersection,
-                                          vector<SQLColumnInfo>(ModelDataFields.begin(),
-                                                                ModelDataFields.end()));
+                                          vector<SQLColumnInfo>(
+                                              ModelDataFields.begin(),
+                                              ModelDataFields.end()));
     dbManager->execute(sql);
   }
 
