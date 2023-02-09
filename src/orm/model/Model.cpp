@@ -46,19 +46,20 @@ void Model<T>::save() {
     values.push_back(getField(*instance, modelField.second));
   }
 
-  if (instance->id == -1) { // instance does not exist: insert
+  if (!wasSaved) { // instance does not exist: insert
     string query = SQLGenerator::insert(data.tableName, fields, values);
-    dbManager->execute(query,
-                       [&instance](std::unordered_map<std::string,
-                                                      std::string> &result) {
-                         instance->id = std::stoll(result["id"]);
-                       });
+    dbManager->execute(query);
+    wasSaved = true;
   } else { // already exists: update it todo improve this check lmao
+    std::string
+        primaryKeyField = ModelManager::getInstance().getModel<T>().primaryKey;
+    std::string primaryKeyValue = getField(*instance,
+                                           data.fields[primaryKeyField]);
     string query = SQLGenerator::update(data.tableName,
                                         fields,
                                         values,
-                                        {{"id", std::to_string(instance->id)}});
-    dbManager->execute(query, nullptr);
+                                        {{primaryKeyField, primaryKeyValue}});
+    dbManager->execute(query);
   }
 }
 

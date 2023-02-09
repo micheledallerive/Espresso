@@ -22,7 +22,6 @@ ModelManager &ModelManager::getInstance() {
 
 template<class T>
 ModelData &ModelManager::getModel() {
-  std::shared_lock lock(this->mutex_);
   return this->models[typeid(T).name()];
 }
 

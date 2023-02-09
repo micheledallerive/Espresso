@@ -19,7 +19,8 @@ class Model {
   void save();
 
   static T get(ConstraintMap);
-  long long id{-1};
+ protected:
+  bool wasSaved{false};
  private:
   static void setField(T &instance,
                        ModelDataField &fieldData,
