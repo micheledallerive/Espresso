@@ -42,13 +42,22 @@ void Model<T>::save() {
   std::vector<string> fields;
   std::vector<string> values;
   for (auto &modelField : data.fields) {
+    if (modelField.second.primaryKey) continue;
+
     fields.push_back(modelField.first);
     values.push_back(getField(*instance, modelField.second));
   }
 
   if (!wasSaved) { // instance does not exist: insert
+    // i do not want to save the primary key
     string query = SQLGenerator::insert(data.tableName, fields, values);
-    dbManager->execute(query);
+    dbManager->execute(query,
+                       [&instance, &data](std::unordered_map<std::string,
+                                                      std::string> &result) {
+                         setField(*instance,
+                                  data.fields[data.primaryKey],
+                                  result["id"]);
+                       });
     wasSaved = true;
   } else { // already exists: update it todo improve this check lmao
     std::string
