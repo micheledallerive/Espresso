@@ -23,6 +23,7 @@ class ConnectionOptions {
 class DatabaseManager {
  public:
   DatabaseManager() = default;
+  virtual ~DatabaseManager() = default;
   virtual void connect(const ConnectionOptions &options) = 0;
   virtual void disconnect() = 0;
   virtual void execute(const std::string &query,
