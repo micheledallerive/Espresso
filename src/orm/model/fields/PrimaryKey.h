@@ -38,7 +38,7 @@ class PrimaryKey : public ModelField<T> {
 
 // write functions to check if a field is a primary key
 template<typename T, typename U>
-bool isPrimaryKey(const ModelField<T> U::*) {
+bool isPrimaryKey(const T U::*) {
   return false;
 }
 
