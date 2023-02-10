@@ -12,7 +12,10 @@ template<typename T>
 class PrimitiveWrapper {
  protected:
   T value;
-  virtual void valueChanged() {}
+  bool set = false;
+  virtual void valueChanged() {
+    set = true;
+  }
  public:
   typedef T value_type;
   PrimitiveWrapper() = default;

@@ -33,6 +33,9 @@ T Model<T>::get(ConstraintMap constraints) {
                          setFieldValue(instance,
                                        ModelDataField.second,
                                        result[ModelDataField.first]);
+                         auto *field =
+                             getField(instance, ModelDataField.second);
+                         field->dirty = false;
                        }
                      });
   if (!found) {
@@ -221,52 +224,33 @@ std::string Model<T>::getFieldValue(T &instance,
 template<class T>
 BaseModelField *Model<T>::getField(T &instance, ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
-    return new ModelField<std::string>(
-        instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(int).name()) {
-    return new ModelField<int>(
-        instance.*std::any_cast<ModelField<int> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<int> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(float).name()) {
-    return new ModelField<float>(
-        instance.*std::any_cast<ModelField<float> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<float> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(double).name()) {
-    return new ModelField<double>(
-        instance.*std::any_cast<ModelField<double> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<double> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(bool).name()) {
-    return new ModelField<bool>(
-        instance.*std::any_cast<ModelField<bool> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<bool> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(long long).name()) {
-    return new ModelField<long long>(
-        instance.*std::any_cast<ModelField<long long> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<long long> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long long).name()) {
-    return new ModelField<unsigned long long>(
-        instance
-            .*std::any_cast<ModelField<unsigned long long> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<unsigned long long> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned int).name()) {
-    return new ModelField<unsigned int>(
-        instance
-            .*std::any_cast<ModelField<unsigned int> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<unsigned int> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned short).name()) {
-    return new ModelField<unsigned short>(
-        instance
-            .*std::any_cast<ModelField<unsigned short> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<unsigned short> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned char).name()) {
-    return new ModelField<unsigned char>(
-        instance
-            .*std::any_cast<ModelField<unsigned char> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<unsigned char> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(long).name()) {
-    return new ModelField<long>(
-        instance.*std::any_cast<ModelField<long> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<long> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long).name()) {
-    return new ModelField<unsigned long>(
-        instance
-            .*std::any_cast<ModelField<unsigned long> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<unsigned long> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(short).name()) {
-    return new ModelField<short>(
-        instance.*std::any_cast<ModelField<short> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<short> T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(char).name()) {
-    return new ModelField<char>(
-        instance.*std::any_cast<ModelField<char> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField<char> T::*>(fieldData.field));
   } else {
     throw std::runtime_error("Unknown type");
   }

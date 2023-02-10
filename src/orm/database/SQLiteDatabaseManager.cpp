@@ -42,7 +42,7 @@ void SQLiteDatabaseManager::execute(const std::string &query,
   int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
   if (rc != SQLITE_OK) {
     throw sql_error(
-        "Could not prepare statement: '" + std::string(sqlite3_errmsg(db)) + "'");
+        "Could not prepare statement: '" + query + "': " + std::string(sqlite3_errmsg(db)));
   }
   while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
     std::unordered_map<std::string, std::string> rowResult;
