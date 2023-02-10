@@ -8,6 +8,7 @@
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
 #include <string>
+#include <orm/model/fields/ForeignKey.h>
 
 namespace Espresso::ORM {
 
@@ -16,6 +17,8 @@ class Model {
  public:
   Model() = default;
   virtual ~Model() = default;
+  Model &operator=(const Model &other) = default;
+
   void save();
   bool remove();
 
@@ -23,6 +26,9 @@ class Model {
  protected:
   bool wasSaved{false};
  private:
+  template <class G>
+  friend class ForeignKey;
+
   static void setFieldValue(T &instance,
                             ModelDataField &fieldData,
                             const std::string &value);

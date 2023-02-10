@@ -12,17 +12,50 @@
 using namespace Espresso::ORM;
 using namespace std;
 
+class Human : public Model<Human> {
+ public:
+  Human() = default;
+  ~Human() = default;
+
+  PrimaryKey<int> pk;
+
+  ModelField<std::string> name;
+  ModelField<std::string> surname;
+  ModelField<int> age;
+};
+
 class Dog : public Model<Dog> {
  public:
   Dog() = default;
   ~Dog() = default;
 
   PrimaryKey<int> pk;
+
   ModelField<std::string> name;
   ModelField<std::string> breed;
   ModelField<int> age;
-  //ForeignKey<Dog> mother;
+
+  ForeignKey<Human> owner;
 };
+
+void registerModels() {
+
+  ModelManager::getInstance().registerModel<Human>(
+      "humans",
+      make_pair(Field{.name="pk", .autoIncrement=true}, &Human::pk),
+      make_pair(Field{.name="name"}, &Human::name),
+      make_pair(Field{.name="surname"}, &Human::surname),
+      make_pair(Field{.name="age"}, &Human::age)
+  );
+  ModelManager::getInstance().registerModel<Dog>(
+      "dogs",
+      make_pair(Field{.name="pk", .autoIncrement=true}, &Dog::pk),
+      make_pair(Field{.name="name"}, &Dog::name),
+      make_pair(Field{.name="breed"}, &Dog::breed),
+      make_pair(Field{.name="age"}, &Dog::age),
+      make_pair(Field{.name="owner"}, &Dog::owner)
+  );
+}
 
 int main() {
   using std::make_pair;
@@ -31,25 +64,48 @@ int main() {
   options.databasePath = "test.db";
   DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
-  ModelManager::getInstance().registerModel<Dog>(
-      "dogs",
-      make_pair(Field{.name="pk", .primaryKey=true, .autoIncrement=true},
-                &Dog::pk),
-      make_pair(Field{.name="name"}, &Dog::name),
-      make_pair(Field{.name="breed"}, &Dog::breed),
-      make_pair(Field{.name="age"}, &Dog::age)
-  );
+  registerModels();
 
-  try {
-    Dog dog2 = Dog::get({{"name", "Loredana"}});
-    std::cout << dog2.age << std::endl;
-    dog2.remove();
+  Human h;
+  h.name = "Michele";
+  h.surname = "Dalle Rive";
+  h.age = 23;
+  h.save();
 
-    Dog dog = Dog();
-    dog.remove();
-  } catch (std::exception &e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-  }
+  Dog d;
+  d.name = "Dog";
+  d.breed = "Labrador";
+  d.age = 3;
+  d.owner = h;
+  d.save();
+
+//  Dog d;
+//  try {
+//    d = Dog::get({{"name", "Ciccio"}});
+//  } catch (const std::exception &e) {
+//    d.name = "Ciccio";
+//    d.breed = "Labrador";
+//    d.age = 3;
+//    d.save();
+//  }
+//
+//  Human h;
+//  try {
+//    h = Human::get({{"name", "Michele"}});
+//  } catch (const std::exception &e) {
+//    h.name = "Michele";
+//    h.surname = "Dalle Rive";
+//    h.age = 23;
+//    h.save();
+//  }
+//
+//  std::optional<Human *> h2 = *d.owner;
+//  if (h2.has_value()) {
+//    std::cout << h2.value()->name << std::endl;
+//  } else {
+//    std::cout << "No owner" << std::endl;
+//  }
+
 
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;

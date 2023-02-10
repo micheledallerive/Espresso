@@ -35,9 +35,13 @@ std::optional<T *> ForeignKey<T>::operator*() {
 
 template<class T>
 ForeignKey<T> &ForeignKey<T>::operator=(T &foreignObj) {
-  obj = foreignObj;
-  value = ModelManager::getInstance().getModel<T>().primaryKey;
+  obj = &foreignObj;
+  std::string pk = ModelManager::getInstance().getModel<T>().primaryKey;
+  ModelDataField
+      &fieldData = ModelManager::getInstance().getModel<T>().fields[pk];
+  value = foreignObj.getFieldValue(foreignObj, fieldData);
   keyWasSet = true;
+  setDirty(true);
   return *this;
 }
 template<class T>
@@ -54,6 +58,7 @@ ForeignKey<T> &ForeignKey<T>::operator=(T *foreignObj) {
   } else {
     ForeignKey<T>::operator=(*foreignObj);
   }
+  setDirty(true);
   return *this;
 }
 template<class T>
