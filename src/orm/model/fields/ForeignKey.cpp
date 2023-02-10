@@ -21,14 +21,14 @@ ForeignKey<T>::ForeignKey(ForeignKey<T> &&foreignObj) noexcept
 }
 
 template<class T>
-const std::optional<T> &ForeignKey<T>::operator*() {
+std::optional<T *> ForeignKey<T>::operator*() {
   if (!obj.has_value()) {
-    if (!keyWasSet) {
+    if (!keyWasSet && this->value.empty()) {
       return std::nullopt;
     }
     const std::string
         &objPKName = ModelManager::getInstance().getModel<T>().primaryKey;
-    obj = T::get({{objPKName, value}});
+    obj = new T(T::get({{objPKName, value}}));
   }
   return obj.value();
 }

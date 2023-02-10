@@ -15,7 +15,7 @@ class ForeignKey : public ModelField<string> {
   // the object the foreign key represents
   // the object will be computed only when accessed
   bool keyWasSet{false};
-  std::optional<const T *> obj{std::nullopt};
+  std::optional<T *> obj{std::nullopt};
 
  public:
   using value_type = T;
@@ -32,7 +32,7 @@ class ForeignKey : public ModelField<string> {
   ForeignKey &operator=(const ForeignKey<T> &);
 
   // used by the user to get the foreign "object"
-  const std::optional<T> &operator*();
+  std::optional<T *> operator*();
 };
 
 // write functions to check if a field is a foreign key

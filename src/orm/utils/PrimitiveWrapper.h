@@ -180,9 +180,9 @@ class PrimitiveWrapper {
     return this->value != other.value;
   }
 
-  explicit operator T() const { return this->value; }
-  operator T &() { return this->value; }
-  operator const T &() const { return this->value; }
+  virtual explicit operator T() const { return this->value; }
+  virtual operator T &() { return this->value; }
+  virtual operator const T &() const { return this->value; }
 
   T get() const { return this->value; }
 
