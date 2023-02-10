@@ -28,9 +28,9 @@ std::optional<T *> ForeignKey<T>::operator*() {
     }
     const std::string
         &objPKName = ModelManager::getInstance().getModel<T>().primaryKey;
-    obj = new T(T::get({{objPKName, value}}));
+    obj = T::get_ptr({{objPKName, value}});
   }
-  return obj.value();
+  return obj.value().get();
 }
 
 template<class T>

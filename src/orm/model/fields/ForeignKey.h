@@ -15,7 +15,7 @@ class ForeignKey : public ModelField<string> {
   // the object the foreign key represents
   // the object will be computed only when accessed
   bool keyWasSet{false};
-  std::optional<T *> obj{std::nullopt};
+  std::optional<std::shared_ptr<T>> obj{std::nullopt};
 
  public:
   using value_type = T;
