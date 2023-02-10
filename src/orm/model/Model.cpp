@@ -15,10 +15,10 @@
 namespace Espresso::ORM {
 
 template<class T>
-T Model<T>::get(ConstraintMap constraints) {
+std::shared_ptr<T> Model<T>::get_ptr(ConstraintMap constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
-  T instance;
+  std::shared_ptr<T> instance = std::make_shared<T>();
   bool found = false;
   for (const auto &constraint : constraints) {
     if (!data.fields.contains(constraint.first)) {
@@ -30,19 +30,24 @@ T Model<T>::get(ConstraintMap constraints) {
                                                                    std::string> &result) {
                        if (!data.fields.empty()) found = true;
                        for (auto &ModelDataField : data.fields) {
-                         setFieldValue(instance,
+                         setFieldValue(*instance,
                                        ModelDataField.second,
                                        result[ModelDataField.first]);
                          auto *field =
-                             getField(instance, ModelDataField.second);
+                             getField(*instance, ModelDataField.second);
                          field->dirty = false;
                        }
                      });
   if (!found) {
     throw object_not_found("Object not found");
   }
-  instance.wasSaved = true;
+  instance->wasSaved = true;
   return instance;
+}
+
+template<class T>
+T Model<T>::get(ConstraintMap constraints) {
+  return *get_ptr(constraints);
 }
 
 template<class T>
@@ -224,33 +229,54 @@ std::string Model<T>::getFieldValue(T &instance,
 template<class T>
 BaseModelField *Model<T>::getField(T &instance, ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
-    return &(instance.*std::any_cast<ModelField<std::string> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < std::string>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(int).name()) {
-    return &(instance.*std::any_cast<ModelField<int> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < int>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(float).name()) {
-    return &(instance.*std::any_cast<ModelField<float> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < float>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(double).name()) {
-    return &(instance.*std::any_cast<ModelField<double> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < double>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(bool).name()) {
-    return &(instance.*std::any_cast<ModelField<bool> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < bool>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(long long).name()) {
-    return &(instance.*std::any_cast<ModelField<long long> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < long long>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long long).name()) {
-    return &(instance.*std::any_cast<ModelField<unsigned long long> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < unsigned long long>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned int).name()) {
-    return &(instance.*std::any_cast<ModelField<unsigned int> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < unsigned int>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned short).name()) {
-    return &(instance.*std::any_cast<ModelField<unsigned short> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < unsigned short>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned char).name()) {
-    return &(instance.*std::any_cast<ModelField<unsigned char> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < unsigned char>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(long).name()) {
-    return &(instance.*std::any_cast<ModelField<long> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < long>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long).name()) {
-    return &(instance.*std::any_cast<ModelField<unsigned long> T::*>(fieldData.field));
+    return &(instance
+        .*std::any_cast<ModelField < unsigned long>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(short).name()) {
-    return &(instance.*std::any_cast<ModelField<short> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < short>
+    T::* > (fieldData.field));
   } else if (fieldData.ctype == typeid(char).name()) {
-    return &(instance.*std::any_cast<ModelField<char> T::*>(fieldData.field));
+    return &(instance.*std::any_cast<ModelField < char>
+    T::* > (fieldData.field));
   } else {
     throw std::runtime_error("Unknown type");
   }

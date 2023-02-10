@@ -23,11 +23,13 @@ class Model {
   bool remove();
 
   static T get(ConstraintMap);
+  static std::shared_ptr<T> get_ptr(ConstraintMap);
  protected:
   bool wasSaved{false};
  private:
-  template <class G>
-  friend class ForeignKey;
+  template<class G>
+  friend
+  class ForeignKey;
 
   static void setFieldValue(T &instance,
                             ModelDataField &fieldData,
