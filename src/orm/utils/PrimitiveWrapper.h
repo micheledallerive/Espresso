@@ -182,6 +182,20 @@ class PrimitiveWrapper {
   operator const T &() const { return this->value; }
 
   T get() const { return this->value; }
+
+  // stream
+  friend std::ostream &operator<<(std::ostream &os,
+                                  const PrimitiveWrapper<T> &wrapper) {
+    os << wrapper.value;
+    return os;
+  }
+
+  friend std::istream &operator>>(std::istream &is,
+                                  PrimitiveWrapper<T> &wrapper) {
+    is >> wrapper.value;
+    wrapper.valueChanged();
+    return is;
+  }
 };
 
 #include "PrimitiveWrapper.h"
