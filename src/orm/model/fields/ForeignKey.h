@@ -12,13 +12,11 @@ namespace Espresso::ORM {
 // create a class ForeignKey<T> that inherits from ModelField<T> but allows self-reference to the model
 // and might be empty
 template<class T>
-class ForeignKey {
+class ForeignKey : public ModelField<string> {
  private:
-  // the foreign key itself
-  std::optional<std::string> key{std::nullopt};
-
   // the object the foreign key represents
   // the object will be computed only when accessed
+  bool keyWasSet{false};
   std::optional<const T &> obj{std::nullopt};
 
  public:
@@ -26,11 +24,14 @@ class ForeignKey {
   virtual ~ForeignKey() = default;
 
   // used by the user to set the foreign "object"
-  ForeignKey &operator=(T &value);
-  ForeignKey &operator=(const T &value);
+  ForeignKey &operator=(T &);
+  ForeignKey &operator=(const T &);
+  ForeignKey &operator=(T *);
+  ForeignKey &operator=(ForeignKey<T> &) = delete;
+  ForeignKey &operator=(const ForeignKey<T> &) = delete;
 
   // used by the user to get the foreign "object"
-  const T &operator*();
+  const std::optional<T> &operator*();
 };
 
 } // ORM
