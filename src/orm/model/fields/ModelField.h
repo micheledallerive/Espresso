@@ -29,6 +29,7 @@ class ModelField : public PrimitiveWrapper<T>, public BaseModelField {
   ModelField &operator=(const T &value) override {
     // use super class operator
     PrimitiveWrapper<T>::operator=(value);
+    setDirty(true);
     return *this;
   }
 };

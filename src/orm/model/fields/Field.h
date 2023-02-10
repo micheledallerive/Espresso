@@ -7,6 +7,7 @@
 
 #include <string>
 #include <any>
+#include <optional>
 
 namespace Espresso::ORM {
 
@@ -16,13 +17,18 @@ struct Field {
   bool autoIncrement{false};
   bool notNull{false};
   std::string defaultValue{};
-  std::string foreignKey{};
+};
+
+struct ForeignKeyData {
+  std::string table;
+  std::string tablePrimaryKey;
 };
 
 class ModelDataField : public Field {
  public:
   std::any field;
   std::string ctype;
+  std::optional<ForeignKeyData> foreignKey;
 
   ModelDataField() = default;
   // create a constructor for the assignment ModelDataField = Field
@@ -33,6 +39,7 @@ class ModelDataField : public Field {
     this->autoIncrement = f.autoIncrement;
     this->notNull = f.notNull;
     this->defaultValue = f.defaultValue;
+    this->foreignKey = std::nullopt;
   }
 };
 

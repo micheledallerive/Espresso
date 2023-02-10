@@ -30,6 +30,7 @@ class SQLColumnInfo;
 class SQLColumnInfo : public Field {
  public:
   SQLType type{SQLType::BLOB};
+  std::optional<ForeignKeyData> foreignKey;
 
   bool operator==(const SQLColumnInfo &other) const {
     return name == other.name;
@@ -75,6 +76,7 @@ class SQLColumnInfo : public Field {
     autoIncrement = field.autoIncrement;
     notNull = field.notNull;
     defaultValue = field.defaultValue;
+    foreignKey = field.foreignKey;
   }
 };
 

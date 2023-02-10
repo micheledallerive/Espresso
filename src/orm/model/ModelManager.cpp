@@ -67,12 +67,20 @@ void ModelManager::registerFields(A arg, Args ... args) {
 
     modelField.primaryKey = fieldParamData.primaryKey
         || isPrimaryKey(arg.second);
-    if (isForeignKey(arg.second)) {
-      modelField.foreignKey =
-          typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
-    }
 
-    setDataFieldTypes(arg.second, modelField);
+    if (isForeignKey(arg.second)) {
+      std::string foreignObjectType =
+          typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
+      modelField.foreignKey = ForeignKeyData{
+          .table=models[foreignObjectType].tableName,
+          .tablePrimaryKey=models[foreignObjectType].primaryKey
+      };
+      modelField.ctype = typeid(std::string).name();
+      modelField.field =
+          reinterpret_cast<ModelField<std::string> T::*>(arg.second);
+    } else {
+      setDataFieldTypes(arg.second, modelField);
+    }
 
     const std::string fieldName = fieldParamData.name;
     if (modelField.primaryKey) {

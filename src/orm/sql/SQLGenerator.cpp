@@ -25,6 +25,13 @@ std::string SQLGenerator::createTable(const std::string &table_name,
       sql << ", ";
     }
   }
+  for (const auto & column : columns) {
+    if (column.foreignKey.has_value()) {
+      sql << ", FOREIGN KEY (" << column.name << ") REFERENCES "
+          << column.foreignKey->table << "("
+          << column.foreignKey->tablePrimaryKey << ")";
+    }
+  }
   sql << ");";
   return sql.str();
 }
