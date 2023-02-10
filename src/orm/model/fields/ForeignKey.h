@@ -17,18 +17,20 @@ class ForeignKey : public ModelField<string> {
   // the object the foreign key represents
   // the object will be computed only when accessed
   bool keyWasSet{false};
-  std::optional<const T &> obj{std::nullopt};
+  std::optional<const T *> obj{std::nullopt};
 
  public:
   ForeignKey() = default;
-  virtual ~ForeignKey() = default;
+  ~ForeignKey() override = default;
+  ForeignKey(const ForeignKey<T> &);
+  ForeignKey(ForeignKey<T> &&) noexcept ;
 
   // used by the user to set the foreign "object"
   ForeignKey &operator=(T &);
   ForeignKey &operator=(const T &);
   ForeignKey &operator=(T *);
-  ForeignKey &operator=(ForeignKey<T> &) = delete;
-  ForeignKey &operator=(const ForeignKey<T> &) = delete;
+
+  ForeignKey &operator=(const ForeignKey<T> &);
 
   // used by the user to get the foreign "object"
   const std::optional<T> &operator*();

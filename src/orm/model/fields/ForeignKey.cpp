@@ -7,6 +7,20 @@
 namespace Espresso::ORM {
 
 template<class T>
+ForeignKey<T>::ForeignKey(const ForeignKey<T> &foreignObj) : ModelField<string>(
+    foreignObj) {
+  obj = foreignObj.obj;
+  keyWasSet = foreignObj.keyWasSet;
+}
+
+template<class T>
+ForeignKey<T>::ForeignKey(ForeignKey<T> &&foreignObj) noexcept
+    : ModelField<string>(std::move(foreignObj)) {
+  obj = std::move(foreignObj.obj);
+  keyWasSet = foreignObj.keyWasSet;
+}
+
+template<class T>
 const std::optional<T> &ForeignKey<T>::operator*() {
   if (!obj.has_value()) {
     if (!keyWasSet) {
@@ -40,6 +54,13 @@ ForeignKey<T> &ForeignKey<T>::operator=(T *foreignObj) {
   } else {
     ForeignKey<T>::operator=(*foreignObj);
   }
+  return *this;
+}
+template<class T>
+ForeignKey<T> &ForeignKey<T>::operator=(const ForeignKey<T> &foreignObj) {
+  obj = foreignObj.obj;
+  value = foreignObj.value;
+  keyWasSet = foreignObj.keyWasSet;
   return *this;
 }
 
