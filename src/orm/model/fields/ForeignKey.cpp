@@ -21,21 +21,21 @@ ForeignKey<T>::ForeignKey(ForeignKey<T> &&foreignObj) noexcept
 }
 
 template<class T>
-std::optional<T *> ForeignKey<T>::operator*() {
+std::shared_ptr<T> ForeignKey<T>::operator*() {
   if (!obj.has_value()) {
     if (!keyWasSet && this->value.empty()) {
-      return std::nullopt;
+      return nullptr;
     }
     const std::string
         &objPKName = ModelManager::getInstance().getModel<T>().primaryKey;
     obj = T::get_ptr({{objPKName, value}});
   }
-  return obj.value().get();
+  return obj.value();
 }
 
 template<class T>
 ForeignKey<T> &ForeignKey<T>::operator=(T &foreignObj) {
-  obj = &foreignObj;
+  obj = std::make_shared<T>(foreignObj);
   std::string pk = ModelManager::getInstance().getModel<T>().primaryKey;
   ModelDataField
       &fieldData = ModelManager::getInstance().getModel<T>().fields[pk];

@@ -32,7 +32,7 @@ class ForeignKey : public ModelField<string> {
   ForeignKey &operator=(const ForeignKey<T> &);
 
   // used by the user to get the foreign "object"
-  std::optional<T *> operator*();
+  std::shared_ptr<T> operator*();
 };
 
 // write functions to check if a field is a foreign key
