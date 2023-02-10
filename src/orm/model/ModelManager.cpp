@@ -2,7 +2,6 @@
 // Created by michele on 07.02.23.
 //
 
-#include <mutex>
 #include <set>
 #include <vector>
 #include <iostream>
@@ -64,6 +63,9 @@ void ModelManager::registerFields(A arg, Args ... args) {
 
     const Field &fieldParamData = arg.first;
     ModelDataField modelField(fieldParamData);
+    modelField.primaryKey = fieldParamData.primaryKey
+        || isPrimaryKey(arg.second);
+
     setDataFieldTypes(arg.second, modelField);
 
     const std::string fieldName = fieldParamData.name;
@@ -89,7 +91,7 @@ ModelDataField ModelManager::setDataFieldTypes(Type Class::* field,
       typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
 
   // every field must be converted to a ModelField in order to be recasted back later
-  // primary keys foreign keys etc are stored in the ModelDataField, so can be
+  // primary keys foreign keys etc. are stored in the ModelDataField, so can be
   // upcasted to a ModelField
   modelField.field =
       reinterpret_cast<ModelField<typename Type::value_type> Class::*>(field);

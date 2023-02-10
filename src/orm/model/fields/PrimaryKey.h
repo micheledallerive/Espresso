@@ -27,9 +27,11 @@ class PrimaryKey : public ModelField<T> {
   }
   PrimaryKey<T> &operator=(const PrimaryKey<T> &other) {
     ModelField<T>::operator=(other);
+    return *this;
   }
   PrimaryKey<T> &operator=(PrimaryKey<T> &&other) noexcept {
     ModelField<T>::operator=(std::move(other));
+    return *this;
   }
 
 };
