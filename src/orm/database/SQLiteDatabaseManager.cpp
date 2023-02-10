@@ -36,7 +36,7 @@ void SQLiteDatabaseManager::execute(const std::string &query,
     }
     return;
   }
-  const char *error;
+
   sqlite3_stmt *stmt;
   const char *sql = query.c_str();
   int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);

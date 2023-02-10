@@ -53,7 +53,7 @@ void Server::listen(unsigned short int port,
   if (setsockopt(this->socket_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
     throw std::runtime_error("Could not set socket options");
   }
-  struct sockaddr_in address = {0};
+  struct sockaddr_in address = {0, 0, {0}, {0}};
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
   address.sin_port = htons(this->port_);

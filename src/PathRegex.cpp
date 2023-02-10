@@ -24,7 +24,7 @@ bool PathRegex::retrieveParams(const Route &route,
     if (route.params.size() != match.size() - 1) {
       return false;
     }
-    for (int i = 1; i < match.size(); ++i) {
+    for (size_t i = 1; i < match.size(); ++i) {
       std::string param = match[i];
       params[route.params[i - 1]] = param;
     }

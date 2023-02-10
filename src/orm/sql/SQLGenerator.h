@@ -21,12 +21,11 @@ class SQLGenerator {
   SQLGenerator &operator=(SQLGenerator &&) = delete;
 
   static std::string createTable(const std::string &,
-                                 const std::vector<SQLColumnInfo> &,
-                                 const ConstraintMap &);
+                                 const std::vector<SQLColumnInfo> &);
   static std::string alterTable(const std::string &,
-                                const std::vector<SQLColumnInfo> &toAdd,
-                                const std::vector<SQLColumnInfo> &toRemove,
-                                const std::vector<SQLColumnInfo> &toModify,
+//                                const std::vector<SQLColumnInfo> &toAdd,
+//                                const std::vector<SQLColumnInfo> &toRemove,
+//                                const std::vector<SQLColumnInfo> &toModify,
                                 const std::vector<SQLColumnInfo> &intersectionColumns,
                                 const std::vector<SQLColumnInfo> &modelColumns);
 

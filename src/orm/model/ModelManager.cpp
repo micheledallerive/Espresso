@@ -123,10 +123,10 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                        dbFields.insert(info);
                      });
 
-  vector<SQLColumnInfo> modelFieldsList = std::move(data.getColumns());
+  vector<SQLColumnInfo> modelFieldsList = data.getColumns();
   if (dbFields.empty()) {
     // create the table
-    string query = SQLGenerator::createTable(tableName, modelFieldsList, {});
+    string query = SQLGenerator::createTable(tableName, modelFieldsList);
     dbManager->execute(query);
     return;
   }
@@ -177,9 +177,9 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
 
     // lets assume the table exists
     string sql = SQLGenerator::alterTable(tableName,
-                                          toAdd,
-                                          toRemove,
-                                          toModify,
+//                                          toAdd,
+//                                          toRemove,
+//                                          toModify,
                                           nameIntersection,
                                           vector<SQLColumnInfo>(
                                               modelFields.begin(),

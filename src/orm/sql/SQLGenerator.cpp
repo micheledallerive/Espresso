@@ -9,12 +9,11 @@
 namespace Espresso::ORM {
 
 std::string SQLGenerator::createTable(const std::string &table_name,
-                                      const std::vector<SQLColumnInfo> &columns,
-                                      const ConstraintMap &constraints) {
+                                      const std::vector<SQLColumnInfo> &columns) {
   std::ostringstream sql;
   sql << "CREATE TABLE " << table_name << " (";
   // add columns with name type and primary key
-  for (int i = 0; i < columns.size(); i++) {
+  for (size_t i = 0; i < columns.size(); i++) {
     sql << columns[i].name << " " << to_string(columns[i].type);
     if (columns[i].primaryKey) {
       sql << " PRIMARY KEY";
@@ -46,14 +45,14 @@ std::string SQLGenerator::insert(const std::string &table_name,
                                  const std::vector<std::string> &values) {
   std::ostringstream sql;
   sql << "INSERT INTO " << table_name << " (";
-  for (int i = 0; i < columns.size(); i++) {
+  for (size_t i = 0; i < columns.size(); i++) {
     sql << columns[i];
     if (i < columns.size() - 1) {
       sql << ", ";
     }
   }
   sql << ") VALUES (";
-  for (int i = 0; i < values.size(); i++) {
+  for (size_t i = 0; i < values.size(); i++) {
     sql << "'" << values[i] << "'";
     if (i < values.size() - 1) {
       sql << ", ";
@@ -71,7 +70,7 @@ std::string SQLGenerator::select(const std::string &table_name,
   if (columns.empty()) {
     sql << "*";
   } else {
-    for (int i = 0; i < columns.size(); i++) {
+    for (size_t i = 0; i < columns.size(); i++) {
       sql << columns[i];
       if (i < columns.size() - 1) {
         sql << ", ";
@@ -81,7 +80,7 @@ std::string SQLGenerator::select(const std::string &table_name,
   sql << " FROM " << table_name;
   if (!constraints.empty()) {
     sql << " WHERE ";
-    int i = 0;
+    size_t i = 0;
     for (const auto &pair : constraints) {
       sql << pair.first << "='" << pair.second << "'";
       if (i < constraints.size() - 1) {
@@ -100,14 +99,14 @@ std::string SQLGenerator::update(const std::string &table_name,
                                  const ConstraintMap &constraints) {
   std::ostringstream sql;
   sql << "UPDATE " << table_name << " SET ";
-  for (int i = 0; i < columns.size(); ++i) {
+  for (size_t i = 0; i < columns.size(); ++i) {
     sql << columns[i] << "='" << values[i] << "'";
     if (i < columns.size() - 1) {
       sql << ", ";
     }
   }
   sql << " WHERE ";
-  int i = 0;
+  size_t i = 0;
   for (const auto &pair : constraints) {
     sql << pair.first << "='" << pair.second << "'";
     if (i < constraints.size() - 1) {
@@ -119,9 +118,9 @@ std::string SQLGenerator::update(const std::string &table_name,
   return sql.str();
 }
 std::string SQLGenerator::alterTable(const std::string &table_name,
-                                     const std::vector<SQLColumnInfo> &toAdd,
-                                     const std::vector<SQLColumnInfo> &toRemove,
-                                     const std::vector<SQLColumnInfo> &toModify,
+//                                     const std::vector<SQLColumnInfo> &toAdd,
+//                                     const std::vector<SQLColumnInfo> &toRemove,
+//                                     const std::vector<SQLColumnInfo> &toModify,
                                      const std::vector<SQLColumnInfo> &intersectionColumns,
                                      const std::vector<SQLColumnInfo> &modelColumns) {
   // write the sql statement for sqlite to alter the table
@@ -137,10 +136,10 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
   sql << "ALTER TABLE " << table_name << " RENAME TO " << table_name
       << "_temp;";
 
-  sql << createTable(table_name, modelColumns, {});
+  sql << createTable(table_name, modelColumns);
 
   sql << "INSERT INTO " << table_name << " SELECT ";
-  for (int i = 0; i < intersectionColumns.size(); i++) {
+  for (size_t i = 0; i < intersectionColumns.size(); i++) {
     sql << intersectionColumns[i].name;
     if (i < intersectionColumns.size() - 1) {
       sql << ", ";
@@ -158,7 +157,7 @@ std::string SQLGenerator::remove(const std::string &table_name,
   sql << "DELETE FROM " << table_name;
   if (!constraints.empty()) {
     sql << " WHERE ";
-    int i = 0;
+    size_t i = 0;
     for (const auto &pair : constraints) {
       sql << pair.first << "='" << pair.second << "'";
       if (i < constraints.size() - 1) {

@@ -17,11 +17,11 @@ class PrimaryKey : public ModelField<T> {
   PrimaryKey(const PrimaryKey<T> &other) = default;
   PrimaryKey(PrimaryKey<T> &&other) noexcept = default;
 
-  PrimaryKey<T> &operator=(const T &value) {
+  virtual PrimaryKey<T> &operator=(const T &value) {
     ModelField<T>::operator=(value);
     return *this;
   }
-  PrimaryKey<T> &operator=(T &&value) noexcept {
+  virtual PrimaryKey<T> &operator=(T &&value) noexcept {
     ModelField<T>::operator=(std::move(value));
     return *this;
   }
@@ -38,12 +38,12 @@ class PrimaryKey : public ModelField<T> {
 
 // write functions to check if a field is a primary key
 template<typename T, typename U>
-bool isPrimaryKey(const ModelField<T> U::*field) {
+bool isPrimaryKey(const ModelField<T> U::*) {
   return false;
 }
 
 template<typename T, typename U>
-bool isPrimaryKey(const PrimaryKey<T> U::*field) {
+bool isPrimaryKey(const PrimaryKey<T> U::*) {
   return true;
 }
 
