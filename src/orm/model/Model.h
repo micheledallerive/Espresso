@@ -24,6 +24,9 @@ class Model {
 
   static T get(ConstraintMap);
   static std::shared_ptr<T> get_ptr(ConstraintMap);
+
+  // operator ==
+  bool operator==(const Model &other) const;
  protected:
   bool wasSaved{false};
  private:

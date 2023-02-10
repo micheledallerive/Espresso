@@ -230,56 +230,69 @@ template<class T>
 BaseModelField *Model<T>::getField(T &instance, ModelDataField &fieldData) {
   if (fieldData.ctype == typeid(std::string).name()) {
     return &(instance
-        .*std::any_cast<ModelField < std::string>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<std::string>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(int).name()) {
-    return &(instance.*std::any_cast<ModelField < int>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<int>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(float).name()) {
-    return &(instance.*std::any_cast<ModelField < float>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<float>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(double).name()) {
-    return &(instance.*std::any_cast<ModelField < double>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<double>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(bool).name()) {
-    return &(instance.*std::any_cast<ModelField < bool>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<bool>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(long long).name()) {
     return &(instance
-        .*std::any_cast<ModelField < long long>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<long long>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long long).name()) {
     return &(instance
-        .*std::any_cast<ModelField < unsigned long long>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<unsigned long long>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned int).name()) {
     return &(instance
-        .*std::any_cast<ModelField < unsigned int>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<unsigned int>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned short).name()) {
     return &(instance
-        .*std::any_cast<ModelField < unsigned short>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<unsigned short>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned char).name()) {
     return &(instance
-        .*std::any_cast<ModelField < unsigned char>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<unsigned char>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(long).name()) {
-    return &(instance.*std::any_cast<ModelField < long>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<long>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(unsigned long).name()) {
     return &(instance
-        .*std::any_cast<ModelField < unsigned long>
-    T::* > (fieldData.field));
+        .*std::any_cast<ModelField<unsigned long>
+                        T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(short).name()) {
-    return &(instance.*std::any_cast<ModelField < short>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<short>
+                                     T::*>(fieldData.field));
   } else if (fieldData.ctype == typeid(char).name()) {
-    return &(instance.*std::any_cast<ModelField < char>
-    T::* > (fieldData.field));
+    return &(instance.*std::any_cast<ModelField<char>
+                                     T::*>(fieldData.field));
   } else {
     throw std::runtime_error("Unknown type");
   }
+}
+
+template<class T>
+bool Model<T>::operator==(const Model<T> &other) const {
+  const ModelData &data = ModelManager::getInstance().getModel<T>();
+  for (auto &fieldPair : data.fields) {
+    auto &fieldData = const_cast<ModelDataField&>(fieldPair.second);
+    if (getFieldValue(*static_cast<T*>(const_cast<Model<T>*>(this)), fieldData) !=
+        getFieldValue(*static_cast<T*>(const_cast<Model<T>*>(&other)), fieldData)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 } // ORM
