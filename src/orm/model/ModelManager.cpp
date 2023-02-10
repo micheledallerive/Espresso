@@ -23,7 +23,11 @@ ModelManager &ModelManager::getInstance() {
 
 template<class T>
 ModelData &ModelManager::getModel() {
-  return this->models[typeid(T).name()];
+  auto it = this->models.find(typeid(T).name());
+  if (it == this->models.end()) {
+    throw model_error("Model not registered");
+  }
+  return it->second;
 }
 
 template<class T, class... Args>
