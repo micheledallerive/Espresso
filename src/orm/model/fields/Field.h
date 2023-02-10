@@ -11,11 +11,12 @@
 namespace Espresso::ORM {
 
 struct Field {
-  std::string name{};
+  std::string name;
   bool primaryKey{false};
   bool autoIncrement{false};
   bool notNull{false};
   std::string defaultValue{};
+  std::string foreignKey{};
 };
 
 class ModelDataField : public Field {

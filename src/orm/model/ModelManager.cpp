@@ -9,6 +9,7 @@
 #include <orm/database/DatabaseManager.h>
 #include <orm/sql/SQLGenerator.h>
 #include <orm/model/fields/PrimaryKey.h>
+#include <orm/model/fields/ForeignKey.h>
 #include "ModelManager.h"
 #include "../exceptions.h"
 #include "ModelData.h"
@@ -63,8 +64,13 @@ void ModelManager::registerFields(A arg, Args ... args) {
 
     const Field &fieldParamData = arg.first;
     ModelDataField modelField(fieldParamData);
+
     modelField.primaryKey = fieldParamData.primaryKey
         || isPrimaryKey(arg.second);
+    if (isForeignKey(arg.second)) {
+      modelField.foreignKey =
+          typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
+    }
 
     setDataFieldTypes(arg.second, modelField);
 

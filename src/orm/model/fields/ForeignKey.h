@@ -5,8 +5,6 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_FOREIGNKEY_H_
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_FOREIGNKEY_H_
 
-#include <orm/model/fields/ModelField.h>
-
 namespace Espresso::ORM {
 
 // create a class ForeignKey<T> that inherits from ModelField<T> but allows self-reference to the model
@@ -20,10 +18,11 @@ class ForeignKey : public ModelField<string> {
   std::optional<const T *> obj{std::nullopt};
 
  public:
+  using value_type = T;
   ForeignKey() = default;
   ~ForeignKey() override = default;
   ForeignKey(const ForeignKey<T> &);
-  ForeignKey(ForeignKey<T> &&) noexcept ;
+  ForeignKey(ForeignKey<T> &&) noexcept;
 
   // used by the user to set the foreign "object"
   ForeignKey &operator=(T &);
@@ -35,6 +34,17 @@ class ForeignKey : public ModelField<string> {
   // used by the user to get the foreign "object"
   const std::optional<T> &operator*();
 };
+
+// write functions to check if a field is a foreign key
+template<typename T, typename U>
+bool isForeignKey(const T U::*) {
+  return false;
+}
+
+template<typename T, typename U>
+bool isForeignKey(const ForeignKey<T> U::*) {
+  return true;
+}
 
 } // ORM
 
