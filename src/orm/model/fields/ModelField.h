@@ -26,7 +26,7 @@ class ModelField : public PrimitiveWrapper<T>, public BaseModelField {
     PrimitiveWrapper<T>::operator=(wrapper);
     return *this;
   }
-  virtual ModelField &operator=(const T &value) override {
+  ModelField &operator=(const T &value) override {
     // use super class operator
     PrimitiveWrapper<T>::operator=(value);
     return *this;
