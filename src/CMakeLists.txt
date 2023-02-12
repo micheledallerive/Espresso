@@ -25,7 +25,7 @@ set(SOURCES
         orm/model/fields/Field.cpp
         orm/model/query/filter/FilterField.cpp
         orm/model/query/filter/FilterOperation.cpp
-        orm/model/query/filter/Operation.cpp)
+        orm/model/query/filter/Operator.cpp)
 
 # Create a library target for the Espresso library
 add_library(espresso STATIC ${SOURCES})

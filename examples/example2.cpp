@@ -12,6 +12,8 @@
 #include <orm/model/query/filter/FilterField.h>
 #include <orm/model/query/filter/FilterNode.h>
 
+#include <orm/model/query/QueryBuilder.h>
+
 using namespace Espresso::ORM;
 using namespace Espresso::ORM::Query;
 using namespace std;
@@ -31,7 +33,10 @@ class Human : public Model<Human> {
 class Dog : public Model<Dog> {
  public:
   Dog() = default;
-  ~Dog() = default;
+  ~Dog() override = default;
+
+  Dog(const std::string &name, const std::string &breed, int age)
+      : name(name), breed(breed), age(age) {}
 
   PrimaryKey<int> pk;
 
@@ -70,7 +75,17 @@ int main() {
 
   registerModels();
 
-  Dog d = Dog::get((Q("name") == "Ciccio") & (Q("age") == "2"));
+  std::vector<Dog> dogs = Dog::all();
+
+  for (Dog &dog : dogs) {
+    std::cout << dog.name << std::endl;
+  }
+
+  std::cout << "----------------" << std::endl;
+
+  std::cout << "Count: " << Dog::all().count() << std::endl;
+
+  Dog newDog = Dog::all().create("a", "b", 5);
 
 //  Dog d;
 //  try {
