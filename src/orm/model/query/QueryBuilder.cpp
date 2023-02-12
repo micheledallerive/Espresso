@@ -14,17 +14,24 @@ QueryBuilder<M> &QueryBuilder<M>::filter(const FilterOperation &filter) {
   } else {
     this->filter_ = filter;
   }
+
+  this->updated();
   return *this;
 }
 
 template<typename M>
 QueryBuilder<M> &QueryBuilder<M>::limit(int limit) {
   this->limit_ = limit;
+
+  this->updated();
   return *this;
 }
 
 template<typename M>
 std::vector<M> QueryBuilder<M>::execute() const {
+  if (this->cache_results_.has_value()) {
+    return this->cache_results_.value();
+  }
   const ModelData &data = ModelManager::getInstance().getModel<M>();
   std::string query = "SELECT * FROM " + data.tableName;
   if (this->filter_.has_value()) {
@@ -44,15 +51,18 @@ std::vector<M> QueryBuilder<M>::execute() const {
         for (const auto &field : data.fields) {
           const std::string &fieldName = field.first;
           const ModelDataField &fieldData = field.second;
-          M::setFieldValue(m, const_cast<ModelDataField&>(fieldData), row.at(fieldName));
+          M::setFieldValue(m,
+                           const_cast<ModelDataField &>(fieldData),
+                           row.at(fieldName));
         }
         result.push_back(m);
       });
+  this->cache_results_ = result;
   return result;
 }
 
 template<typename M>
-QueryBuilder<M>::operator std::vector<M >() const {
+QueryBuilder<M>::operator std::vector<M>() const {
   return this->execute();
 }
 

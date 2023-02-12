@@ -13,14 +13,24 @@ namespace Espresso::ORM::Query {
 template<typename M> // the model type
 class QueryBuilder {
  private:
+  std::optional<std::vector<M>> cache_results_{std::nullopt};
+
   std::optional<FilterOperation> filter_{std::nullopt};
   std::optional<int> limit_{std::nullopt};
+
+  void updated() {
+    this->cache_results_ = std::nullopt;
+  }
  public:
   QueryBuilder() = default;
   virtual ~QueryBuilder() = default;
 
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &limit(int limit);
+  size_t count() const;
+
+  M get() const;
+  M *get_ptr() const;
 
   operator std::vector<M>() const;
   std::vector<M> execute() const;
