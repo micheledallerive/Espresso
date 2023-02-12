@@ -14,9 +14,9 @@ namespace Espresso::ORM::Query {
 
 class FilterOperation : public FilterNode {
  protected:
-  std::unique_ptr<FilterNode> left;
-  std::unique_ptr<Operator> op;
-  std::unique_ptr<FilterNode> right;
+  std::shared_ptr<FilterNode> left;
+  std::shared_ptr<Operator> op;
+  std::shared_ptr<FilterNode> right;
  public:
   FilterOperation(FilterNode *left, Operator *op, FilterNode *right)
       : left(left), op(op), right(right) {}
@@ -27,7 +27,7 @@ class FilterOperation : public FilterNode {
   [[nodiscard]] std::vector<std::string> getKeys() const override;
   [[nodiscard]] bool isTerminal() const override;
 
-  FilterOperation *operator&(const FilterNode &) const;
+  FilterOperation operator&(const FilterOperation &) const;
   FilterOperation *operator|(const FilterNode &) const;
 };
 

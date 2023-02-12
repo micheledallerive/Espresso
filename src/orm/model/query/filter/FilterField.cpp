@@ -16,10 +16,10 @@ bool FilterField::isTerminal() const {
   return true;
 }
 
-FilterOperation *FilterField::operator==(const std::string &right) const {
-  return new FilterOperation(new FilterField(*this),
+FilterOperation FilterField::operator==(const std::string &right) const {
+  return {new FilterField(*this),
                              new RelationalOperator(RelationalOperator::EQUAL),
-                             new FilterField(right));
+                             new FilterField(right)};
 }
 
 FilterOperation *FilterField::operator!=(const std::string &right) const {

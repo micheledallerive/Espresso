@@ -22,7 +22,7 @@ class FilterField : public FilterNode { // represents a FilterLiteral
   [[nodiscard]] std::vector<std::string> getKeys() const override;
   [[nodiscard]] bool isTerminal() const override;
 
-  FilterOperation *operator==(const std::string &right) const;
+  FilterOperation operator==(const std::string &right) const;
   FilterOperation *operator!=(const std::string &right) const;
   FilterOperation *operator<(const std::string &right) const;
   FilterOperation *operator<=(const std::string &right) const;

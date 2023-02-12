@@ -14,10 +14,10 @@ std::string FilterOperation::toString() const {
       + (right->isTerminal() ? "'" + right->toString() + "'" :
           right->toString());
 }
-FilterOperation *FilterOperation::operator&(const FilterNode &other) const {
-  return new FilterOperation((FilterNode *) this,
-                             new LogicalOperator(LogicalOperator::AND),
-                             (FilterNode *) &other);
+FilterOperation FilterOperation::operator&(const FilterOperation &other) const {
+  return {new FilterOperation(*this),
+      new LogicalOperator(LogicalOperator::AND),
+      new FilterOperation(other)};
 }
 FilterOperation *FilterOperation::operator|(const FilterNode &other) const {
   return new FilterOperation((FilterNode *) this,
