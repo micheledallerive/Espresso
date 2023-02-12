@@ -29,6 +29,7 @@ class QueryBuilder {
   virtual ~QueryBuilder() = default;
 
   QueryBuilder &filter(const FilterOperation &filter);
+  QueryBuilder &exclude(const FilterOperation &filter);
   QueryBuilder &limit(int limit);
 
   template<typename... Args>

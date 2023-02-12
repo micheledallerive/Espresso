@@ -36,6 +36,18 @@ QueryBuilder<M> &QueryBuilder<M>::filter(const FilterOperation &filter) {
 }
 
 template<typename M>
+QueryBuilder<M> &QueryBuilder<M>::exclude(const FilterOperation &filter) {
+  if (this->filter_.has_value()) {
+    this->filter_ = this->filter_.value() & (!filter);
+  } else {
+    this->filter_ = (!filter);
+  }
+
+  this->updated();
+  return *this;
+}
+
+template<typename M>
 QueryBuilder<M> &QueryBuilder<M>::limit(int limit) {
   this->limit_ = limit;
 
