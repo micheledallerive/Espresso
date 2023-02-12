@@ -5,15 +5,30 @@
 #include "FilterOperation.h"
 #include "Operator.h"
 #include <vector>
+#include <sstream>
 
 namespace Espresso::ORM::Query {
 
 std::string FilterOperation::toString() const {
-  return (left == nullptr ? "" : left->toString() + " ")
-      + op->toString() + " "
-      + (right->isTerminal() ?
-          "'" + right->toString() + "'" :
-          "(" + right->toString() + ")");
+  std::ostringstream sql;
+  if (left != nullptr) {
+    if (left->isTerminal()) {
+      sql << left->toString();
+    } else {
+      sql << "(" << left->toString() << ")";
+    }
+    sql << " ";
+  }
+  sql << op->toString();
+  if (right != nullptr) {
+    sql << " ";
+    if (right->isTerminal()) {
+      sql << right->toString();
+    } else {
+      sql << "(" << right->toString() << ")";
+    }
+  }
+  return sql.str();
 }
 FilterOperation FilterOperation::operator&(const FilterOperation &other) const {
   return {new FilterOperation(*this),
