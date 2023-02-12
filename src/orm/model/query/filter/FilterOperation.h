@@ -8,27 +8,17 @@
 #include <memory>
 
 #include "FilterNode.h"
+#include "Operation.h"
 
 namespace Espresso::ORM::Query {
-
-enum class Operation {
-  EQUAL,
-  NOT_EQUAL,
-  GREATER,
-  GREATER_EQUAL,
-  LESS,
-  LESS_EQUAL,
-};
-
-std::string operatorToString(Operation op);
 
 class FilterOperation : public FilterNode {
  protected:
   std::unique_ptr<FilterNode> left;
-  Operation op;
+  std::unique_ptr<Operation> op;
   std::unique_ptr<FilterNode> right;
  public:
-  FilterOperation(FilterNode *left, Operation op, FilterNode *right)
+  FilterOperation(FilterNode *left, Operation *op, FilterNode *right)
       : left(left), op(op), right(right) {}
 
   ~FilterOperation() override = default;

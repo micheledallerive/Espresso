@@ -11,7 +11,8 @@ namespace Espresso::ORM::Query {
 
 class Operation {
  public:
-  virtual std::string toString() const = 0;
+  virtual ~Operation() = default;
+  [[nodiscard]] virtual std::string toString() const = 0;
 };
 
 class RelationalOperator : public Operation {
@@ -26,17 +27,7 @@ class RelationalOperator : public Operation {
   } op;
 
   explicit RelationalOperator(RelationalOperator::Operation op) : op(op) {}
-  std::string toString() const override {
-    switch (op) {
-      case EQUAL:return "=";
-      case NOT_EQUAL:return "!=";
-      case GREATER_THAN:return ">";
-      case GREATER_THAN_OR_EQUAL:return ">=";
-      case LESS_THAN:return "<";
-      case LESS_THAN_OR_EQUAL:return "<=";
-      default:return "";
-    }
-  }
+  [[nodiscard]] std::string toString() const override;
 };
 
 class LogicalOperator : public Operation {
@@ -47,13 +38,7 @@ class LogicalOperator : public Operation {
   } op;
 
   explicit LogicalOperator(LogicalOperator::Operation op) : op(op) {}
-  std::string toString() const override {
-    switch (op) {
-      case AND:return "AND";
-      case OR:return "OR";
-      default:return "";
-    }
-  }
+  [[nodiscard]] std::string toString() const override;
 };
 
 } // Query

@@ -5,4 +5,22 @@
 #include "Operation.h"
 
 namespace Espresso::ORM::Query {
+std::string LogicalOperator::toString() const {
+  switch (op) {
+    case AND:return "AND";
+    case OR:return "OR";
+    default:return "";
+  }
+}
+std::string RelationalOperator::toString() const {
+  switch (op) {
+    case EQUAL:return "=";
+    case NOT_EQUAL:return "!=";
+    case GREATER_THAN:return ">";
+    case GREATER_THAN_OR_EQUAL:return ">=";
+    case LESS_THAN:return "<";
+    case LESS_THAN_OR_EQUAL:return "<=";
+    default:return "";
+  }
+}
 } // Query

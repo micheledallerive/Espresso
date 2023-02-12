@@ -6,20 +6,8 @@
 
 namespace Espresso::ORM::Query {
 
-std::string operatorToString(Operation op) {
-  switch (op) {
-    case Operation::EQUAL:return "=";
-    case Operation::NOT_EQUAL:return "!=";
-    case Operation::GREATER:return ">";
-    case Operation::GREATER_EQUAL:return ">=";
-    case Operation::LESS:return "<";
-    case Operation::LESS_EQUAL:return "<=";
-    default: return "";
-  }
-}
-
 std::string FilterOperation::toString() const {
-  return left->toString() + " " + operatorToString(op) + " "
+  return left->toString() + " " + op->toString() + " "
       + right->toString();
 }
 } // Query

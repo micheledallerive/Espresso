@@ -11,7 +11,7 @@ std::string FilterField::toString() const {
 
 FilterOperation *FilterField::operator==(const std::string &right) const {
   return new FilterOperation(new FilterField(*this),
-                             Operation::EQUAL,
+                             new RelationalOperator(RelationalOperator::EQUAL),
                              new FilterField(right));
 }
 } // Query
