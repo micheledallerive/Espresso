@@ -32,6 +32,8 @@ class FilterField : public FilterNode { // represents a FilterLiteral
 
 };
 
+using Q = FilterField; // alias for FilterField to make queries more readable
+
 } // Query
 
 #endif //ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_FILTERFIELD_H_
