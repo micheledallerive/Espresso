@@ -1,3 +1,7 @@
+
+# set the compilation parameters
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
+
 set(SOURCES
         Cookies.cpp
         HTTPMessage.cpp
