@@ -16,6 +16,11 @@
 namespace Espresso::ORM {
 
 template<class T>
+Query::QueryBuilder<T> Model<T>::all() {
+  return Query::QueryBuilder<T>();
+}
+
+template<class T>
 std::shared_ptr<T> Model<T>::get_ptr(const std::optional<Query::FilterOperation> &constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);

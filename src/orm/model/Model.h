@@ -27,6 +27,8 @@ class Model {
   static T get(const std::optional<Query::FilterOperation> & = std::nullopt);
   static std::shared_ptr<T> get_ptr(const std::optional<Query::FilterOperation> & = std::nullopt);
 
+  static Query::QueryBuilder<T> all();
+
   // operator ==
   bool operator==(const Model &other) const;
  protected:
