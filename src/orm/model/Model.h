@@ -21,7 +21,7 @@ class Model {
   virtual ~Model() = default;
   Model &operator=(const Model &other) = default;
 
-  void save();
+  void save(bool checkDirty=true);
   bool remove();
 
   static T get(const std::optional<Query::FilterOperation> & = std::nullopt);

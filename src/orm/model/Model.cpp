@@ -78,7 +78,7 @@ bool Model<T>::remove() {
 }
 
 template<class T>
-void Model<T>::save() {
+void Model<T>::save(bool checkDirty) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   T *instance = static_cast<T *>(this);
 
@@ -99,7 +99,7 @@ void Model<T>::save() {
       }
     }
 
-    if (!dirty) continue;
+    if (checkDirty && !dirty) continue;
 
     fields.push_back(modelField.first);
     values.push_back(getFieldValue(*instance, modelField.second));
