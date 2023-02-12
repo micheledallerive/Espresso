@@ -9,8 +9,10 @@
 namespace Espresso::ORM::Query {
 
 std::string FilterOperation::toString() const {
-  return left->toString() + " " + op->toString() + " "
-      + right->toString();
+  return left->toString() + " "
+      + op->toString() + " "
+      + (right->isTerminal() ? "'" + right->toString() + "'" :
+          right->toString());
 }
 FilterOperation *FilterOperation::operator&(const FilterNode &other) const {
   return new FilterOperation((FilterNode *) this,
@@ -27,6 +29,9 @@ std::vector<std::string> FilterOperation::getKeys() const {
   std::vector<std::string> leftKeys = left->getKeys();
   keys.insert(keys.end(), leftKeys.begin(), leftKeys.end());
   return keys;
+}
+bool FilterOperation::isTerminal() const {
+  return false;
 }
 
 } // Query

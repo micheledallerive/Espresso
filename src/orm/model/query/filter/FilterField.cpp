@@ -18,4 +18,7 @@ FilterOperation *FilterField::operator==(const std::string &right) const {
 std::vector<std::string> FilterField::getKeys() const {
   return std::vector<std::string>{value};
 }
+bool FilterField::isTerminal() const {
+  return true;
+}
 } // Query

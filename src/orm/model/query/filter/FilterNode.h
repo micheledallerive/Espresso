@@ -14,11 +14,14 @@ class FilterNode {
  public:
   virtual ~FilterNode() = default;
 
-  virtual std::string toString() const {
+  [[nodiscard]] virtual std::string toString() const {
     return "";
   }
-  virtual std::vector<std::string> getKeys() const {
+  [[nodiscard]] virtual std::vector<std::string> getKeys() const {
     return {};
+  }
+  [[nodiscard]] virtual bool isTerminal() const {
+    return false;
   }
 };
 
