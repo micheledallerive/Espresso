@@ -10,6 +10,7 @@
 #include <string>
 #include <orm/model/fields/ForeignKey.h>
 #include <orm/model/query/filter/FilterOperation.h>
+#include <orm/model/query/QueryBuilder.h>
 
 namespace Espresso::ORM {
 
@@ -34,6 +35,9 @@ class Model {
   template<class G>
   friend
   class ForeignKey;
+  template<class G>
+  friend
+  class Query::QueryBuilder;
 
   static void setFieldValue(T &instance,
                             ModelDataField &fieldData,
