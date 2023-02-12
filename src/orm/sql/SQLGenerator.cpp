@@ -3,6 +3,7 @@
 //
 
 #include "SQLGenerator.h"
+#include "orm/model/query/filter/FilterNode.h"
 #include <sstream>
 #include <unordered_map>
 
@@ -25,7 +26,7 @@ std::string SQLGenerator::createTable(const std::string &table_name,
       sql << ", ";
     }
   }
-  for (const auto & column : columns) {
+  for (const auto &column : columns) {
     if (column.foreignKey.has_value()) {
       sql << ", FOREIGN KEY (" << column.name << ") REFERENCES "
           << column.foreignKey->table << "("
@@ -71,7 +72,7 @@ std::string SQLGenerator::insert(const std::string &table_name,
 
 std::string SQLGenerator::select(const std::string &table_name,
                                  const std::vector<std::string> &columns,
-                                 const ConstraintMap &constraints) {
+                                 Query::FilterNode *constraints) {
   std::ostringstream sql;
   sql << "SELECT ";
   if (columns.empty()) {
@@ -85,16 +86,8 @@ std::string SQLGenerator::select(const std::string &table_name,
     }
   }
   sql << " FROM " << table_name;
-  if (!constraints.empty()) {
-    sql << " WHERE ";
-    size_t i = 0;
-    for (const auto &pair : constraints) {
-      sql << pair.first << "='" << pair.second << "'";
-      if (i < constraints.size() - 1) {
-        sql << " AND ";
-      }
-      i++;
-    }
+  if (constraints != nullptr) {
+    sql << " WHERE " << constraints->toString();
   }
   sql << ";";
   return sql.str();

@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "ModelData.h"
 #include <orm/model/fields/BaseModelField.h>
+#include <orm/model/query/filter/FilterNode.h>
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
 #include <orm/sql/SQLGenerator.h>
@@ -15,14 +16,16 @@
 namespace Espresso::ORM {
 
 template<class T>
-std::shared_ptr<T> Model<T>::get_ptr(ConstraintMap constraints) {
+std::shared_ptr<T> Model<T>::get_ptr(Query::FilterNode *constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
   std::shared_ptr<T> instance = std::make_shared<T>();
   bool found = false;
-  for (const auto &constraint : constraints) {
-    if (!data.fields.contains(constraint.first)) {
-      throw model_error("Field " + constraint.first + " does not exist");
+  const std::vector<std::string> &keys = constraints->getKeys();
+  delete constraints;
+  for (const auto &key : keys) {
+    if (!data.fields.contains(key)) {
+      throw model_error("Field " + key + " does not exist");
     }
   }
   dbManager->execute(query,
@@ -46,7 +49,7 @@ std::shared_ptr<T> Model<T>::get_ptr(ConstraintMap constraints) {
 }
 
 template<class T>
-T Model<T>::get(ConstraintMap constraints) {
+T Model<T>::get(Query::FilterNode *constraints) {
   return *get_ptr(constraints);
 }
 
@@ -286,9 +289,11 @@ template<class T>
 bool Model<T>::operator==(const Model<T> &other) const {
   const ModelData &data = ModelManager::getInstance().getModel<T>();
   for (auto &fieldPair : data.fields) {
-    auto &fieldData = const_cast<ModelDataField&>(fieldPair.second);
-    if (getFieldValue(*static_cast<T*>(const_cast<Model<T>*>(this)), fieldData) !=
-        getFieldValue(*static_cast<T*>(const_cast<Model<T>*>(&other)), fieldData)) {
+    auto &fieldData = const_cast<ModelDataField &>(fieldPair.second);
+    if (getFieldValue(*static_cast<T *>(const_cast<Model<T> *>(this)),
+                      fieldData) !=
+        getFieldValue(*static_cast<T *>(const_cast<Model<T> *>(&other)),
+                      fieldData)) {
       return false;
     }
   }

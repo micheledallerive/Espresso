@@ -9,6 +9,7 @@
 #include <orm/model/ModelManager.h>
 #include <string>
 #include <orm/model/fields/ForeignKey.h>
+#include <orm/model/query/filter/FilterNode.h>
 
 namespace Espresso::ORM {
 
@@ -22,8 +23,8 @@ class Model {
   void save();
   bool remove();
 
-  static T get(ConstraintMap);
-  static std::shared_ptr<T> get_ptr(ConstraintMap);
+  static T get(Query::FilterNode * = nullptr);
+  static std::shared_ptr<T> get_ptr(Query::FilterNode * = nullptr);
 
   // operator ==
   bool operator==(const Model &other) const;

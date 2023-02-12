@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_map>
 #include <orm/sql/SQLTypes.h>
+#include "orm/model/query/filter/FilterNode.h"
 
 namespace Espresso::ORM {
 
@@ -36,7 +37,7 @@ class SQLGenerator {
                             const std::vector<std::string> &values);
   static std::string select(const std::string &table_name,
                             const std::vector<std::string> &columns,
-                            const ConstraintMap &);
+                            Query::FilterNode *);
   static std::string update(const std::string &table_name,
                             const std::vector<std::string> &columns,
                             const std::vector<std::string> &values,

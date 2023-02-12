@@ -70,9 +70,8 @@ int main() {
 
   registerModels();
 
-  FilterNode *fn = *(FilterField("name") == "Ciccio") & *(FilterField("name") == "Loredana");
-  std::cout << fn->toString() << std::endl;
-  delete fn;
+  Dog d = Dog::get(*(FilterField("name") == "Test") & *(FilterField("breed") == "Labrador"));
+  std::cout << d.age << std::endl;
 
 //  Dog d;
 //  try {
