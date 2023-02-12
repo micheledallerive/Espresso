@@ -21,19 +21,22 @@ class QueryBuilder {
   void updated() {
     this->cache_results_ = std::nullopt;
   }
+ protected:
+  [[nodiscard]] const std::string &getTableName() const;
+  [[nodiscard]] std::string conditionsToSQL() const;
  public:
   QueryBuilder() = default;
   virtual ~QueryBuilder() = default;
 
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &limit(int limit);
-  size_t count() const;
 
-  M get() const;
-  M *get_ptr() const;
+  size_t count();
+  M get();
+  M *get_ptr();
 
-  operator std::vector<M>() const;
-  std::vector<M> execute() const;
+  operator std::vector<M>();
+  std::vector<M> execute();
 };
 
 } // ORM

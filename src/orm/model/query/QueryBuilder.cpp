@@ -8,6 +8,22 @@
 namespace Espresso::ORM::Query {
 
 template<typename M>
+const std::string &QueryBuilder<M>::getTableName() const {
+  return ModelManager::getInstance().getModel<M>().tableName;
+}
+template<typename M>
+std::string QueryBuilder<M>::conditionsToSQL() const {
+  std::string sql = "";
+  if (this->filter_.has_value()) {
+    sql += this->filter_.value().toString();
+  }
+  if (this->limit_.has_value()) {
+    sql += "LIMIT " + std::to_string(this->limit_.value());
+  }
+  return sql.empty() ? "" : " WHERE " + sql;
+}
+
+template<typename M>
 QueryBuilder<M> &QueryBuilder<M>::filter(const FilterOperation &filter) {
   if (this->filter_.has_value()) {
     this->filter_ = this->filter_.value() & filter;
@@ -28,7 +44,26 @@ QueryBuilder<M> &QueryBuilder<M>::limit(int limit) {
 }
 
 template<typename M>
-std::vector<M> QueryBuilder<M>::execute() const {
+size_t QueryBuilder<M>::count() {
+  if (this->cache_results_.has_value()) {
+    return this->cache_results_.value().size();
+  }
+  std::string query = "SELECT COUNT(*) FROM " + this->getTableName();
+  query += this->conditionsToSQL();
+  query += ";";
+  size_t result = 0;
+  dbManager->execute(
+      query,
+      [&result](
+          const std::unordered_map<std::string,
+                                   std::string> &row) {
+        result = std::stoi(row.at("COUNT(*)"));
+      });
+  return result;
+}
+
+template<typename M>
+std::vector<M> QueryBuilder<M>::execute() {
   if (this->cache_results_.has_value()) {
     return this->cache_results_.value();
   }
@@ -58,11 +93,15 @@ std::vector<M> QueryBuilder<M>::execute() const {
         result.push_back(m);
       });
   this->cache_results_ = result;
+  // q: why does the previous line giving me a operator= error?
+  // a: because the cache_results_ is a const std::optional
+  // q: how do i fix that
+  // a: you can use the mutable keyword
   return result;
 }
 
 template<typename M>
-QueryBuilder<M>::operator std::vector<M>() const {
+QueryBuilder<M>::operator std::vector<M>() {
   return this->execute();
 }
 
