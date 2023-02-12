@@ -8,17 +8,17 @@
 #include <memory>
 
 #include "FilterNode.h"
-#include "Operation.h"
+#include "Operator.h"
 
 namespace Espresso::ORM::Query {
 
 class FilterOperation : public FilterNode {
  protected:
   std::unique_ptr<FilterNode> left;
-  std::unique_ptr<Operation> op;
+  std::unique_ptr<Operator> op;
   std::unique_ptr<FilterNode> right;
  public:
-  FilterOperation(FilterNode *left, Operation *op, FilterNode *right)
+  FilterOperation(FilterNode *left, Operator *op, FilterNode *right)
       : left(left), op(op), right(right) {}
 
   ~FilterOperation() override = default;

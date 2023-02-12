@@ -2,7 +2,7 @@
 // Created by michele on 12.02.23.
 //
 
-#include "Operation.h"
+#include "Operator.h"
 
 namespace Espresso::ORM::Query {
 std::string LogicalOperator::toString() const {

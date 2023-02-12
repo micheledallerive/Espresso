@@ -3,7 +3,7 @@
 //
 
 #include "FilterOperation.h"
-#include "Operation.h"
+#include "Operator.h"
 #include <vector>
 
 namespace Espresso::ORM::Query {

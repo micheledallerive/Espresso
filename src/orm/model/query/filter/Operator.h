@@ -2,20 +2,20 @@
 // Created by michele on 12.02.23.
 //
 
-#ifndef ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATION_H_
-#define ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATION_H_
+#ifndef ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATOR_H_
+#define ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATOR_H_
 
 #include <string>
 
 namespace Espresso::ORM::Query {
 
-class Operation {
+class Operator {
  public:
-  virtual ~Operation() = default;
+  virtual ~Operator() = default;
   [[nodiscard]] virtual std::string toString() const = 0;
 };
 
-class RelationalOperator : public Operation {
+class RelationalOperator : public Operator {
  public:
   enum Operation {
     EQUAL,
@@ -30,7 +30,7 @@ class RelationalOperator : public Operation {
   [[nodiscard]] std::string toString() const override;
 };
 
-class LogicalOperator : public Operation {
+class LogicalOperator : public Operator {
  public:
   enum Operation {
     AND,
@@ -43,4 +43,4 @@ class LogicalOperator : public Operation {
 
 } // Query
 
-#endif //ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATION_H_
+#endif //ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_OPERATOR_H_
