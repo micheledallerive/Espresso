@@ -35,6 +35,7 @@ class QueryBuilder {
   QueryBuilder &exclude(const FilterOperation &filter);
   // annotate
   QueryBuilder &order_by(const std::vector<std::string>& );
+  QueryBuilder &reverse();
 
   QueryBuilder &limit(int limit);
 

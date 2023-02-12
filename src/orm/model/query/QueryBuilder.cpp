@@ -76,6 +76,16 @@ QueryBuilder<M> &QueryBuilder<M>::order_by(const std::vector<std::string> &order
 }
 
 template<typename M>
+QueryBuilder<M> &QueryBuilder<M>::reverse() {
+  if (this->order_by_.has_value()) {
+    for (auto &order : this->order_by_.value()) {
+      order.second = !order.second;
+    }
+  }
+  return *this;
+}
+
+template<typename M>
 QueryBuilder<M> &QueryBuilder<M>::limit(int limit) {
   this->limit_ = limit;
 
