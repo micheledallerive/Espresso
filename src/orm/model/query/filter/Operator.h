@@ -38,7 +38,8 @@ class LogicalOperator : public Operator {
  public:
   enum Operation {
     AND,
-    OR
+    OR,
+    NOT
   } op;
 
   explicit LogicalOperator(LogicalOperator::Operation op) : op(op) {}

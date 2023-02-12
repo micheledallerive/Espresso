@@ -9,6 +9,7 @@ std::string LogicalOperator::toString() const {
   switch (op) {
     case AND:return "AND";
     case OR:return "OR";
+    case NOT:return "NOT";
     default:return "";
   }
 }

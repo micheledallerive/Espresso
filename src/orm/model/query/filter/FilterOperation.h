@@ -29,6 +29,7 @@ class FilterOperation : public FilterNode {
 
   FilterOperation operator&(const FilterOperation &) const;
   FilterOperation operator|(const FilterOperation &) const;
+  FilterOperation operator!() const;
 };
 
 } // Query
