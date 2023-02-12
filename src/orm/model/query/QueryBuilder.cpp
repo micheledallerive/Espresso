@@ -4,6 +4,7 @@
 
 #include "QueryBuilder.h"
 #include <orm/model/ModelManager.h>
+#include <sstream>
 
 namespace Espresso::ORM::Query {
 
@@ -20,7 +21,7 @@ void QueryBuilder<M>::checkField(const std::string &field) const {
 }
 template<typename M>
 std::string QueryBuilder<M>::conditionsToSQL() const {
-  std::string sql = "";
+  std::string sql;
   if (this->filter_.has_value()) {
     sql += this->filter_.value().toString();
   }
@@ -86,6 +87,12 @@ QueryBuilder<M> &QueryBuilder<M>::reverse() {
 }
 
 template<typename M>
+QueryBuilder<M> &QueryBuilder<M>::distinct() {
+  this->distinct_ = true;
+  return *this;
+}
+
+template<typename M>
 QueryBuilder<M> &QueryBuilder<M>::limit(int limit) {
   this->limit_ = limit;
 
@@ -126,22 +133,29 @@ std::vector<M> QueryBuilder<M>::execute() {
     return this->cache_results_.value();
   }
   const ModelData &data = ModelManager::getInstance().getModel<M>();
-  std::string query = "SELECT * FROM " + data.tableName;
-  if (this->filter_.has_value()) {
-    query += " WHERE " + this->filter_.value().toString();
+
+  std::ostringstream sql;
+  sql << "SELECT ";
+  if (this->distinct_) {
+    sql << "DISTINCT ";
   }
-  if (this->limit_.has_value()) {
-    query += " LIMIT " + std::to_string(this->limit_.value());
-  }
+  sql << "* FROM " << data.tableName;
+  sql << this->conditionsToSQL();
   if (this->order_by_.has_value()) {
-    query += " ORDER BY ";
-    for (const auto &fieldOrder : this->order_by_.value()) {
-      query += fieldOrder.first + (fieldOrder.second ? " ASC" : " DESC") + ", ";
+    sql << " ORDER BY ";
+    for (unsigned int i = 0; i < this->order_by_.value().size(); i++) {
+      const auto &order = this->order_by_.value()[i];
+      sql << order.first;
+      if (!order.second) {
+        sql << " DESC";
+      }
+      if (i < this->order_by_.value().size() - 1) {
+        sql << ", ";
+      }
     }
-    query.pop_back();
-    query.pop_back();
   }
-  query += ";";
+  sql << ";";
+  const std::string query = sql.str();
   std::vector<M> result;
   dbManager->execute(
       query,

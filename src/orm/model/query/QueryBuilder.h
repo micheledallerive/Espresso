@@ -19,6 +19,7 @@ class QueryBuilder {
   std::optional<FilterOperation> filter_{std::nullopt};
   std::optional<int> limit_{std::nullopt};
   std::optional<std::vector<Order>> order_by_{std::nullopt};
+  bool distinct_{false};
 
   void updated() {
     this->cache_results_ = std::nullopt;
@@ -34,8 +35,9 @@ class QueryBuilder {
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &exclude(const FilterOperation &filter);
   // annotate
-  QueryBuilder &order_by(const std::vector<std::string>& );
+  QueryBuilder &order_by(const std::vector<std::string> &);
   QueryBuilder &reverse();
+  QueryBuilder &distinct();
 
   QueryBuilder &limit(int limit);
 
