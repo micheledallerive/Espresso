@@ -13,14 +13,17 @@ namespace Espresso::ORM::Query {
 template<typename M> // the model type
 class QueryBuilder {
  private:
+  using Order = std::pair<std::string, bool>; // field name, ascending
   std::optional<std::vector<M>> cache_results_{std::nullopt};
 
   std::optional<FilterOperation> filter_{std::nullopt};
   std::optional<int> limit_{std::nullopt};
+  std::optional<std::vector<Order>> order_by_{std::nullopt};
 
   void updated() {
     this->cache_results_ = std::nullopt;
   }
+  void checkField(const std::string &) const;
  protected:
   [[nodiscard]] const std::string &getTableName() const;
   [[nodiscard]] std::string conditionsToSQL() const;
@@ -30,6 +33,9 @@ class QueryBuilder {
 
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &exclude(const FilterOperation &filter);
+  // annotate
+  QueryBuilder &order_by(const std::vector<std::string>& );
+
   QueryBuilder &limit(int limit);
 
   template<typename... Args>

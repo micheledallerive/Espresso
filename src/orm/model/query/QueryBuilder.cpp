@@ -12,6 +12,13 @@ const std::string &QueryBuilder<M>::getTableName() const {
   return ModelManager::getInstance().getModel<M>().tableName;
 }
 template<typename M>
+void QueryBuilder<M>::checkField(const std::string &field) const {
+  if (!ModelManager::getInstance().getModel<M>().fields.contains(field)) {
+    throw std::invalid_argument("Field " + field + " does not exist in model " +
+        ModelManager::getInstance().getModel<M>().tableName);
+  }
+}
+template<typename M>
 std::string QueryBuilder<M>::conditionsToSQL() const {
   std::string sql = "";
   if (this->filter_.has_value()) {
@@ -44,6 +51,27 @@ QueryBuilder<M> &QueryBuilder<M>::exclude(const FilterOperation &filter) {
   }
 
   this->updated();
+  return *this;
+}
+
+template<typename M>
+QueryBuilder<M> &QueryBuilder<M>::order_by(const std::vector<std::string> &order) {
+  for (const auto &fieldOrder : order) {
+    std::string fieldName;
+    bool ascending = fieldOrder[0] != '-';
+    if (fieldOrder[0] == '-') {
+      fieldName = fieldOrder.substr(1);
+      ascending = false;
+    } else {
+      fieldName = fieldOrder;
+    }
+    this->checkField(fieldName);
+    if (this->order_by_.has_value()) {
+      this->order_by_.value().emplace_back(fieldName, ascending);
+    } else {
+      this->order_by_ = {{fieldName, ascending}};
+    }
+  }
   return *this;
 }
 
@@ -94,6 +122,14 @@ std::vector<M> QueryBuilder<M>::execute() {
   }
   if (this->limit_.has_value()) {
     query += " LIMIT " + std::to_string(this->limit_.value());
+  }
+  if (this->order_by_.has_value()) {
+    query += " ORDER BY ";
+    for (const auto &fieldOrder : this->order_by_.value()) {
+      query += fieldOrder.first + (fieldOrder.second ? " ASC" : " DESC") + ", ";
+    }
+    query.pop_back();
+    query.pop_back();
   }
   query += ";";
   std::vector<M> result;
