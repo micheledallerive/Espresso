@@ -70,8 +70,7 @@ int main() {
 
   registerModels();
 
-  Dog d = Dog::get(*(FilterField("name") != "Test") & *(FilterField("breed") != "Labrador"));
-  std::cout << d.age << std::endl;
+  Dog d = Dog::get((Q("name") == "Ciccio") & (Q("age") == "2"));
 
 //  Dog d;
 //  try {

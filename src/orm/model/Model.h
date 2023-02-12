@@ -9,7 +9,7 @@
 #include <orm/model/ModelManager.h>
 #include <string>
 #include <orm/model/fields/ForeignKey.h>
-#include <orm/model/query/filter/FilterNode.h>
+#include <orm/model/query/filter/FilterOperation.h>
 
 namespace Espresso::ORM {
 
@@ -23,8 +23,8 @@ class Model {
   void save();
   bool remove();
 
-  static T get(Query::FilterNode * = nullptr);
-  static std::shared_ptr<T> get_ptr(Query::FilterNode * = nullptr);
+  static T get(const std::optional<Query::FilterOperation> & = std::nullopt);
+  static std::shared_ptr<T> get_ptr(const std::optional<Query::FilterOperation> & = std::nullopt);
 
   // operator ==
   bool operator==(const Model &other) const;

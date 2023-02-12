@@ -3,7 +3,7 @@
 //
 
 #include "SQLGenerator.h"
-#include "orm/model/query/filter/FilterNode.h"
+#include "orm/model/query/filter/FilterOperation.h"
 #include <sstream>
 #include <unordered_map>
 
@@ -72,7 +72,7 @@ std::string SQLGenerator::insert(const std::string &table_name,
 
 std::string SQLGenerator::select(const std::string &table_name,
                                  const std::vector<std::string> &columns,
-                                 Query::FilterNode *constraints) {
+                                 const std::optional<Query::FilterOperation> &constraints) {
   std::ostringstream sql;
   sql << "SELECT ";
   if (columns.empty()) {
@@ -86,8 +86,8 @@ std::string SQLGenerator::select(const std::string &table_name,
     }
   }
   sql << " FROM " << table_name;
-  if (constraints != nullptr) {
-    sql << " WHERE " << constraints->toString();
+  if (constraints.has_value()) {
+    sql << " WHERE " << constraints.value().toString();
   }
   sql << ";";
   return sql.str();

@@ -5,7 +5,7 @@
 #include "Model.h"
 #include "ModelData.h"
 #include <orm/model/fields/BaseModelField.h>
-#include <orm/model/query/filter/FilterNode.h>
+#include <orm/model/query/filter/FilterOperation.h>
 #include <orm/database/DatabaseManager.h>
 #include <orm/model/ModelManager.h>
 #include <orm/sql/SQLGenerator.h>
@@ -16,13 +16,15 @@
 namespace Espresso::ORM {
 
 template<class T>
-std::shared_ptr<T> Model<T>::get_ptr(Query::FilterNode *constraints) {
+std::shared_ptr<T> Model<T>::get_ptr(const std::optional<Query::FilterOperation> &constraints) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
   std::shared_ptr<T> instance = std::make_shared<T>();
   bool found = false;
-  const std::vector<std::string> &keys = constraints->getKeys();
-  delete constraints;
+  const std::vector<std::string> &keys =
+      constraints.has_value()
+          ? constraints.value().getKeys()
+          : std::vector<std::string>();
   for (const auto &key : keys) {
     if (!data.fields.contains(key)) {
       throw model_error("Field " + key + " does not exist");
@@ -49,7 +51,7 @@ std::shared_ptr<T> Model<T>::get_ptr(Query::FilterNode *constraints) {
 }
 
 template<class T>
-T Model<T>::get(Query::FilterNode *constraints) {
+T Model<T>::get(const std::optional<Query::FilterOperation> &constraints) {
   return *get_ptr(constraints);
 }
 
