@@ -63,6 +63,14 @@ size_t QueryBuilder<M>::count() {
 }
 
 template<typename M>
+template<typename... Args>
+M QueryBuilder<M>::create(Args &&... args) {
+  M m = M(std::forward<Args>(args)...);
+  m.save(false);
+  return m;
+}
+
+template<typename M>
 std::vector<M> QueryBuilder<M>::execute() {
   if (this->cache_results_.has_value()) {
     return this->cache_results_.value();

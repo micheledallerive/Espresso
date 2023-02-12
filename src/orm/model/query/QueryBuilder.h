@@ -31,6 +31,8 @@ class QueryBuilder {
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &limit(int limit);
 
+  template<typename... Args>
+  M create(Args &&... args);
   size_t count();
   M get();
   M *get_ptr();
