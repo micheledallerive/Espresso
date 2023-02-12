@@ -70,8 +70,9 @@ int main() {
 
   registerModels();
 
-  FilterNode *fn = FilterField("name") == "Ciccio";
+  FilterNode *fn = *(FilterField("name") == "Ciccio") & *(FilterField("name") == "Loredana");
   std::cout << fn->toString() << std::endl;
+  delete fn;
 
 //  Dog d;
 //  try {

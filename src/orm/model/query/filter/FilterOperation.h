@@ -23,7 +23,10 @@ class FilterOperation : public FilterNode {
 
   ~FilterOperation() override = default;
 
-  std::string toString() const override;
+  [[nodiscard]] std::string toString() const override;
+
+  FilterOperation *operator&(const FilterNode &) const;
+  FilterOperation *operator|(const FilterNode &) const;
 };
 
 } // Query
