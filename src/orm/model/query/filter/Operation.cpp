@@ -20,6 +20,7 @@ std::string RelationalOperator::toString() const {
     case GREATER_THAN_OR_EQUAL:return ">=";
     case LESS_THAN:return "<";
     case LESS_THAN_OR_EQUAL:return "<=";
+    case LIKE:return "LIKE";
     default:return "";
   }
 }

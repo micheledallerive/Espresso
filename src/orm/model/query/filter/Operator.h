@@ -23,7 +23,11 @@ class RelationalOperator : public Operator {
     GREATER_THAN,
     GREATER_THAN_OR_EQUAL,
     LESS_THAN,
-    LESS_THAN_OR_EQUAL
+    LESS_THAN_OR_EQUAL,
+    LIKE,
+    // in the future
+    // BETWEEN
+    // IN
   } op;
 
   explicit RelationalOperator(RelationalOperator::Operation op) : op(op) {}
