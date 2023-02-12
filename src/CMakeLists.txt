@@ -21,26 +21,11 @@ set(SOURCES
         orm/sql/SQLiteSQLGenerator.cpp
         orm/sql/SQLTypes.cpp
         orm/model/fields/BaseModelField.cpp
-        orm/model/ModelData.cpp orm/model/ModelData.h orm/model/fields/Field.cpp orm/model/fields/Field.h orm/model/query/filter/FilterField.cpp orm/model/query/filter/FilterField.h orm/model/query/filter/FilterOperation.cpp orm/model/query/filter/FilterOperation.h orm/model/query/filter/Operation.cpp orm/model/query/filter/Operator.h)
-
-set(HEADERS Cookies.h
-        HTTPMessage.h
-        HTTPMethod.h
-        HTTPRequest.h
-        HTTPResponse.h
-        Middleware.h
-        Router.h
-        Server.h
-        PathRegex.h
-        Route.h
-        utils.h
-
-        orm/sql/SQLTypes.h
-        orm/database/DatabaseManager.h
-        orm/database/SQLiteDatabaseManager.h
-        orm/exceptions.h
-        orm/sql/SQLGenerator.h
-        )
+        orm/model/ModelData.cpp
+        orm/model/fields/Field.cpp
+        orm/model/query/filter/FilterField.cpp
+        orm/model/query/filter/FilterOperation.cpp
+        orm/model/query/filter/Operation.cpp)
 
 # Create a library target for the Espresso library
 add_library(espresso STATIC ${SOURCES})
