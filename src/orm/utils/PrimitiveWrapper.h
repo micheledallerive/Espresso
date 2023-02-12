@@ -56,9 +56,9 @@ class PrimitiveWrapper {
 
   // increment and decrement
   PrimitiveWrapper<T> &operator++();
-  const PrimitiveWrapper<T> operator++(T);
+  const PrimitiveWrapper<T> operator++(int);
   PrimitiveWrapper<T> &operator--();
-  const PrimitiveWrapper<T> operator--(T);
+  const PrimitiveWrapper<T> operator--(int);
 
   bool operator<(const PrimitiveWrapper<T> &other) const;
   bool operator>(const PrimitiveWrapper<T> &other) const;

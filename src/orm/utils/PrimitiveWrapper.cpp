@@ -39,55 +39,55 @@ PrimitiveWrapper<T> &PrimitiveWrapper<T>::operator=(PrimitiveWrapper<T> &&other)
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator+(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value + other.value);
+  return PrimitiveWrapper<T>(value + other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator-(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value - other.value);
+  return PrimitiveWrapper<T>(value - other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator*(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value * other.value);
+  return PrimitiveWrapper<T>(value * other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator/(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value / other.value);
+  return PrimitiveWrapper<T>(value / other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator%(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value % other.value);
+  return PrimitiveWrapper<T>(value % other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator^(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value ^ other.value);
+  return PrimitiveWrapper<T>(value ^ other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator&(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value & other.value);
+  return PrimitiveWrapper<T>(value & other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator~() const {
-  return PrimitiveWrapper < T > (~value);
+  return PrimitiveWrapper<T>(~value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator|(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value | other.value);
+  return PrimitiveWrapper<T>(value | other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator<<(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value << other.value);
+  return PrimitiveWrapper<T>(value << other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator>>(const PrimitiveWrapper<T> &other) const {
-  return PrimitiveWrapper < T > (value >> other.value);
+  return PrimitiveWrapper<T>(value >> other.value);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator<<(const T &other) const {
-  return PrimitiveWrapper < T > (value << other);
+  return PrimitiveWrapper<T>(value << other);
 }
 template<typename T>
 PrimitiveWrapper<T> PrimitiveWrapper<T>::operator>>(const T &other) const {
-  return PrimitiveWrapper < T > (value >> other);
+  return PrimitiveWrapper<T>(value >> other);
 }
 
 template<typename T>
@@ -103,14 +103,14 @@ PrimitiveWrapper<T> &PrimitiveWrapper<T>::operator--() {
   return *this;
 }
 template<typename T>
-const PrimitiveWrapper<T> PrimitiveWrapper<T>::operator++(T) {
-  PrimitiveWrapper < T > tmp(*this);
+const PrimitiveWrapper<T> PrimitiveWrapper<T>::operator++(int) {
+  PrimitiveWrapper<T> tmp(*this);
   operator++();
   return tmp;
 }
 template<typename T>
-const PrimitiveWrapper<T> PrimitiveWrapper<T>::operator--(T) {
-  PrimitiveWrapper < T > tmp(*this);
+const PrimitiveWrapper<T> PrimitiveWrapper<T>::operator--(int) {
+  PrimitiveWrapper<T> tmp(*this);
   operator--();
   return tmp;
 }

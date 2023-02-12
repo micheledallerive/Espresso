@@ -25,7 +25,7 @@ TEST(SQLiteDatabaseManagerTest, Execute) {
   dbManager.connect(options);
 
   std::string query =
-      "CREATE TABLE test(id INT PRIMARY KEY NOT NULL, name TEXT NOT NULL)";
+      "CREATE TABLE IF NOT EXISTS test(id INT PRIMARY KEY NOT NULL, name TEXT NOT NULL)";
   try {
     dbManager.execute(query, nullptr);
     query = "INSERT INTO test (id, name) VALUES (1, 'John Doe')";
@@ -37,6 +37,10 @@ TEST(SQLiteDatabaseManagerTest, Execute) {
                         ASSERT_EQ(result.at("id"), "1");
                         ASSERT_EQ(result.at("name"), "John Doe");
                       });
+
+    query = "DROP TABLE test";
+    dbManager.execute(query, nullptr);
+
   } catch (std::exception &e) {
     FAIL() << "Unexpected exception: " << e.what();
   }
