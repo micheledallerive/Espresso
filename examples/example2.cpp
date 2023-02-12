@@ -9,7 +9,11 @@
 #include "orm/model/Model.h"
 #include "orm/model/fields/ForeignKey.h"
 
+#include <orm/model/query/filter/FilterField.h>
+#include <orm/model/query/filter/FilterNode.h>
+
 using namespace Espresso::ORM;
+using namespace Espresso::ORM::Query;
 using namespace std;
 
 class Human : public Model<Human> {
@@ -66,18 +70,8 @@ int main() {
 
   registerModels();
 
-  Human h;
-  h.name = "Michele";
-  h.surname = "Dalle Rive";
-  h.age = 23;
-  h.save();
-
-  Dog d;
-  d.name = "Dog";
-  d.breed = "Labrador";
-  d.age = 3;
-  d.owner = h;
-  d.save();
+  FilterNode *fn = FilterField("name") == "Ciccio";
+  std::cout << fn->toString() << std::endl;
 
 //  Dog d;
 //  try {
