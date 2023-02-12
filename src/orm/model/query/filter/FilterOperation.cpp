@@ -4,6 +4,7 @@
 
 #include "FilterOperation.h"
 #include "Operation.h"
+#include <vector>
 
 namespace Espresso::ORM::Query {
 
@@ -21,4 +22,11 @@ FilterOperation *FilterOperation::operator|(const FilterNode &other) const {
                              new LogicalOperator(LogicalOperator::OR),
                              (FilterNode *) &other);
 }
+std::vector<std::string> FilterOperation::getKeys() const {
+  std::vector<std::string> keys;
+  std::vector<std::string> leftKeys = left->getKeys();
+  keys.insert(keys.end(), leftKeys.begin(), leftKeys.end());
+  return keys;
+}
+
 } // Query

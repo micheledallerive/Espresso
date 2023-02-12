@@ -24,6 +24,7 @@ class FilterOperation : public FilterNode {
   ~FilterOperation() override = default;
 
   [[nodiscard]] std::string toString() const override;
+  [[nodiscard]] std::vector<std::string> getKeys() const override;
 
   FilterOperation *operator&(const FilterNode &) const;
   FilterOperation *operator|(const FilterNode &) const;

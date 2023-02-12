@@ -6,6 +6,7 @@
 #define ESPRESSO_SRC_ORM_MODEL_QUERY_FILTER_FILTERNODE_H_
 
 #include <string>
+#include <vector>
 
 namespace Espresso::ORM::Query {
 
@@ -15,6 +16,9 @@ class FilterNode {
 
   virtual std::string toString() const {
     return "";
+  }
+  virtual std::vector<std::string> getKeys() const {
+    return {};
   }
 };
 

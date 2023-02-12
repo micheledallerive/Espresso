@@ -18,7 +18,8 @@ class FilterField : public FilterNode { // represents a FilterLiteral
   FilterField(const FilterField &other) : value(other.value) {};
   FilterField(FilterField &&other) : value(std::move(other.value)) {};
 
-  std::string toString() const override;
+  [[nodiscard]] std::string toString() const override;
+  [[nodiscard]] std::vector<std::string> getKeys() const override;
 
   FilterOperation *operator==(const std::string &right) const;
 
