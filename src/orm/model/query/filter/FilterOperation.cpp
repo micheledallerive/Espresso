@@ -19,10 +19,10 @@ FilterOperation FilterOperation::operator&(const FilterOperation &other) const {
       new LogicalOperator(LogicalOperator::AND),
       new FilterOperation(other)};
 }
-FilterOperation *FilterOperation::operator|(const FilterNode &other) const {
-  return new FilterOperation((FilterNode *) this,
-                             new LogicalOperator(LogicalOperator::OR),
-                             (FilterNode *) &other);
+FilterOperation FilterOperation::operator|(const FilterOperation &other) const {
+  return {new FilterOperation(*this),
+      new LogicalOperator(LogicalOperator::OR),
+      new FilterOperation(other)};
 }
 std::vector<std::string> FilterOperation::getKeys() const {
   std::vector<std::string> keys;

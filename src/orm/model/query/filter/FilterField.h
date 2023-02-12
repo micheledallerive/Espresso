@@ -23,12 +23,12 @@ class FilterField : public FilterNode { // represents a FilterLiteral
   [[nodiscard]] bool isTerminal() const override;
 
   FilterOperation operator==(const std::string &right) const;
-  FilterOperation *operator!=(const std::string &right) const;
-  FilterOperation *operator<(const std::string &right) const;
-  FilterOperation *operator<=(const std::string &right) const;
-  FilterOperation *operator>(const std::string &right) const;
-  FilterOperation *operator>=(const std::string &right) const;
-  FilterOperation *operator%(const std::string &right) const;
+  FilterOperation operator!=(const std::string &right) const;
+  FilterOperation operator<(const std::string &right) const;
+  FilterOperation operator<=(const std::string &right) const;
+  FilterOperation operator>(const std::string &right) const;
+  FilterOperation operator>=(const std::string &right) const;
+  FilterOperation operator%(const std::string &right) const;
 
 };
 

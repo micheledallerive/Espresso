@@ -28,7 +28,7 @@ class FilterOperation : public FilterNode {
   [[nodiscard]] bool isTerminal() const override;
 
   FilterOperation operator&(const FilterOperation &) const;
-  FilterOperation *operator|(const FilterNode &) const;
+  FilterOperation operator|(const FilterOperation &) const;
 };
 
 } // Query
