@@ -40,6 +40,8 @@ class PrimitiveWrapper {
   PrimitiveWrapper<T> operator~() const;
   PrimitiveWrapper<T> operator<<(const PrimitiveWrapper<T> &other) const;
   PrimitiveWrapper<T> operator>>(const PrimitiveWrapper<T> &other) const;
+  PrimitiveWrapper<T> operator<<(const T &other) const;
+  PrimitiveWrapper<T> operator>>(const T &other) const;
 
   PrimitiveWrapper<T> &operator+=(const PrimitiveWrapper<T> &other);
   PrimitiveWrapper<T> &operator-=(const PrimitiveWrapper<T> &other);
@@ -52,6 +54,12 @@ class PrimitiveWrapper {
   PrimitiveWrapper<T> &operator<<=(const PrimitiveWrapper<T> &other);
   PrimitiveWrapper<T> &operator>>=(const PrimitiveWrapper<T> &other);
 
+  // increment and decrement
+  PrimitiveWrapper<T> &operator++();
+  const PrimitiveWrapper<T> operator++(T);
+  PrimitiveWrapper<T> &operator--();
+  const PrimitiveWrapper<T> operator--(T);
+
   bool operator<(const PrimitiveWrapper<T> &other) const;
   bool operator>(const PrimitiveWrapper<T> &other) const;
   bool operator<=(const PrimitiveWrapper<T> &other) const;
@@ -59,7 +67,6 @@ class PrimitiveWrapper {
   bool operator==(const PrimitiveWrapper<T> &other) const;
   bool operator!=(const PrimitiveWrapper<T> &other) const;
 
-  virtual operator T() const;
   virtual operator T &();
   virtual operator const T &() const;
   T get() const;
