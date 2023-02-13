@@ -65,7 +65,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
     const Field &fieldParamData = arg.first;
     fieldParamData.validate();
 
-    ModelDataField modelField(fieldParamData);
+    auto &modelField = *(new ModelDataField(fieldParamData));
 
     modelField.primaryKey = fieldParamData.primaryKey
         || isPrimaryKey(arg.second);

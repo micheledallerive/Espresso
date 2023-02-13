@@ -41,6 +41,13 @@ class ModelManager {
 
  private:
   ModelManager() = default;
+  ~ModelManager() {
+    for (auto &model : models) {
+      for (auto &field : model.second.fields) {
+        delete &field.second;
+      }
+    }
+  };
 
   template<class T>
   void registerFields() {}
