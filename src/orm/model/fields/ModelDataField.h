@@ -5,10 +5,10 @@
 #ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELDATAFIELD_H_
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELDATAFIELD_H_
 
-#include "Field.h"
+#include "FieldParams.h"
 namespace Espresso::ORM {
 
-class ModelDataField : public Field {
+class ModelDataField : public FieldParams {
  public:
   std::any field;
   std::string ctype;
@@ -17,7 +17,7 @@ class ModelDataField : public Field {
   ModelDataField() = default;
   // create a constructor for the assignment ModelDataField = Field
   // Field does not have a constructor
-  explicit ModelDataField(const Field &f) {
+  explicit ModelDataField(const FieldParams &f) {
     this->name = f.name;
     this->primaryKey = f.primaryKey;
     this->autoIncrement = f.autoIncrement;

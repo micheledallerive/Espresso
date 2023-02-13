@@ -51,17 +51,17 @@ void registerModels() {
 
   ModelManager::getInstance().registerModel<Human>(
       "humans",
-      make_pair(Field("pk"), &Human::pk),
-      make_pair(Field("name"), &Human::name),
-      make_pair(Field("surname"), &Human::surname),
-      make_pair(Field("age"), &Human::age)
+      make_pair(FieldParams("pk"), &Human::pk),
+      make_pair(FieldParams("name"), &Human::name),
+      make_pair(FieldParams("surname"), &Human::surname),
+      make_pair(FieldParams("age"), &Human::age)
   );
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
-      make_pair(Field("pk", true), &Dog::pk),
-      make_pair(Field("name"), &Dog::name),
-      make_pair(Field("breed"), &Dog::breed),
-      make_pair(Field("age"), &Dog::age),
+      make_pair(FieldParams("pk", true), &Dog::pk),
+      make_pair(FieldParams("name"), &Dog::name),
+      make_pair(FieldParams("breed"), &Dog::breed),
+      make_pair(FieldParams("age"), &Dog::age),
       make_pair(ForeignKeyField("owner", "doggos"),
                 &Dog::owner)
   );

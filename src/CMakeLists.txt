@@ -24,7 +24,7 @@ set(SOURCES
         orm/model/fields/ModelDataField.cpp
         orm/model/ModelData.cpp
         orm/model/BaseModel.cpp
-        orm/model/fields/Field.cpp
+        orm/model/fields/FieldParams.cpp
         orm/model/query/filter/FilterField.cpp
         orm/model/query/filter/FilterOperation.cpp
         orm/model/query/filter/Operator.cpp)

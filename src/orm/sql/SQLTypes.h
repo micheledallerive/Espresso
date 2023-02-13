@@ -27,7 +27,7 @@ SQLType getSQLType(const std::string &type);
 
 class SQLColumnInfo;
 
-class SQLColumnInfo : public Field {
+class SQLColumnInfo : public FieldParams {
  public:
   SQLType type{SQLType::BLOB};
   std::optional<ForeignKeyData> foreignKey;

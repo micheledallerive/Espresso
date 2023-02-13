@@ -13,7 +13,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include <orm/model/fields/Field.h>
+#include <orm/model/fields/FieldParams.h>
 
 namespace Espresso::ORM {
 

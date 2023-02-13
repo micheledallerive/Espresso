@@ -62,7 +62,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
       throw std::runtime_error("Model not registered");
     }
 
-    const Field &fieldParamData = arg.first;
+    const FieldParams &fieldParamData = arg.first;
     fieldParamData.validate();
 
     auto &modelField = *(new ModelDataField(fieldParamData));

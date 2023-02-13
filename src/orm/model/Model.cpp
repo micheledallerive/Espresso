@@ -284,7 +284,6 @@ template<class T>
 bool Model<T>::operator==(const Model<T> &other) const {
   const ModelData &data = ModelManager::getInstance().getModel<T>();
   for (auto &fieldPair : data.fields) {
-    auto &fieldData = const_cast<ModelDataField &>(fieldPair.second);
     if (this->get(fieldPair.first) != other.get(fieldPair.first)) {
       return false;
     }
