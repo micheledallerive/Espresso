@@ -7,6 +7,7 @@
 
 #include <orm/model/query/filter/FilterOperation.h>
 #include <vector>
+#include <optional>
 
 namespace Espresso::ORM::Query {
 

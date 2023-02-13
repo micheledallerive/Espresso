@@ -7,10 +7,16 @@
 
 namespace Espresso::ORM {
 
+namespace Query {
+template<typename G>
+class QueryBuilder;
+}
+
 class BaseModelField {
  public:
-  template<class G>
-  friend class Model;
+  template<typename G>
+  friend
+  class Query::QueryBuilder;
   virtual ~BaseModelField() = default;
  protected:
   bool dirty{false};

@@ -3,6 +3,7 @@
 //
 
 #include "QueryBuilder.h"
+#include "orm/exceptions.h"
 #include <orm/model/ModelManager.h>
 #include <sstream>
 
@@ -184,17 +185,17 @@ std::vector<M> QueryBuilder<M>::execute() {
         }
         for (const auto &field : data.fields) {
           const std::string &fieldName = field.first;
-          const ModelDataField &fieldData =
+          auto &fieldData =
               const_cast<ModelDataField &>(field.second);
           M::setFieldValue(m, fieldData, row.at(fieldName));
           auto *f = M::getField(m, fieldData);
-          f->dirty = false;
+          f->setDirty(false);
         }
         m.wasSaved = true;
         result.push_back(m);
       });
   if (!found) {
-    throw model_error("No results found for query: " + query);
+    throw model_error(string("No results found for query: " + query));
   }
   this->cache_results_ = result;
   // q: why does the previous line giving me a operator= error?
