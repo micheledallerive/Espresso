@@ -78,6 +78,11 @@ void ModelManager::registerFields(A arg, Args ... args) {
       modelField.ctype = typeid(std::string).name();
       modelField.field =
           reinterpret_cast<ModelField<std::string> T::*>(arg.second);
+      models[foreignObjectType].relatedModels.emplace(
+          // to be changed, automatically the name of the table
+          getModel<T>().tableName,
+          std::make_pair(typeid(T).name(),
+                         models[typeid(T).name()].primaryKey));
     } else {
       setDataFieldTypes(arg.second, modelField);
     }

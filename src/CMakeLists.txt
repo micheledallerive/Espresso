@@ -22,6 +22,7 @@ set(SOURCES
         orm/sql/SQLTypes.cpp
         orm/model/fields/BaseModelField.cpp
         orm/model/ModelData.cpp
+        orm/model/BaseModel.cpp
         orm/model/fields/Field.cpp
         orm/model/query/filter/FilterField.cpp
         orm/model/query/filter/FilterOperation.cpp

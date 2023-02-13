@@ -24,6 +24,11 @@ struct ModelData {
   // the name of the primary key (can be accessed by the field name in the map)
   std::string primaryKey;
 
+  // map [relationship name] -> [related model name, related model field name]
+  // e.g. "dogs" -> ["Dog", "owner"]
+  std::unordered_map<std::string, std::pair<std::string, std::string>>
+      relatedModels;
+
   std::vector<Espresso::ORM::SQLColumnInfo> getColumns() const {
     std::vector<Espresso::ORM::SQLColumnInfo> columns;
     for (const auto &field : fields) {
