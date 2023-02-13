@@ -22,14 +22,27 @@ void QueryBuilder<M>::checkField(const std::string &field) const {
 }
 template<typename M>
 std::string QueryBuilder<M>::conditionsToSQL() const {
-  std::string sql;
+  std::ostringstream sql;
   if (this->filter_.has_value()) {
-    sql += " WHERE " + this->filter_.value().toString();
+    sql << " WHERE " << this->filter_.value().toString();
+  }
+  if (this->order_by_.has_value()) {
+    sql << " ORDER BY ";
+    for (unsigned int i = 0; i < this->order_by_.value().size(); i++) {
+      const auto &order = this->order_by_.value()[i];
+      sql << order.first;
+      if (!order.second) {
+        sql << " DESC";
+      }
+      if (i < this->order_by_.value().size() - 1) {
+        sql << ", ";
+      }
+    }
   }
   if (this->limit_.has_value()) {
-    sql += " LIMIT " + std::to_string(this->limit_.value());
+    sql << " LIMIT " << std::to_string(this->limit_.value());
   }
-  return sql;
+  return sql.str();
 }
 
 template<typename M>
@@ -165,19 +178,6 @@ std::vector<M> QueryBuilder<M>::execute() {
   }
   sql << "* FROM " << data.tableName;
   sql << this->conditionsToSQL();
-  if (this->order_by_.has_value()) {
-    sql << " ORDER BY ";
-    for (unsigned int i = 0; i < this->order_by_.value().size(); i++) {
-      const auto &order = this->order_by_.value()[i];
-      sql << order.first;
-      if (!order.second) {
-        sql << " DESC";
-      }
-      if (i < this->order_by_.value().size() - 1) {
-        sql << ", ";
-      }
-    }
-  }
   sql << ";";
   const std::string query = sql.str();
   std::vector<M> result;
