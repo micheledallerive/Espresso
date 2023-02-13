@@ -63,6 +63,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
     }
 
     const Field &fieldParamData = arg.first;
+    fieldParamData.validate();
 
     ModelDataField modelField(fieldParamData);
 

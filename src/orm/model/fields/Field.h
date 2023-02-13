@@ -39,7 +39,7 @@ class Field {
   Field &operator=(const Field &other) = default;
   Field &operator=(Field &&other) noexcept = default;
 
-  virtual void validate() {
+  virtual void validate() const {
     if (this->name.empty()) {
       throw model_error("Field name cannot be empty");
     }
@@ -69,7 +69,7 @@ struct ForeignKeyField : public Field {
   ForeignKeyField(const Field &f, std::string relatedName)
       : Field(f), relatedName(std::move(relatedName)) {}
 
-  void validate() override {
+  void validate() const override {
     Field::validate();
     if (this->relatedName.empty()) {
       throw model_error("Related name cannot be empty");
