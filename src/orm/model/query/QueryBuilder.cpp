@@ -144,6 +144,14 @@ M QueryBuilder<M>::create(Args &&... args) {
 }
 
 template<typename M>
+template<typename... Args>
+void QueryBuilder<M>::bulkCreate(std::vector<M> args) {
+  for (auto &arg : args) {
+    arg.save(false);
+  }
+}
+
+template<typename M>
 std::vector<M> QueryBuilder<M>::execute() {
   if (this->cache_results_.has_value()) {
     return this->cache_results_.value();
