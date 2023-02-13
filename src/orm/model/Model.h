@@ -11,11 +11,12 @@
 #include <orm/model/fields/ForeignKey.h>
 #include <orm/model/query/filter/FilterOperation.h>
 #include <orm/model/query/QueryBuilder.h>
+#include "BaseModel.h"
 
 namespace Espresso::ORM {
 
 template<class T>
-class Model {
+class Model : public BaseModel{
  public:
   Model() = default;
   virtual ~Model() = default;
@@ -40,8 +41,8 @@ class Model {
 
   static ModelDataField &getFieldData(const std::string &fieldName);
   BaseModelField *getField(const std::string &field);
-  void set(const std::string &field, const std::string &value);
-  std::string get(const std::string &field);
+  void set(const std::string &field, const std::string &value) override;
+  std::string get(const std::string &field) const override;
 
 };
 

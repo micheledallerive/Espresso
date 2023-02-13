@@ -145,7 +145,7 @@ void Model<T>::set(const std::string &field, const std::string &value) {
 }
 
 template<class T>
-std::string Model<T>::get(const std::string &field) {
+std::string Model<T>::get(const std::string &field) const {
   const ModelDataField &fieldData = getFieldData(field);
   if (fieldData.ctype == typeid(std::string).name()) {
     return (T &) *this
