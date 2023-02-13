@@ -16,7 +16,12 @@ class BaseModelField {
  public:
   template<typename G>
   friend
+  class Model;
+
+  template<typename G>
+  friend
   class Query::QueryBuilder;
+
   virtual ~BaseModelField() = default;
  protected:
   bool dirty{false};
