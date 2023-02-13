@@ -110,13 +110,13 @@ void Model<T>::save(bool checkDirty) {
 }
 
 template<class T>
-ModelDataField &Model<T>::getFieldData(const std::string &fieldName) {
+FieldData &Model<T>::getFieldData(const std::string &fieldName) {
   return ModelManager::getInstance().getModel<T>().fields.at(fieldName);
 }
 
 template<class T>
 void Model<T>::set(const std::string &field, const std::string &value) {
-  const ModelDataField &fieldData = getFieldData(field);
+  const FieldData &fieldData = getFieldData(field);
   if (fieldData.ctype == typeid(std::string).name()) {
     (T &) *this.*std::any_cast<ModelField<std::string> T::*>(fieldData.field) =
         value;
@@ -170,7 +170,7 @@ void Model<T>::set(const std::string &field, const std::string &value) {
 
 template<class T>
 std::string Model<T>::get(const std::string &field) const {
-  const ModelDataField &fieldData = getFieldData(field);
+  const FieldData &fieldData = getFieldData(field);
   if (fieldData.ctype == typeid(std::string).name()) {
     return (T &) *this
         .*std::any_cast<ModelField<std::string> T::*>(fieldData.field);

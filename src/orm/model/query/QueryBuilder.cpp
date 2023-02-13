@@ -169,7 +169,7 @@ bool QueryBuilder<M>::contains(M &obj) {
     ModelData &modelData = ModelManager::getInstance().getModel<M>();
     QueryBuilder &query = *this;
     for (const auto &field : modelData.fields) {
-      auto &fieldData = const_cast<ModelDataField &>(field.second);
+      auto &fieldData = const_cast<FieldData &>(field.second);
       if (fieldData.primaryKey) {
         continue;
       }

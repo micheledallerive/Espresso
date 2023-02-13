@@ -42,7 +42,7 @@ class Model : public BaseModel {
   friend
   class Query::QueryBuilder;
 
-  static ModelDataField &getFieldData(const std::string &fieldName);
+  static FieldData &getFieldData(const std::string &fieldName);
   BaseModelField *getField(const std::string &field);
   void set(const std::string &field, const std::string &value) override;
   std::string get(const std::string &field) const override;

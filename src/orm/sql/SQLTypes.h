@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
-#include <orm/model/fields/ModelDataField.h>
+#include <orm/model/fields/FieldData.h>
 
 namespace Espresso::ORM {
 
@@ -69,7 +69,7 @@ class SQLColumnInfo : public FieldParams {
   }
 
   SQLColumnInfo() = default;
-  explicit SQLColumnInfo(const ModelDataField &field) {
+  explicit SQLColumnInfo(const FieldData &field) {
     name = field.name;
     type = getSQLType(field.ctype);
     primaryKey = field.primaryKey;

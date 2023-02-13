@@ -2,22 +2,22 @@
 // Created by michele on 14.02.23.
 //
 
-#ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELDATAFIELD_H_
-#define ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELDATAFIELD_H_
+#ifndef ESPRESSO_SRC_ORM_MODEL_FIELDS_FIELDDATA_H_
+#define ESPRESSO_SRC_ORM_MODEL_FIELDS_FIELDDATA_H_
 
 #include "FieldParams.h"
 namespace Espresso::ORM {
 
-class ModelDataField : public FieldParams {
+class FieldData : public FieldParams {
  public:
   std::any field;
   std::string ctype;
   std::optional<ForeignKeyData> foreignKey;
 
-  ModelDataField() = default;
+  FieldData() = default;
   // create a constructor for the assignment ModelDataField = Field
   // Field does not have a constructor
-  explicit ModelDataField(const FieldParams &f) {
+  explicit FieldData(const FieldParams &f) {
     this->name = f.name;
     this->primaryKey = f.primaryKey;
     this->autoIncrement = f.autoIncrement;
@@ -29,4 +29,4 @@ class ModelDataField : public FieldParams {
 
 } // ORM
 
-#endif //ESPRESSO_SRC_ORM_MODEL_FIELDS_MODELDATAFIELD_H_
+#endif //ESPRESSO_SRC_ORM_MODEL_FIELDS_FIELDDATA_H_

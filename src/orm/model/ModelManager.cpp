@@ -65,7 +65,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
     const FieldParams &fieldParamData = arg.first;
     fieldParamData.validate();
 
-    auto &modelField = *(new ModelDataField(fieldParamData));
+    auto &modelField = *(new FieldData(fieldParamData));
 
     modelField.primaryKey = fieldParamData.primaryKey
         || isPrimaryKey(arg.second);
@@ -111,7 +111,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
 
 template<class Class, class Type>
 void ModelManager::setDataFieldTypes(Type Class::* field,
-                                     ModelDataField &modelField) {
+                                     FieldData &modelField) {
   string fieldType =
       typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
 

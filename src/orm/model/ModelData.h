@@ -19,7 +19,7 @@ namespace Espresso::ORM {
 
 struct ModelData {
   std::string tableName; // the name of the table for the model
-  std::unordered_map<std::string, ModelDataField&> fields; // field name and data
+  std::unordered_map<std::string, FieldData&> fields; // field name and data
   bool migrated{false}; // whether the model was migrated
   // the name of the primary key (can be accessed by the field name in the map)
   std::string primaryKey;
