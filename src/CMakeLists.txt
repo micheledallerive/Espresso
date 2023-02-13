@@ -21,6 +21,7 @@ set(SOURCES
         orm/sql/SQLiteSQLGenerator.cpp
         orm/sql/SQLTypes.cpp
         orm/model/fields/BaseModelField.cpp
+        orm/model/fields/ModelDataField.cpp
         orm/model/ModelData.cpp
         orm/model/BaseModel.cpp
         orm/model/fields/Field.cpp
