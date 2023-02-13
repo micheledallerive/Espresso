@@ -23,12 +23,12 @@ template<typename M>
 std::string QueryBuilder<M>::conditionsToSQL() const {
   std::string sql;
   if (this->filter_.has_value()) {
-    sql += this->filter_.value().toString();
+    sql += " WHERE " + this->filter_.value().toString();
   }
   if (this->limit_.has_value()) {
-    sql += "LIMIT " + std::to_string(this->limit_.value());
+    sql += " LIMIT " + std::to_string(this->limit_.value());
   }
-  return sql.empty() ? "" : " WHERE " + sql;
+  return sql;
 }
 
 template<typename M>
@@ -117,6 +117,21 @@ size_t QueryBuilder<M>::count() {
         result = std::stoi(row.at("COUNT(*)"));
       });
   return result;
+}
+
+template<typename M>
+M &QueryBuilder<M>::get() {
+  return *this->get_ptr();
+}
+
+template<typename M>
+std::shared_ptr<M> QueryBuilder<M>::get_ptr() {
+  this->limit(1);
+  std::vector<M> result = this->execute();
+  if (result.empty()) {
+    return nullptr;
+  }
+  return std::make_shared<M>(result[0]);
 }
 
 template<typename M>

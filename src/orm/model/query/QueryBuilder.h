@@ -44,8 +44,8 @@ class QueryBuilder {
   template<typename... Args>
   M create(Args &&... args);
   size_t count();
-  M get();
-  M *get_ptr();
+  M &get();
+  std::shared_ptr<M> get_ptr();
 
   operator std::vector<M>();
   std::vector<M> execute();
