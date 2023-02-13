@@ -160,9 +160,8 @@ bool QueryBuilder<M>::contains(M &obj) {
   if (obj.wasSaved) {
     // the object is already in the database, but not necessarily in the query
     // just need to check the primary key
-    ModelDataField &field = M::getFieldData(this->getPrimaryKey());
     return this->filter(
-        Q(this->getPrimaryKey()) == M::getFieldValue(obj, field)
+        Q(this->getPrimaryKey()) == obj->get(this->getPrimaryKey())
     ).exists();
   } else {
     // the object is not in the database, so we need to check all the fields
@@ -174,10 +173,10 @@ bool QueryBuilder<M>::contains(M &obj) {
       if (fieldData.primaryKey) {
         continue;
       }
-      if (!M::getField(obj, fieldData)->dirty) { // not set
+      if (!obj->getField(field.first)->dirty) { // not set
         continue;
       }
-      query.filter(Q(field.first) == M::getFieldValue(obj, fieldData));
+      query.filter(Q(field.first) == obj->get(field.first));
     }
     return query.exists();
   }
@@ -262,10 +261,8 @@ std::vector<M> QueryBuilder<M>::execute() {
         }
         for (const auto &field : data.fields) {
           const std::string &fieldName = field.first;
-          auto &fieldData =
-              const_cast<ModelDataField &>(field.second);
-          M::setFieldValue(m, fieldData, row.at(fieldName));
-          auto *f = M::getField(m, fieldData);
+          m.set(field.first, row.at(fieldName));
+          auto *f = m.getField(field.first);
           f->setDirty(false);
         }
         m.wasSaved = true;

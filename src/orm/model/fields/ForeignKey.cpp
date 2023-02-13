@@ -37,9 +37,7 @@ template<class T>
 ForeignKey<T> &ForeignKey<T>::operator=(T &foreignObj) {
   obj = std::make_shared<T>(foreignObj);
   std::string pk = ModelManager::getInstance().getModel<T>().primaryKey;
-  ModelDataField
-      &fieldData = ModelManager::getInstance().getModel<T>().fields[pk];
-  value = foreignObj.getFieldValue(foreignObj, fieldData);
+  value = foreignObj.get(pk);
   keyWasSet = true;
   setDirty(true);
   return *this;

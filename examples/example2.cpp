@@ -75,11 +75,12 @@ int main() {
 
   registerModels();
 
-
+  Dog d = Dog::all().get();
+  std::cout << d.name << std::endl;
 
 //  Dog d;
 //  try {
-//    d = Dog::get({{"name", "Ciccio"}});
+//    d = Dog::get({{el"name", "Ciccio"}});
 //  } catch (const std::exception &e) {
 //    d.name = "Ciccio";
 //    d.breed = "Labrador";

@@ -39,13 +39,10 @@ class Model {
   class Query::QueryBuilder;
 
   static ModelDataField &getFieldData(const std::string &fieldName);
-  static void setFieldValue(T &instance,
-                            ModelDataField &fieldData,
-                            const std::string &value);
-  static std::string getFieldValue(T &instance,
-                                   ModelDataField &fieldData);
-  static BaseModelField *getField(T &instance,
-                                  ModelDataField &fieldData);
+  BaseModelField *getField(const std::string &field);
+  void set(const std::string &field, const std::string &value);
+  std::string get(const std::string &field);
+
 };
 
 } // ORM
