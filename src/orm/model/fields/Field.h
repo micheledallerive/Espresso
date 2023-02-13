@@ -8,20 +8,79 @@
 #include <string>
 #include <any>
 #include <optional>
+#include <utility>
+#include "orm/exceptions.h"
 
 namespace Espresso::ORM {
 
-struct Field {
-  std::string name;
-  bool primaryKey{false};
+class Field {
+ public:
+  std::string name{};
   bool autoIncrement{false};
   bool notNull{false};
-  std::string defaultValue{};
+  std::string defaultValue;
+  bool primaryKey{false};
+
+  Field() = default;
+  Field(const Field &other) = default;
+  Field(Field &&other) noexcept = default;
+
+  Field(std::string name,
+        bool autoIncrement = false,
+        bool notNull = false,
+        std::string defaultValue = "",
+        bool primaryKey = false)
+      : name(std::move(name)),
+        autoIncrement(autoIncrement),
+        notNull(notNull),
+        defaultValue(std::move(defaultValue)),
+        primaryKey(primaryKey) {}
+
+  Field &operator=(const Field &other) = default;
+  Field &operator=(Field &&other) noexcept = default;
+
+  virtual void validate() {
+    if (this->name.empty()) {
+      throw model_error("Field name cannot be empty");
+    }
+  }
+};
+
+struct ForeignKeyField : public Field {
+  std::string relatedName;
+
+  ForeignKeyField() = default;
+  ForeignKeyField(const ForeignKeyField &other) = default;
+  ForeignKeyField(ForeignKeyField &&other) noexcept = default;
+
+  ForeignKeyField(std::string name,
+                  std::string relatedName,
+                  bool autoIncrement = false,
+                  bool notNull = false,
+                  std::string defaultValue = "",
+                  bool primaryKey = false)
+      : Field(std::move(name),
+              autoIncrement,
+              notNull,
+              std::move(defaultValue),
+              primaryKey),
+        relatedName(std::move(relatedName)) {}
+
+  ForeignKeyField(const Field &f, std::string relatedName)
+      : Field(f), relatedName(std::move(relatedName)) {}
+
+  void validate() override {
+    Field::validate();
+    if (this->relatedName.empty()) {
+      throw model_error("Related name cannot be empty");
+    }
+  }
 };
 
 struct ForeignKeyData {
   std::string table;
   std::string tablePrimaryKey;
+  std::string relatedName;
 };
 
 class ModelDataField : public Field {

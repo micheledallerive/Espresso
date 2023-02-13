@@ -46,8 +46,8 @@ class ModelManager {
   void registerFields() {}
 
   template<class Class, class Type>
-  ModelDataField setDataFieldTypes(Type Class::* field,
-                                   ModelDataField &modelField);
+  void setDataFieldTypes(Type Class::* field,
+                         ModelDataField &modelField);
 
   mutable std::shared_mutex mutex_;
   unordered_map<string, ModelData>

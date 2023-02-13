@@ -63,12 +63,15 @@ void ModelManager::registerFields(A arg, Args ... args) {
     }
 
     const Field &fieldParamData = arg.first;
+
     ModelDataField modelField(fieldParamData);
 
     modelField.primaryKey = fieldParamData.primaryKey
         || isPrimaryKey(arg.second);
 
     if (isForeignKey(arg.second)) {
+      auto &foreign_key_field =
+          dynamic_cast<ForeignKeyField &>(arg.first);
       std::string foreignObjectType =
           typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
       modelField.foreignKey = ForeignKeyData{
@@ -78,9 +81,11 @@ void ModelManager::registerFields(A arg, Args ... args) {
       modelField.ctype = typeid(std::string).name();
       modelField.field =
           reinterpret_cast<ModelField<std::string> T::*>(arg.second);
+
+      std::string relatedName = foreign_key_field.relatedName;
       models[foreignObjectType].relatedModels.emplace(
           // to be changed, automatically the name of the table
-          getModel<T>().tableName,
+          relatedName,
           std::make_pair(typeid(T).name(),
                          fieldParamData.name));
     } else {
@@ -104,8 +109,8 @@ void ModelManager::registerFields(A arg, Args ... args) {
 }
 
 template<class Class, class Type>
-ModelDataField ModelManager::setDataFieldTypes(Type Class::* field,
-                                               ModelDataField &modelField) {
+void ModelManager::setDataFieldTypes(Type Class::* field,
+                                     ModelDataField &modelField) {
   string fieldType =
       typeid(typename pointer_value<decltype(field)>::valType::value_type).name();
 
@@ -115,7 +120,6 @@ ModelDataField ModelManager::setDataFieldTypes(Type Class::* field,
   modelField.field =
       reinterpret_cast<ModelField<typename Type::value_type> Class::*>(field);
   modelField.ctype = fieldType;
-  return modelField;
 }
 
 void ModelManager::migrateModels() {

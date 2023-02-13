@@ -51,18 +51,19 @@ void registerModels() {
 
   ModelManager::getInstance().registerModel<Human>(
       "humans",
-      make_pair(Field{.name="pk", .autoIncrement=true}, &Human::pk),
-      make_pair(Field{.name="name"}, &Human::name),
-      make_pair(Field{.name="surname"}, &Human::surname),
-      make_pair(Field{.name="age"}, &Human::age)
+      make_pair(Field("pk"), &Human::pk),
+      make_pair(Field("name"), &Human::name),
+      make_pair(Field("surname"), &Human::surname),
+      make_pair(Field("age"), &Human::age)
   );
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
-      make_pair(Field{.name="pk", .autoIncrement=true}, &Dog::pk),
-      make_pair(Field{.name="name"}, &Dog::name),
-      make_pair(Field{.name="breed"}, &Dog::breed),
-      make_pair(Field{.name="age"}, &Dog::age),
-      make_pair(Field{.name="owner"}, &Dog::owner)
+      make_pair(Field("pk", true), &Dog::pk),
+      make_pair(Field("name"), &Dog::name),
+      make_pair(Field("breed"), &Dog::breed),
+      make_pair(Field("age"), &Dog::age),
+      make_pair(ForeignKeyField("owner", "doggos"),
+                &Dog::owner)
   );
 }
 
@@ -77,10 +78,10 @@ int main() {
 
   Human h = Human::all().filter(Q("pk") == "1").get();
   std::cout << h.name << std::endl;
-  std::vector<Dog> dogs = h.related<Dog>("dogs");
-    for (Dog &d : dogs) {
-        std::cout << d.name << std::endl;
-    }
+  std::vector<Dog> dogs = h.related<Dog>("doggos");
+  for (Dog &d : dogs) {
+    std::cout << d.name << std::endl;
+  }
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;
 //  }
