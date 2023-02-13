@@ -121,7 +121,7 @@ size_t QueryBuilder<M>::count() {
 }
 
 template<typename M>
-M &QueryBuilder<M>::get() {
+M QueryBuilder<M>::get() {
   return *this->get_ptr();
 }
 
