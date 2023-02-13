@@ -23,7 +23,7 @@ std::string FilterOperation::toString() const {
   if (right != nullptr) {
     sql << " ";
     if (right->isTerminal()) {
-      sql << right->toString();
+      sql << "'" << right->toString() << "'";
     } else {
       sql << "(" << right->toString() << ")";
     }
