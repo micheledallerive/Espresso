@@ -28,6 +28,7 @@ class QueryBuilder {
   void checkField(const std::string &) const;
  protected:
   [[nodiscard]] const std::string &getTableName() const;
+  [[nodiscard]] const std::string &getPrimaryKey() const;
   [[nodiscard]] std::string conditionsToSQL() const;
  public:
   QueryBuilder() = default;
@@ -49,6 +50,8 @@ class QueryBuilder {
   size_t count();
   M get();
   std::shared_ptr<M> get_ptr();
+  std::optional<M> first();
+  std::optional<M> last();
 
   operator std::vector<M>();
   std::vector<M> execute();

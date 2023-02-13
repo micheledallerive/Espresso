@@ -14,6 +14,10 @@ const std::string &QueryBuilder<M>::getTableName() const {
   return ModelManager::getInstance().getModel<M>().tableName;
 }
 template<typename M>
+const std::string &QueryBuilder<M>::getPrimaryKey() const {
+  return ModelManager::getInstance().getModel<M>().primaryKey;
+}
+template<typename M>
 void QueryBuilder<M>::checkField(const std::string &field) const {
   if (!ModelManager::getInstance().getModel<M>().fields.contains(field)) {
     throw std::invalid_argument("Field " + field + " does not exist in model " +
@@ -162,6 +166,29 @@ void QueryBuilder<M>::bulkCreate(std::vector<M> args) {
   for (auto &arg : args) {
     arg.save(false);
   }
+}
+
+template<typename M>
+std::optional<M> QueryBuilder<M>::first() {
+  this->limit(1);
+  if (!this->order_by_.has_value()) {
+    this->order_by({this->getPrimaryKey()});
+  }
+  try {
+    return this->get();
+  } catch (const object_not_found &e) {
+    return std::nullopt;
+  }
+}
+
+template<typename M>
+std::optional<M> QueryBuilder<M>::last() {
+  if (!this->order_by_.has_value()) {
+    this->order_by({"-" + this->getPrimaryKey()});
+  } else {
+    this->reverse();
+  }
+  return this->first();
 }
 
 template<typename M>
