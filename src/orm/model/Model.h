@@ -21,11 +21,8 @@ class Model {
   virtual ~Model() = default;
   Model &operator=(const Model &other) = default;
 
-  void save(bool checkDirty=true);
+  void save(bool checkDirty = true);
   bool remove();
-
-  static T get(const std::optional<Query::FilterOperation> & = std::nullopt);
-  static std::shared_ptr<T> get_ptr(const std::optional<Query::FilterOperation> & = std::nullopt);
 
   static Query::QueryBuilder<T> all();
 

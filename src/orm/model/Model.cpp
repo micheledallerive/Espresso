@@ -21,46 +21,6 @@ Query::QueryBuilder<T> Model<T>::all() {
 }
 
 template<class T>
-std::shared_ptr<T> Model<T>::get_ptr(const std::optional<Query::FilterOperation> &constraints) {
-  ModelData &data = ModelManager::getInstance().getModel<T>();
-  string query = SQLGenerator::select(data.tableName, {"*"}, constraints);
-  std::shared_ptr<T> instance = std::make_shared<T>();
-  bool found = false;
-  const std::vector<std::string> &keys =
-      constraints.has_value()
-          ? constraints.value().getKeys()
-          : std::vector<std::string>();
-  for (const auto &key : keys) {
-    if (!data.fields.contains(key)) {
-      throw model_error("Field " + key + " does not exist");
-    }
-  }
-  dbManager->execute(query,
-                     [&data, &instance, &found](std::unordered_map<std::string,
-                                                                   std::string> &result) {
-                       if (!data.fields.empty()) found = true;
-                       for (auto &ModelDataField : data.fields) {
-                         setFieldValue(*instance,
-                                       ModelDataField.second,
-                                       result[ModelDataField.first]);
-                         auto *field =
-                             getField(*instance, ModelDataField.second);
-                         field->dirty = false;
-                       }
-                     });
-  if (!found) {
-    throw object_not_found("Object not found");
-  }
-  instance->wasSaved = true;
-  return instance;
-}
-
-template<class T>
-T Model<T>::get(const std::optional<Query::FilterOperation> &constraints) {
-  return *get_ptr(constraints);
-}
-
-template<class T>
 bool Model<T>::remove() {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   T *instance = static_cast<T *>(this);

@@ -172,21 +172,30 @@ std::vector<M> QueryBuilder<M>::execute() {
   sql << ";";
   const std::string query = sql.str();
   std::vector<M> result;
+  bool found = false;
   dbManager->execute(
       query,
-      [&result, &data](
+      [&result, &data, &found](
           const std::unordered_map<std::string,
                                    std::string> &row) {
         M m = M();
+        if (!row.empty()) {
+          found = true;
+        }
         for (const auto &field : data.fields) {
           const std::string &fieldName = field.first;
-          const ModelDataField &fieldData = field.second;
-          M::setFieldValue(m,
-                           const_cast<ModelDataField &>(fieldData),
-                           row.at(fieldName));
+          const ModelDataField &fieldData =
+              const_cast<ModelDataField &>(field.second);
+          M::setFieldValue(m, fieldData, row.at(fieldName));
+          auto *f = M::getField(m, fieldData);
+          f->dirty = false;
         }
+        m.wasSaved = true;
         result.push_back(m);
       });
+  if (!found) {
+    throw model_error("No results found for query: " + query);
+  }
   this->cache_results_ = result;
   // q: why does the previous line giving me a operator= error?
   // a: because the cache_results_ is a const std::optional
