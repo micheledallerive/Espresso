@@ -52,6 +52,7 @@ class QueryBuilder {
   std::shared_ptr<M> get_ptr();
   std::optional<M> first();
   std::optional<M> last();
+  bool exists();
 
   operator std::vector<M>();
   std::vector<M> execute();

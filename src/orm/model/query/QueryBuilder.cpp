@@ -149,7 +149,7 @@ std::shared_ptr<M> QueryBuilder<M>::get_ptr() {
   }
   std::vector<M> result = this->execute();
   if (result.empty()) {
-    return nullptr;
+    throw object_not_found("Object not found");
   }
   return std::make_shared<M>(result[0]);
 }
@@ -194,6 +194,17 @@ std::optional<M> QueryBuilder<M>::last() {
 }
 
 template<typename M>
+bool QueryBuilder<M>::exists() {
+  // no order_by needed
+  if (this->cache_results_ != std::nullopt) {
+    return !this->cache_results_.value().empty();
+  }
+  this->order_by_ = std::nullopt;
+  this->limit(1);
+  return !this->execute().empty();
+}
+
+template<typename M>
 std::vector<M> QueryBuilder<M>::execute() {
   if (this->cache_results_.has_value()) {
     return this->cache_results_.value();
@@ -231,9 +242,6 @@ std::vector<M> QueryBuilder<M>::execute() {
         m.wasSaved = true;
         result.push_back(m);
       });
-  if (!found) {
-    throw model_error(string("No results found for query: " + query));
-  }
   this->cache_results_ = result;
   // q: why does the previous line giving me a operator= error?
   // a: because the cache_results_ is a const std::optional
