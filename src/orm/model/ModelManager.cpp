@@ -82,7 +82,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
           // to be changed, automatically the name of the table
           getModel<T>().tableName,
           std::make_pair(typeid(T).name(),
-                         models[typeid(T).name()].primaryKey));
+                         fieldParamData.name));
     } else {
       setDataFieldTypes(arg.second, modelField);
     }

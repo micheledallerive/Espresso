@@ -16,7 +16,7 @@
 namespace Espresso::ORM {
 
 template<class T>
-class Model : public BaseModel{
+class Model : public BaseModel {
  public:
   Model() = default;
   virtual ~Model() = default;
@@ -29,8 +29,11 @@ class Model : public BaseModel{
 
   // operator ==
   bool operator==(const Model &other) const;
+  template<class R>
+  Query::QueryBuilder<R> related(const std::string &relatedName);
  protected:
   bool wasSaved{false};
+
  private:
   template<class G>
   friend

@@ -75,8 +75,15 @@ int main() {
 
   registerModels();
 
-  Dog d = Dog::all().get();
-  std::cout << d.name << std::endl;
+  Human h = Human::all().filter(Q("pk") == "1").get();
+  std::cout << h.name << std::endl;
+  std::vector<Dog> dogs = h.related<Dog>("dogs");
+    for (Dog &d : dogs) {
+        std::cout << d.name << std::endl;
+    }
+//  for (Dog &d : dogs) {
+//    std::cout << d.name << std::endl;
+//  }
 
 //  Dog d;
 //  try {

@@ -21,6 +21,30 @@ Query::QueryBuilder<T> Model<T>::all() {
 }
 
 template<class T>
+template<class R>
+Query::QueryBuilder<R> Model<T>::related(const std::string &relatedName) {
+  ModelData &data = ModelManager::getInstance().getModel<T>();
+  ModelData &relatedData = ModelManager::getInstance().getModel<R>();
+
+  if (!data.relatedModels.contains(relatedName)) {
+    throw model_error(
+        "Table " + data.tableName + " has no related name " + relatedName);
+  }
+
+  std::pair<std::string, std::string>
+      related = data.relatedModels[relatedName];
+  std::string relatedModel = related.first;
+  std::string fkField = related.second;
+
+  if (relatedModel != typeid(R).name()) {
+    throw model_error("Related model " + relatedModel + " is not of type " +
+        typeid(R).name());
+  }
+
+  return R::all().filter(Query::Q(fkField) == this->get(data.primaryKey));
+}
+
+template<class T>
 bool Model<T>::remove() {
   ModelData &data = ModelManager::getInstance().getModel<T>();
   T *instance = static_cast<T *>(this);
