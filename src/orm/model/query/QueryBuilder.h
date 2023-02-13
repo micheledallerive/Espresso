@@ -53,6 +53,7 @@ class QueryBuilder {
   std::optional<M> first();
   std::optional<M> last();
   bool exists();
+  bool contains(M &);
 
   operator std::vector<M>();
   std::vector<M> execute();

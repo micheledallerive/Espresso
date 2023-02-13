@@ -4,6 +4,7 @@
 
 #include "QueryBuilder.h"
 #include "orm/exceptions.h"
+#include "orm/model/query/filter/FilterField.h"
 #include <orm/model/ModelManager.h>
 #include <sstream>
 
@@ -152,6 +153,34 @@ std::shared_ptr<M> QueryBuilder<M>::get_ptr() {
     throw object_not_found("Object not found");
   }
   return std::make_shared<M>(result[0]);
+}
+
+template<typename M>
+bool QueryBuilder<M>::contains(M &obj) {
+  if (obj.wasSaved) {
+    // the object is already in the database, but not necessarily in the query
+    // just need to check the primary key
+    ModelDataField &field = M::getFieldData(this->getPrimaryKey());
+    return this->filter(
+        Q(this->getPrimaryKey()) == M::getFieldValue(obj, field)
+    ).exists();
+  } else {
+    // the object is not in the database, so we need to check all the fields
+    // that are in the query
+    ModelData &modelData = ModelManager::getInstance().getModel<M>();
+    QueryBuilder &query = *this;
+    for (const auto &field : modelData.fields) {
+      auto &fieldData = const_cast<ModelDataField &>(field.second);
+      if (fieldData.primaryKey) {
+        continue;
+      }
+      if (!M::getField(obj, fieldData)->dirty) { // not set
+        continue;
+      }
+      query.filter(Q(field.first) == M::getFieldValue(obj, fieldData));
+    }
+    return query.exists();
+  }
 }
 
 template<typename M>

@@ -75,17 +75,7 @@ int main() {
 
   registerModels();
 
-  std::vector<Dog> dogs = Dog::all();
 
-  for (Dog &dog : dogs) {
-    std::cout << dog.name << std::endl;
-  }
-
-  std::cout << "----------------" << std::endl;
-
-  std::cout << "Count: " << Dog::all().count() << std::endl;
-
-  Dog newDog = Dog::all().create("a", "b", 5);
 
 //  Dog d;
 //  try {

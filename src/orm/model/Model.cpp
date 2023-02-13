@@ -90,6 +90,11 @@ void Model<T>::save(bool checkDirty) {
 }
 
 template<class T>
+ModelDataField &Model<T>::getFieldData(const std::string &fieldName) {
+  return ModelManager::getInstance().getModel<T>().fields[fieldName];
+}
+
+template<class T>
 void Model<T>::setFieldValue(T &instance,
                              ModelDataField &fieldData,
                              const std::string &value) {

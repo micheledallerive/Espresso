@@ -38,6 +38,7 @@ class Model {
   friend
   class Query::QueryBuilder;
 
+  static ModelDataField &getFieldData(const std::string &fieldName);
   static void setFieldValue(T &instance,
                             ModelDataField &fieldData,
                             const std::string &value);
