@@ -144,7 +144,9 @@ M QueryBuilder<M>::get() {
 
 template<typename M>
 std::shared_ptr<M> QueryBuilder<M>::get_ptr() {
-  this->limit(1);
+  if (this->limit_ != 1) {
+    this->limit(1);
+  }
   std::vector<M> result = this->execute();
   if (result.empty()) {
     return nullptr;
