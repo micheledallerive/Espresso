@@ -41,7 +41,8 @@ Query::QueryBuilder<R> Model<T>::related(const std::string &relatedName) {
         typeid(R).name());
   }
 
-  return R::all().filter(Query::Q(fkField) == this->get(data.primaryKey));
+  return Query::QueryBuilder<R>(fkField, this->get(data.primaryKey))
+      .filter(Query::Q(fkField) == this->get(data.primaryKey));
 }
 
 template<class T>

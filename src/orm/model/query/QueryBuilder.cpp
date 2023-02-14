@@ -190,15 +190,16 @@ template<typename M>
 template<typename... Args>
 M QueryBuilder<M>::create(Args &&... args) {
   M m = M(std::forward<Args>(args)...);
+  m.set(relationship_context_.first, relationship_context_.second);
   m.save(false);
   return m;
 }
 
 template<typename M>
-template<typename... Args>
 void QueryBuilder<M>::bulkCreate(std::vector<M> args) {
   AtomicTransaction transaction;
-  for (auto &arg : args) {
+  for (M &arg : args) {
+    arg.set(relationship_context_.first, relationship_context_.second);
     arg.save(false);
   }
 }
