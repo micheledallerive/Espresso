@@ -31,6 +31,11 @@ class DatabaseManager {
 
   virtual void startTransaction() = 0;
   virtual void commitTransaction() = 0;
+  virtual void rollbackTransaction() = 0;
+
+  virtual void startSavepoint(const std::string &) = 0;
+  virtual void releaseSavepoint(const std::string &) = 0;
+  virtual void rollbackSavepoint(const std::string &) = 0;
 
   bool isConnected();
  protected:

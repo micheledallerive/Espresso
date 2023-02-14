@@ -27,6 +27,11 @@ class SQLiteDatabaseManager : public DatabaseManager {
 
   void startTransaction() override;
   void commitTransaction() override;
+  void rollbackTransaction() override;
+
+  void startSavepoint(const std::string &) override;
+  void releaseSavepoint(const std::string &) override;
+  void rollbackSavepoint(const std::string &) override;
  private:
   sqlite3 *db{nullptr};
 };

@@ -80,5 +80,17 @@ void SQLiteDatabaseManager::startTransaction() {
 void SQLiteDatabaseManager::commitTransaction() {
   this->execute("COMMIT TRANSACTION", nullptr);
 }
+void SQLiteDatabaseManager::rollbackTransaction() {
+  this->execute("ROLLBACK TRANSACTION", nullptr);
+}
+void SQLiteDatabaseManager::startSavepoint(const std::string &name) {
+  this->execute("SAVEPOINT " + name, nullptr);
+}
+void SQLiteDatabaseManager::releaseSavepoint(const std::string &name) {
+  this->execute("RELEASE SAVEPOINT " + name, nullptr);
+}
+void SQLiteDatabaseManager::rollbackSavepoint(const std::string &name) {
+  this->execute("ROLLBACK TO SAVEPOINT " + name, nullptr);
+}
 
 }
