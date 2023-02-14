@@ -5,6 +5,7 @@
 #include "QueryBuilder.h"
 #include "orm/exceptions.h"
 #include "orm/model/query/filter/FilterField.h"
+#include "orm/database/AtomicTransaction.h"
 #include <orm/model/ModelManager.h>
 #include <sstream>
 
@@ -193,6 +194,7 @@ M QueryBuilder<M>::create(Args &&... args) {
 template<typename M>
 template<typename... Args>
 void QueryBuilder<M>::bulkCreate(std::vector<M> args) {
+  AtomicTransaction transaction;
   for (auto &arg : args) {
     arg.save(false);
   }

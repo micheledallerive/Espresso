@@ -6,6 +6,7 @@
 #include <sqlite3.h>
 #include "../exceptions.h"
 #include "utils.h"
+#include "AtomicTransaction.h"
 
 namespace Espresso::ORM {
 
@@ -31,11 +32,12 @@ void SQLiteDatabaseManager::execute(const std::string &query,
   }
   auto pos = query.find_first_of(';');
   if (pos != std::string::npos && pos != query.size() - 1) {
-    execute("BEGIN TRANSACTION", nullptr);
-    for (auto &q : Espresso::split(query, ';')) {
-      execute(q, callback);
+    {
+      AtomicTransaction transaction;
+      for (auto &q : Espresso::split(query, ';')) {
+        execute(q, callback);
+      }
     }
-    execute("COMMIT TRANSACTION", nullptr);
     return;
   }
 
