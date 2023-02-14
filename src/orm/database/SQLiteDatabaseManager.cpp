@@ -38,13 +38,16 @@ void SQLiteDatabaseManager::execute(const std::string &query,
   }
 
   sqlite3_stmt *stmt;
-  const char *sql = query.c_str();
+  const char *sql = query.data();
   int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
   if (rc != SQLITE_OK) {
     throw sql_error(
-        "Could not prepare statement: '" + query + "': " + std::string(sqlite3_errmsg(db)));
+        "Could not prepare statement: '" + query + "': "
+            + std::string(sqlite3_errmsg(db)));
   }
   while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    if (!callback) continue;
+
     std::unordered_map<std::string, std::string> rowResult;
     // for each column
     for (int i = 0; i < sqlite3_column_count(stmt); i++) {
@@ -53,17 +56,17 @@ void SQLiteDatabaseManager::execute(const std::string &query,
       rowResult.emplace(columnName,
                         columnValue == nullptr ? "" : std::string(columnValue));
     }
-    if (callback) callback(rowResult);
+    callback(rowResult);
   }
-  if (query.find("INSERT") != std::string::npos) {
+  if (callback && query.find("INSERT") != std::string::npos) {
     std::string last_id = std::to_string(sqlite3_last_insert_rowid(db));
     std::unordered_map<std::string, std::string> rowResult;
     rowResult.emplace("id", last_id);
-    if (callback) callback(rowResult);
+    callback(rowResult);
   }
   if (rc != SQLITE_DONE) {
     throw sql_error("Could not execute statement '" + query + "': " +
-                    std::string(sqlite3_errmsg(db)));
+        std::string(sqlite3_errmsg(db)));
   }
   sqlite3_finalize(stmt);
 }
