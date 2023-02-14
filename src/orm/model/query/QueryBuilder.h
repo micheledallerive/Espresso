@@ -48,8 +48,8 @@ class QueryBuilder {
   template<typename... Args>
   void bulkCreate(std::vector<M> args);
   size_t count();
-  M get();
-  std::shared_ptr<M> get_ptr();
+  M get(const std::optional<FilterOperation> & = std::nullopt);
+  std::shared_ptr<M> get_ptr(const std::optional<FilterOperation> & = std::nullopt);
   std::optional<M> first();
   std::optional<M> last();
   bool exists();

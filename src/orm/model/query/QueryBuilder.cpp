@@ -140,12 +140,15 @@ size_t QueryBuilder<M>::count() {
 }
 
 template<typename M>
-M QueryBuilder<M>::get() {
-  return *this->get_ptr();
+M QueryBuilder<M>::get(const std::optional<FilterOperation> &filter) {
+  return *this->get_ptr(filter);
 }
 
 template<typename M>
-std::shared_ptr<M> QueryBuilder<M>::get_ptr() {
+std::shared_ptr<M> QueryBuilder<M>::get_ptr(const std::optional<FilterOperation> &filter) {
+  if (filter.has_value()) {
+    this->filter(filter.value());
+  }
   if (this->limit_ != 1) {
     this->limit(1);
   }
