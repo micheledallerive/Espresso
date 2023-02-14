@@ -81,7 +81,10 @@ void Server::listen(unsigned short int port,
 
 void Server::handle_connection_(int client_socket) {
   char buffer[2048] = {0};
-  read(client_socket, buffer, 2048);
+  ssize_t res = read(client_socket, buffer, 2048);
+  if (res < 0) {
+    throw std::runtime_error("Could not read from socket");
+  }
 
   auto request = Espresso::HTTPRequest(buffer);
   auto response = Espresso::HTTPResponse();
