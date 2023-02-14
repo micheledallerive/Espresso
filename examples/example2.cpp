@@ -47,6 +47,21 @@ class Dog : public Model<Dog> {
   ForeignKey<Human> owner;
 };
 
+class Cat : public Model<Cat> {
+ public:
+  Cat() = default;
+  ~Cat() override = default;
+
+  Cat(const std::string &name, const std::string &breed, int age)
+      : name(name), breed(breed), age(age) {}
+
+  PrimaryKey<int> pk;
+
+  ModelField<std::string> name;
+  ModelField<std::string> breed;
+  ModelField<int> age;
+};
+
 void registerModels() {
 
   ModelManager::getInstance().registerModel<Human>(
@@ -65,6 +80,14 @@ void registerModels() {
       make_pair(ForeignKeyField("owner", "doggos"),
                 &Dog::owner)
   );
+  ModelManager::getInstance().registerModel<Cat>(
+      "cats",
+      make_pair(FieldParams("pk", true), &Cat::pk),
+      make_pair(FieldParams("name", false, true, true), &Cat::name),
+      make_pair(FieldParams("breed", false, false, false, "breed"),
+                &Cat::breed),
+      make_pair(FieldParams("age"), &Cat::age)
+  );
 }
 
 int main() {
@@ -76,10 +99,10 @@ int main() {
 
   registerModels();
 
-  Human h;
-  h.name = "test";
-  h.age = 5;
-  h.save();
+  Cat c;
+  c.age = 50;
+  c.save();
+
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;
 //  }

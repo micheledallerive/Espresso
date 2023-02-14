@@ -22,6 +22,15 @@ std::string SQLGenerator::createTable(const std::string &table_name,
     if (columns[i].autoIncrement) {
       sql << " AUTOINCREMENT";
     }
+    if (columns[i].notNull) {
+      sql << " NOT NULL";
+    }
+    if (columns[i].defaultValue.has_value()) {
+      sql << " DEFAULT " << columns[i].defaultValue.value();
+    }
+    if (columns[i].unique) {
+      sql << " UNIQUE";
+    }
     if (i < columns.size() - 1) {
       sql << ", ";
     }

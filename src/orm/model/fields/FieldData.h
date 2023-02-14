@@ -29,6 +29,7 @@ class FieldData : public FieldParams, public BaseFieldData {
     this->name = f.name;
     this->primaryKey = f.primaryKey;
     this->autoIncrement = f.autoIncrement;
+    this->unique = f.unique;
     this->notNull = f.notNull;
     this->defaultValue = f.defaultValue;
   }
@@ -45,8 +46,8 @@ class FieldData : public FieldParams, public BaseFieldData {
     if (this->notNull) {
       ss << " NOT NULL";
     }
-    if (!this->defaultValue.empty()) {
-      ss << " DEFAULT " << this->defaultValue;
+    if (!this->defaultValue.has_value()) {
+      ss << " DEFAULT " << this->defaultValue.value();
     }
     return ss.str();
   }
@@ -73,19 +74,7 @@ class ForeignKeyFieldData : public FieldData {
 
   [[nodiscard]] std::string toSQL() const override {
     std::stringstream ss;
-    ss << this->name << " " << to_string(getSQLType(this->ctype));
-    if (this->primaryKey) {
-      ss << " PRIMARY KEY";
-    }
-    if (this->autoIncrement) {
-      ss << " AUTOINCREMENT";
-    }
-    if (this->notNull) {
-      ss << " NOT NULL";
-    }
-    if (!this->defaultValue.empty()) {
-      ss << " DEFAULT " << this->defaultValue;
-    }
+    ss << FieldData::toSQL();
     if (this->foreignKey.has_value()) {
       ss << " REFERENCES " << this->foreignKey->table << "("
          << this->foreignKey->tablePrimaryKey << ")";
@@ -99,6 +88,7 @@ class ForeignKeyFieldData : public FieldData {
     info.type = getSQLType(this->ctype);
     info.primaryKey = this->primaryKey;
     info.autoIncrement = this->autoIncrement;
+    info.unique = this->unique;
     info.notNull = this->notNull;
     info.defaultValue = this->defaultValue;
     info.foreignKey = this->foreignKey;

@@ -18,7 +18,8 @@ class FieldParams {
   std::string name{};
   bool autoIncrement{false};
   bool notNull{false};
-  std::string defaultValue;
+  bool unique{false};
+  std::optional<std::string> defaultValue{std::nullopt};
   bool primaryKey{false};
 
   FieldParams() = default;
@@ -26,13 +27,15 @@ class FieldParams {
   FieldParams(FieldParams &&other) noexcept = default;
 
   explicit FieldParams(std::string name,
-              bool autoIncrement = false,
-              bool notNull = false,
-              std::string defaultValue = "",
-              bool primaryKey = false)
+                       bool autoIncrement = false,
+                       bool notNull = false,
+                       bool unique = false,
+                       std::optional<std::string> defaultValue = std::nullopt,
+                       bool primaryKey = false)
       : name(std::move(name)),
         autoIncrement(autoIncrement),
         notNull(notNull),
+        unique(unique),
         defaultValue(std::move(defaultValue)),
         primaryKey(primaryKey) {}
 
@@ -57,11 +60,13 @@ struct ForeignKeyField : public FieldParams {
                   std::string relatedName,
                   bool autoIncrement = false,
                   bool notNull = false,
-                  std::string defaultValue = "",
+                  bool unique = false,
+                  std::optional<std::string> defaultValue = std::nullopt,
                   bool primaryKey = false)
       : FieldParams(std::move(name),
                     autoIncrement,
                     notNull,
+                    unique,
                     std::move(defaultValue),
                     primaryKey),
         relatedName(std::move(relatedName)) {}
@@ -82,7 +87,6 @@ struct ForeignKeyStruct_ {
   std::string tablePrimaryKey;
   std::string relatedName;
 };
-
 
 } // ORM
 
