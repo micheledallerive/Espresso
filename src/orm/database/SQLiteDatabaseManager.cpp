@@ -31,9 +31,11 @@ void SQLiteDatabaseManager::execute(const std::string &query,
   }
   auto pos = query.find_first_of(';');
   if (pos != std::string::npos && pos != query.size() - 1) {
+    execute("BEGIN TRANSACTION", nullptr);
     for (auto &q : Espresso::split(query, ';')) {
       execute(q, callback);
     }
+    execute("COMMIT TRANSACTION", nullptr);
     return;
   }
 
@@ -69,6 +71,12 @@ void SQLiteDatabaseManager::execute(const std::string &query,
         std::string(sqlite3_errmsg(db)));
   }
   sqlite3_finalize(stmt);
+}
+void SQLiteDatabaseManager::startTransaction() {
+  this->execute("BEGIN TRANSACTION", nullptr);
+}
+void SQLiteDatabaseManager::commitTransaction() {
+  this->execute("COMMIT TRANSACTION", nullptr);
 }
 
 }
