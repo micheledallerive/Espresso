@@ -51,7 +51,7 @@ void registerModels() {
 
   ModelManager::getInstance().registerModel<Human>(
       "humans",
-      make_pair(FieldParams("pk"), &Human::pk),
+      make_pair(FieldParams("pk", true), &Human::pk),
       make_pair(FieldParams("name"), &Human::name),
       make_pair(FieldParams("surname"), &Human::surname),
       make_pair(FieldParams("age"), &Human::age)
@@ -76,12 +76,10 @@ int main() {
 
   registerModels();
 
-  Human h = Human::all().filter(Q("pk") == "1").get();
-  std::cout << h.name << std::endl;
-  std::vector<Dog> dogs = h.related<Dog>("doggos");
-  for (Dog &d : dogs) {
-    std::cout << d.name << std::endl;
-  }
+  Human h;
+  h.name = "test";
+  h.age = 5;
+  h.save();
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;
 //  }

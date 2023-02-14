@@ -145,6 +145,9 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
       sql << ", ";
     }
   }
+  if (intersectionColumns.size() < modelColumns.size()) {
+    sql << ", 0 ";
+  }
   sql << " FROM " << table_name << "_temp;";
 
   sql << dropTable(table_name + "_temp");

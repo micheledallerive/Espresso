@@ -6,14 +6,22 @@
 #define ESPRESSO_SRC_ORM_MODEL_FIELDS_FIELDDATA_H_
 
 #include "FieldParams.h"
+#include "orm/sql/SQLTypes.h"
+#include <orm/sql/SQLGenerator.h>
+#include <sstream>
 namespace Espresso::ORM {
 
-class FieldData : public FieldParams {
+class BaseFieldData {
  public:
   std::any field;
   std::string ctype;
-  std::optional<ForeignKeyData> foreignKey;
 
+  [[nodiscard]] virtual std::string toSQL() const = 0;
+  [[nodiscard]] virtual SQLColumnInfo getColumnInfo() const = 0;
+};
+
+class FieldData : public FieldParams, public BaseFieldData {
+ public:
   FieldData() = default;
   // create a constructor for the assignment ModelDataField = Field
   // Field does not have a constructor
@@ -23,7 +31,78 @@ class FieldData : public FieldParams {
     this->autoIncrement = f.autoIncrement;
     this->notNull = f.notNull;
     this->defaultValue = f.defaultValue;
-    this->foreignKey = std::nullopt;
+  }
+
+  [[nodiscard]] std::string toSQL() const override {
+    std::stringstream ss;
+    ss << this->name << " " << to_string(getSQLType(this->ctype));
+    if (this->primaryKey) {
+      ss << " PRIMARY KEY";
+    }
+    if (this->autoIncrement) {
+      ss << " AUTOINCREMENT";
+    }
+    if (this->notNull) {
+      ss << " NOT NULL";
+    }
+    if (!this->defaultValue.empty()) {
+      ss << " DEFAULT " << this->defaultValue;
+    }
+    return ss.str();
+  }
+
+  [[nodiscard]] SQLColumnInfo getColumnInfo() const override {
+    SQLColumnInfo info;
+    info.name = this->name;
+    info.type = getSQLType(this->ctype);
+    info.primaryKey = this->primaryKey;
+    info.autoIncrement = this->autoIncrement;
+    info.notNull = this->notNull;
+    info.defaultValue = this->defaultValue;
+    return info;
+  }
+};
+
+class ForeignKeyFieldData : public FieldData {
+ public:
+  std::optional<ForeignKeyStruct_> foreignKey;
+
+  ForeignKeyFieldData() = default;
+  explicit ForeignKeyFieldData(const FieldParams &f) : FieldData(f) {}
+  explicit ForeignKeyFieldData(const FieldData &f) : FieldData(f) {}
+
+  [[nodiscard]] std::string toSQL() const override {
+    std::stringstream ss;
+    ss << this->name << " " << to_string(getSQLType(this->ctype));
+    if (this->primaryKey) {
+      ss << " PRIMARY KEY";
+    }
+    if (this->autoIncrement) {
+      ss << " AUTOINCREMENT";
+    }
+    if (this->notNull) {
+      ss << " NOT NULL";
+    }
+    if (!this->defaultValue.empty()) {
+      ss << " DEFAULT " << this->defaultValue;
+    }
+    if (this->foreignKey.has_value()) {
+      ss << " REFERENCES " << this->foreignKey->table << "("
+         << this->foreignKey->tablePrimaryKey << ")";
+    }
+    return ss.str();
+  }
+
+  [[nodiscard]] SQLColumnInfo getColumnInfo() const override {
+    SQLColumnInfo info;
+    info.name = this->name;
+    info.type = getSQLType(this->ctype);
+    info.primaryKey = this->primaryKey;
+    info.autoIncrement = this->autoIncrement;
+    info.notNull = this->notNull;
+    info.defaultValue = this->defaultValue;
+    info.foreignKey = this->foreignKey;
+    return info;
   }
 };
 

@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
-#include <orm/model/fields/FieldData.h>
+#include <orm/model/fields/FieldParams.h>
 
 namespace Espresso::ORM {
 
@@ -30,7 +30,7 @@ class SQLColumnInfo;
 class SQLColumnInfo : public FieldParams {
  public:
   SQLType type{SQLType::BLOB};
-  std::optional<ForeignKeyData> foreignKey;
+  std::optional<ForeignKeyStruct_> foreignKey;
 
   bool operator==(const SQLColumnInfo &other) const {
     return name == other.name;
@@ -69,15 +69,11 @@ class SQLColumnInfo : public FieldParams {
   }
 
   SQLColumnInfo() = default;
-  explicit SQLColumnInfo(const FieldData &field) {
-    name = field.name;
-    type = getSQLType(field.ctype);
-    primaryKey = field.primaryKey;
-    autoIncrement = field.autoIncrement;
-    notNull = field.notNull;
-    defaultValue = field.defaultValue;
-    foreignKey = field.foreignKey;
-  }
+  SQLColumnInfo(SQLColumnInfo &&) = default;
+  SQLColumnInfo(const SQLColumnInfo &) = default;
+
+  SQLColumnInfo &operator=(const SQLColumnInfo &) = default;
+  SQLColumnInfo &operator=(SQLColumnInfo &&) = default;
 };
 
 }

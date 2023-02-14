@@ -65,22 +65,22 @@ void ModelManager::registerFields(A arg, Args ... args) {
     const FieldParams &fieldParamData = arg.first;
     fieldParamData.validate();
 
-    auto &modelField = *(new FieldData(fieldParamData));
-
-    modelField.primaryKey = fieldParamData.primaryKey
-        || isPrimaryKey(arg.second);
+    FieldData *modelField;
 
     if (isForeignKey(arg.second)) {
       auto &foreign_key_field =
           dynamic_cast<ForeignKeyField &>(arg.first);
       std::string foreignObjectType =
           typeid(typename pointer_value<decltype(arg.second)>::valType::value_type).name();
-      modelField.foreignKey = ForeignKeyData{
+
+      auto *fkd = new ForeignKeyFieldData(fieldParamData);
+
+      fkd->foreignKey = ForeignKeyStruct_{
           .table=models[foreignObjectType].tableName,
           .tablePrimaryKey=models[foreignObjectType].primaryKey
       };
-      modelField.ctype = typeid(std::string).name();
-      modelField.field =
+      fkd->ctype = typeid(std::string).name();
+      fkd->field =
           reinterpret_cast<ModelField<std::string> T::*>(arg.second);
 
       std::string relatedName = foreign_key_field.relatedName;
@@ -89,12 +89,16 @@ void ModelManager::registerFields(A arg, Args ... args) {
           relatedName,
           std::make_pair(typeid(T).name(),
                          fieldParamData.name));
+      modelField = fkd;
     } else {
-      setDataFieldTypes(arg.second, modelField);
+      modelField = new FieldData(fieldParamData);
+      modelField->primaryKey =
+          fieldParamData.primaryKey || isPrimaryKey(arg.second);
+      setDataFieldTypes(arg.second, *modelField);
     }
 
     const std::string fieldName = fieldParamData.name;
-    if (modelField.primaryKey) {
+    if (modelField->primaryKey) {
       if (!getModel<T>().primaryKey.empty()) {
         std::string msg =
             "Multiple primary keys: cannot set '" + string(fieldName)
@@ -104,7 +108,7 @@ void ModelManager::registerFields(A arg, Args ... args) {
       getModel<T>().primaryKey = fieldName;
     }
 
-    getModel<T>().fields.emplace(fieldName, modelField);
+    getModel<T>().fields.emplace(fieldName, *modelField);
   }
   registerFields < T >(args...);
 }
@@ -147,7 +151,11 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
                        dbFields.insert(info);
                      });
 
-  vector<SQLColumnInfo> modelFieldsList = data.getColumns();
+  vector<SQLColumnInfo> modelFieldsList;
+  for (const auto &field : data.fields) {
+    modelFieldsList.push_back(field.second.getColumnInfo());
+  }
+
   if (dbFields.empty()) {
     // create the table
     string query = SQLGenerator::createTable(tableName, modelFieldsList);
@@ -155,13 +163,9 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
     return;
   }
 
-  set<SQLColumnInfo> modelFields = set<SQLColumnInfo>(modelFieldsList.begin(),
-                                                      modelFieldsList.end());
+  set<SQLColumnInfo> modelFields;
   for (const auto &field : data.fields) {
-    SQLColumnInfo info;
-    info.name = field.first;
-    info.type = getSQLType(field.second.ctype);
-    modelFields.insert(info);
+    modelFields.insert(field.second.getColumnInfo());
   }
 
   vector<SQLColumnInfo> toAdd;
@@ -205,9 +209,7 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
 //                                          toRemove,
 //                                          toModify,
                                           nameIntersection,
-                                          vector<SQLColumnInfo>(
-                                              modelFields.begin(),
-                                              modelFields.end()));
+                                          modelFieldsList);
     dbManager->execute(sql);
   }
 

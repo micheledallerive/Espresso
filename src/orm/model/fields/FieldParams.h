@@ -77,7 +77,7 @@ struct ForeignKeyField : public FieldParams {
   }
 };
 
-struct ForeignKeyData {
+struct ForeignKeyStruct_ {
   std::string table;
   std::string tablePrimaryKey;
   std::string relatedName;
