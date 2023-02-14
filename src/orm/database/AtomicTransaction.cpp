@@ -12,7 +12,10 @@ AtomicTransaction::AtomicTransaction() {
 }
 
 AtomicTransaction::~AtomicTransaction() {
-  dbManager->commitTransaction();
+  if (std::uncaught_exceptions())
+    dbManager->rollbackTransaction();
+  else
+    dbManager->commitTransaction();
 }
 
 } // ORM

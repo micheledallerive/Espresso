@@ -12,12 +12,10 @@ class AtomicTransaction {
   AtomicTransaction();
   ~AtomicTransaction();
 
- private:
-  AtomicTransaction(const AtomicTransaction &) = delete;
   AtomicTransaction &operator=(const AtomicTransaction &) = delete;
-
-  AtomicTransaction(AtomicTransaction &&) = delete;
   AtomicTransaction &operator=(AtomicTransaction &&) = delete;
+  AtomicTransaction(const AtomicTransaction &) = delete;
+  AtomicTransaction(AtomicTransaction &&) = delete;
 };
 
 } // ORM
