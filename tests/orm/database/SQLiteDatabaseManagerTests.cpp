@@ -54,3 +54,39 @@ TEST(SQLiteDatabaseManagerTest, Disconnect) {
   dbManager.disconnect();
   ASSERT_FALSE(dbManager.isConnected());
 }
+
+TEST(SqliteDatabaseManagerTest, GetTableFields) {
+  SQLiteDatabaseManager dbManager;
+  SQLiteConnectionOptions options;
+  options.databasePath = "test.db";
+  dbManager.connect(options);
+
+  std::string query = "DROP TABLE IF EXISTS test";
+  try {
+    dbManager.execute(query, nullptr);
+    query =
+        "CREATE TABLE IF NOT EXISTS test(id INT PRIMARY KEY NOT NULL, name TEXT NOT NULL)";
+    dbManager.execute(query, nullptr);
+    query = "INSERT INTO test (id, name) VALUES (1, 'John Doe')";
+    dbManager.execute(query, nullptr);
+    query = "SELECT * FROM test";
+    auto fields = dbManager.getTableFields("test");
+    ASSERT_EQ(fields.size(), 2);
+
+    EXPECT_EQ(fields[0].name, "id");
+    EXPECT_EQ(fields[0].ctype, typeid(int).name());
+    EXPECT_EQ(fields[0].primaryKey, true);
+    EXPECT_EQ(fields[0].notNull, true);
+
+    EXPECT_EQ(fields[1].name, "name");
+    EXPECT_EQ(fields[1].ctype, typeid(std::string).name());
+    EXPECT_EQ(fields[1].primaryKey, false);
+    EXPECT_EQ(fields[1].notNull, true);
+
+    query = "DROP TABLE test";
+    dbManager.execute(query, nullptr);
+
+  } catch (std::exception &e) {
+    FAIL() << "Unexpected exception: " << e.what();
+  }
+}

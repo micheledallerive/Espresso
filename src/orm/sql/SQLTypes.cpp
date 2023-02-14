@@ -15,16 +15,16 @@ std::string to_string(SQLType type) {
   }
 }
 
-SQLType getSQLType(const std::string &type) {
-  if (type == typeid(int).name()) {
+SQLType getSQLType(const std::string &ctype) {
+  if (ctype == typeid(int).name()) {
     return SQLType::INTEGER;
-  } else if (type == typeid(float).name()) {
+  } else if (ctype == typeid(float).name()) {
     return SQLType::REAL;
-  } else if (type == typeid(double).name()) {
+  } else if (ctype == typeid(double).name()) {
     return SQLType::REAL;
-  } else if (type == typeid(std::string).name()) {
+  } else if (ctype == typeid(std::string).name()) {
     return SQLType::TEXT;
-  } else if (type == typeid(bool).name()) {
+  } else if (ctype == typeid(bool).name()) {
     return SQLType::INTEGER;
   } else {
     return SQLType::BLOB;

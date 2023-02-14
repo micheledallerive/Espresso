@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <memory>
+#include "orm/model/fields/FieldData.h"
 namespace Espresso::ORM {
 
 using QueryCallback = std::function<void(std::unordered_map<std::string,
@@ -28,6 +29,8 @@ class DatabaseManager {
   virtual void disconnect() = 0;
   virtual void execute(const std::string &query,
                        QueryCallback callback = nullptr) = 0;
+
+  virtual std::vector<BaseFieldData> getTableFields(const std::string &tableName) = 0;
 
   virtual void startTransaction() = 0;
   virtual void commitTransaction() = 0;

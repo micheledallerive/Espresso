@@ -23,7 +23,7 @@ enum class SQLType {
 
 std::string to_string(SQLType type);
 
-SQLType getSQLType(const std::string &type);
+SQLType getSQLType(const std::string &ctype);
 
 class SQLColumnInfo;
 

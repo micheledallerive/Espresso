@@ -11,17 +11,21 @@
 #include <sstream>
 namespace Espresso::ORM {
 
-class BaseFieldData {
+class BaseFieldData : public FieldParams {
  public:
-  std::any field;
   std::string ctype;
 
-  [[nodiscard]] virtual std::string toSQL() const = 0;
-  [[nodiscard]] virtual SQLColumnInfo getColumnInfo() const = 0;
+  BaseFieldData() = default;
+  virtual ~BaseFieldData() = default;
+
+  [[nodiscard]] virtual std::string toSQL() const { return ""; }
+  [[nodiscard]] virtual SQLColumnInfo getColumnInfo() const {return SQLColumnInfo();};
 };
 
-class FieldData : public FieldParams, public BaseFieldData {
+class FieldData : public BaseFieldData {
  public:
+  std::any field;
+
   FieldData() = default;
   // create a constructor for the assignment ModelDataField = Field
   // Field does not have a constructor
