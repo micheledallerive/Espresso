@@ -135,7 +135,7 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
 //                                     const std::vector<SQLColumnInfo> &toAdd,
 //                                     const std::vector<SQLColumnInfo> &toRemove,
 //                                     const std::vector<SQLColumnInfo> &toModify,
-                                     const std::vector<BaseFieldData *> &intersectionColumns,
+                                     const std::vector<const BaseFieldData *> &intersectionColumns,
                                      const std::vector<BaseFieldData *> &modelColumns) {
   // write the sql statement for sqlite to alter the table
   std::ostringstream sql;

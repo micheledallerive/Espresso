@@ -27,6 +27,9 @@ class BaseFieldData : public FieldParams {
             || (!defaultValue.has_value() && !rhs.defaultValue.has_value())) &&
         ctype == rhs.ctype;
   }
+  bool operator<(const BaseFieldData &rhs) const {
+    return name < rhs.name;
+  }
 
   [[nodiscard]] virtual std::string toSQL() const { return ""; }
 };

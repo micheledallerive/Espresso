@@ -28,7 +28,7 @@ class SQLGenerator {
 //                                const std::vector<SQLColumnInfo> &toAdd,
 //                                const std::vector<SQLColumnInfo> &toRemove,
 //                                const std::vector<SQLColumnInfo> &toModify,
-                                const std::vector<BaseFieldData *> &intersectionColumns,
+                                const std::vector<const BaseFieldData *> &intersectionColumns,
                                 const std::vector<BaseFieldData *> &modelColumns);
 
   static std::string dropTable(const std::string &table_name,

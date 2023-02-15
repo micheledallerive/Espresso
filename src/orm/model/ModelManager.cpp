@@ -145,9 +145,14 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
 
   const string &tableName = data.tableName;
 
+  const auto baseFieldDataComparator = [](const BaseFieldData *a,
+                                          const BaseFieldData *b) {
+    return *a < *b;
+  };
+
   std::vector<BaseFieldData *>
       dbFieldsVector = dbManager->getTableFields(tableName);
-  std::set<BaseFieldData *>
+  std::set<const BaseFieldData *, decltype(baseFieldDataComparator)>
       dbFields(dbFieldsVector.begin(), dbFieldsVector.end());
 
   vector<BaseFieldData *> modelFieldsVector;
@@ -155,46 +160,48 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
     modelFieldsVector.push_back((BaseFieldData *) &field.second);
   }
 
-  if (dbFields.empty()) {
+  if (dbFields.empty()) { // there is no table in the database
     // create the table
     string query = SQLGenerator::createTable(tableName, modelFieldsVector);
     dbManager->execute(query);
     return;
   }
 
-  set<BaseFieldData *>
-      modelFields(modelFieldsVector.begin(), modelFieldsVector.end());
+  set<BaseFieldData *, decltype(baseFieldDataComparator)>
+      modelFields(modelFieldsVector.begin(), modelFieldsVector.end(),
+                  baseFieldDataComparator);
 
-  vector<BaseFieldData *> intersection;
-  std::set_intersection(modelFields.begin(), modelFields.end(),
-                        dbFields.begin(), dbFields.end(),
-                        std::inserter(intersection, intersection.begin()),
-                        [](const BaseFieldData *a, const BaseFieldData *b) {
-                          return a->name == b->name && !(*a == *b);
-                        });
-  vector<BaseFieldData *> nameIntersection;
-  std::set_intersection(modelFields.begin(), modelFields.end(),
-                        dbFields.begin(), dbFields.end(),
-                        std::inserter(nameIntersection,
-                                      nameIntersection.begin()),
+  // how do I know if I need to migrate? If there is some difference between the db and model
+  bool migrate = false;
+  auto dbIt = dbFields.begin();
+  auto modelIt = modelFields.begin();
+  while (dbIt != dbFields.end() && modelIt != modelFields.end()) {
+    const BaseFieldData *dbField = *dbIt;
+    const BaseFieldData *modelField = *modelIt;
+    if (!(*dbField == *modelField)) {
+      migrate = true;
+      break;
+    }
+    ++dbIt;
+    ++modelIt;
+  }
+
+  if (!migrate) return;
+
+  vector<const BaseFieldData *> nameIntersections;
+  std::set_intersection(dbFields.begin(), dbFields.end(),
+                        modelFields.begin(), modelFields.end(),
+                        std::inserter(nameIntersections,
+                                      nameIntersections.begin()),
                         [](const BaseFieldData *a, const BaseFieldData *b) {
                           return a->name == b->name;
                         });
 
-  if (intersection.size() != modelFields.size()) {
-    std::cout << "Migrating model " << tableName <<
-              std::endl;
-
 // lets assume the table exists
-    string sql = SQLGenerator::alterTable(tableName,
-//                                          toAdd,
-//                                          toRemove,
-//                                          toModify,
-                                          nameIntersection,
-                                          modelFieldsVector);
-    dbManager->
-        execute(sql);
-  }
+  string sql = SQLGenerator::alterTable(tableName,
+                                        nameIntersections,
+                                        modelFieldsVector);
+  dbManager->execute(sql);
 
 // update the model
   {

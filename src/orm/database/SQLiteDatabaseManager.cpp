@@ -96,9 +96,9 @@ void SQLiteDatabaseManager::rollbackSavepoint(const std::string &name) {
   this->execute("ROLLBACK TO SAVEPOINT " + name, nullptr);
 }
 std::vector<BaseFieldData *> SQLiteDatabaseManager::getTableFields(const std::string &tableName) {
-  std::vector<BaseFieldData *> fields;
+  std::unordered_map<std::string, BaseFieldData *> fieldsMap;
   this->execute("PRAGMA table_info(" + tableName + ")",
-                [&fields](std::unordered_map<std::string, std::string> row) {
+                [&fieldsMap](std::unordered_map<std::string, std::string> row) {
                   auto *fieldData = new BaseFieldData();
                   if (row["type"] == "INTEGER") {
                     fieldData->ctype = typeid(int).name();
@@ -118,8 +118,31 @@ std::vector<BaseFieldData *> SQLiteDatabaseManager::getTableFields(const std::st
                   fieldData->defaultValue =
                       row["dflt_value"].empty() ? std::nullopt : std::make_optional(
                           row["dflt_value"]);
-                  fields.push_back(fieldData);
+                  fieldsMap.emplace(fieldData->name, fieldData);
                 });
+  // are these fields unique??
+  std::vector<std::string> indexes;
+  this->execute("PRAGMA index_list(" + tableName + ")",
+                [&indexes](std::unordered_map<std::string, std::string> row) {
+                  if (row["unique"] == "1") {
+                    indexes.push_back(row["name"]);
+                  }
+                });
+  for (auto &index : indexes) {
+    std::vector<std::string> indexFields;
+    this->execute("PRAGMA index_info(" + index + ")",
+                  [&indexFields](std::unordered_map<std::string,
+                                                    std::string> row) {
+                    indexFields.push_back(row["name"]);
+                  });
+    for (auto &field : indexFields) {
+      fieldsMap[field]->unique = true;
+    }
+  }
+  std::vector<BaseFieldData *> fields;
+  for (auto &field : fieldsMap) {
+    fields.push_back(field.second);
+  }
   return fields;
 }
 
