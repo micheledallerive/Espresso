@@ -7,7 +7,6 @@
 
 #include "FieldParams.h"
 #include "orm/sql/SQLTypes.h"
-#include <orm/sql/SQLGenerator.h>
 #include <sstream>
 namespace Espresso::ORM {
 
@@ -17,9 +16,19 @@ class BaseFieldData : public FieldParams {
 
   BaseFieldData() = default;
   virtual ~BaseFieldData() = default;
+  bool operator==(const BaseFieldData &rhs) const {
+    return name == rhs.name &&
+        primaryKey == rhs.primaryKey &&
+        autoIncrement == rhs.autoIncrement &&
+        unique == rhs.unique &&
+        notNull == rhs.notNull &&
+        ((defaultValue.has_value() && rhs.defaultValue.has_value()
+            && defaultValue.value() == rhs.defaultValue.value())
+            || (!defaultValue.has_value() && !rhs.defaultValue.has_value())) &&
+        ctype == rhs.ctype;
+  }
 
   [[nodiscard]] virtual std::string toSQL() const { return ""; }
-  [[nodiscard]] virtual SQLColumnInfo getColumnInfo() const {return SQLColumnInfo();};
 };
 
 class FieldData : public BaseFieldData {
@@ -56,16 +65,6 @@ class FieldData : public BaseFieldData {
     return ss.str();
   }
 
-  [[nodiscard]] SQLColumnInfo getColumnInfo() const override {
-    SQLColumnInfo info;
-    info.name = this->name;
-    info.type = getSQLType(this->ctype);
-    info.primaryKey = this->primaryKey;
-    info.autoIncrement = this->autoIncrement;
-    info.notNull = this->notNull;
-    info.defaultValue = this->defaultValue;
-    return info;
-  }
 };
 
 class ForeignKeyFieldData : public FieldData {
@@ -84,19 +83,6 @@ class ForeignKeyFieldData : public FieldData {
          << this->foreignKey->tablePrimaryKey << ")";
     }
     return ss.str();
-  }
-
-  [[nodiscard]] SQLColumnInfo getColumnInfo() const override {
-    SQLColumnInfo info;
-    info.name = this->name;
-    info.type = getSQLType(this->ctype);
-    info.primaryKey = this->primaryKey;
-    info.autoIncrement = this->autoIncrement;
-    info.unique = this->unique;
-    info.notNull = this->notNull;
-    info.defaultValue = this->defaultValue;
-    info.foreignKey = this->foreignKey;
-    return info;
   }
 };
 

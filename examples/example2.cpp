@@ -67,7 +67,7 @@ void registerModels() {
   ModelManager::getInstance().registerModel<Human>(
       "humans",
       make_pair(FieldParams("pk", true), &Human::pk),
-      make_pair(FieldParams("name"), &Human::name),
+      make_pair(FieldParams("name", false, false, true, "Nome!"), &Human::name),
       make_pair(FieldParams("surname"), &Human::surname),
       make_pair(FieldParams("age"), &Human::age)
   );
@@ -98,10 +98,6 @@ int main() {
   DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
   registerModels();
-
-  Cat c;
-  c.age = 50;
-  c.save();
 
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;

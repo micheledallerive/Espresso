@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <orm/sql/SQLTypes.h>
 #include "orm/model/query/filter/FilterOperation.h"
+#include "orm/model/fields/FieldData.h"
 
 namespace Espresso::ORM {
 
@@ -22,13 +23,13 @@ class SQLGenerator {
   SQLGenerator &operator=(SQLGenerator &&) = delete;
 
   static std::string createTable(const std::string &,
-                                 const std::vector<SQLColumnInfo> &);
+                                 const std::vector<BaseFieldData*> &);
   static std::string alterTable(const std::string &,
 //                                const std::vector<SQLColumnInfo> &toAdd,
 //                                const std::vector<SQLColumnInfo> &toRemove,
 //                                const std::vector<SQLColumnInfo> &toModify,
-                                const std::vector<SQLColumnInfo> &intersectionColumns,
-                                const std::vector<SQLColumnInfo> &modelColumns);
+                                const std::vector<BaseFieldData *> &intersectionColumns,
+                                const std::vector<BaseFieldData *> &modelColumns);
 
   static std::string dropTable(const std::string &table_name,
                                bool ifExists = false);

@@ -30,7 +30,7 @@ class DatabaseManager {
   virtual void execute(const std::string &query,
                        QueryCallback callback = nullptr) = 0;
 
-  virtual std::vector<BaseFieldData> getTableFields(const std::string &tableName) = 0;
+  virtual std::vector<BaseFieldData *> getTableFields(const std::string &tableName) = 0;
 
   virtual void startTransaction() = 0;
   virtual void commitTransaction() = 0;

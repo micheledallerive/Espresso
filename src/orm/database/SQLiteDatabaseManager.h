@@ -25,7 +25,7 @@ class SQLiteDatabaseManager : public DatabaseManager {
   void disconnect() override;
   void execute(const std::string &query, QueryCallback callback) override;
 
-  std::vector<BaseFieldData> getTableFields(const std::string &tableName) override;
+  std::vector<BaseFieldData*> getTableFields(const std::string &tableName) override;
 
   void startTransaction() override;
   void commitTransaction() override;

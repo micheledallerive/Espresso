@@ -4,31 +4,32 @@
 
 #include "SQLGenerator.h"
 #include "orm/model/query/filter/FilterOperation.h"
+#include "orm/model/fields/FieldData.h"
 #include <sstream>
 #include <unordered_map>
 
 namespace Espresso::ORM {
 
 std::string SQLGenerator::createTable(const std::string &table_name,
-                                      const std::vector<SQLColumnInfo> &columns) {
+                                      const std::vector<BaseFieldData *> &columns) {
   std::ostringstream sql;
   sql << "CREATE TABLE " << table_name << " (";
   // add columns with name type and primary key
   for (size_t i = 0; i < columns.size(); i++) {
-    sql << columns[i].name << " " << to_string(columns[i].type);
-    if (columns[i].primaryKey) {
+    sql << columns[i]->name << " " << to_string(getSQLType(columns[i]->ctype));
+    if (columns[i]->primaryKey) {
       sql << " PRIMARY KEY";
     }
-    if (columns[i].autoIncrement) {
+    if (columns[i]->autoIncrement) {
       sql << " AUTOINCREMENT";
     }
-    if (columns[i].notNull) {
+    if (columns[i]->notNull) {
       sql << " NOT NULL";
     }
-    if (columns[i].defaultValue.has_value()) {
-      sql << " DEFAULT " << columns[i].defaultValue.value();
+    if (columns[i]->defaultValue.has_value()) {
+      sql << " DEFAULT " << columns[i]->defaultValue.value();
     }
-    if (columns[i].unique) {
+    if (columns[i]->unique) {
       sql << " UNIQUE";
     }
     if (i < columns.size() - 1) {
@@ -36,10 +37,14 @@ std::string SQLGenerator::createTable(const std::string &table_name,
     }
   }
   for (const auto &column : columns) {
-    if (column.foreignKey.has_value()) {
-      sql << ", FOREIGN KEY (" << column.name << ") REFERENCES "
-          << column.foreignKey->table << "("
-          << column.foreignKey->tablePrimaryKey << ")";
+    auto *fk = dynamic_cast<ForeignKeyFieldData *>(column);
+    if (fk == nullptr) {
+      continue;
+    }
+    if (fk->foreignKey.has_value()) {
+      sql << ", FOREIGN KEY (" << fk->name << ") REFERENCES "
+          << fk->foreignKey->table << "("
+          << fk->foreignKey->tablePrimaryKey << ")";
     }
   }
   sql << ");";
@@ -130,8 +135,8 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
 //                                     const std::vector<SQLColumnInfo> &toAdd,
 //                                     const std::vector<SQLColumnInfo> &toRemove,
 //                                     const std::vector<SQLColumnInfo> &toModify,
-                                     const std::vector<SQLColumnInfo> &intersectionColumns,
-                                     const std::vector<SQLColumnInfo> &modelColumns) {
+                                     const std::vector<BaseFieldData *> &intersectionColumns,
+                                     const std::vector<BaseFieldData *> &modelColumns) {
   // write the sql statement for sqlite to alter the table
   std::ostringstream sql;
   // create a new table with a temporary name and modelColumns fields
@@ -149,7 +154,7 @@ std::string SQLGenerator::alterTable(const std::string &table_name,
 
   sql << "INSERT INTO " << table_name << " SELECT ";
   for (size_t i = 0; i < intersectionColumns.size(); i++) {
-    sql << intersectionColumns[i].name;
+    sql << intersectionColumns[i]->name;
     if (i < intersectionColumns.size() - 1) {
       sql << ", ";
     }

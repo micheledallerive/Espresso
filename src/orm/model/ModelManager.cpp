@@ -144,79 +144,63 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
   }
 
   const string &tableName = data.tableName;
-  set<SQLColumnInfo> dbFields;
-  dbManager->execute("PRAGMA table_info(" + tableName + ")",
-                     [&dbFields](const unordered_map<string, string> &result) {
-                       SQLColumnInfo info(result);
-                       dbFields.insert(info);
-                     });
 
-  vector<SQLColumnInfo> modelFieldsList;
+  std::vector<BaseFieldData *>
+      dbFieldsVector = dbManager->getTableFields(tableName);
+  std::set<BaseFieldData *>
+      dbFields(dbFieldsVector.begin(), dbFieldsVector.end());
+
+  vector<BaseFieldData *> modelFieldsVector;
   for (const auto &field : data.fields) {
-    modelFieldsList.push_back(field.second.getColumnInfo());
+    modelFieldsVector.push_back((BaseFieldData *) &field.second);
   }
 
   if (dbFields.empty()) {
     // create the table
-    string query = SQLGenerator::createTable(tableName, modelFieldsList);
+    string query = SQLGenerator::createTable(tableName, modelFieldsVector);
     dbManager->execute(query);
     return;
   }
 
-  set<SQLColumnInfo> modelFields;
-  for (const auto &field : data.fields) {
-    modelFields.insert(field.second.getColumnInfo());
-  }
+  set<BaseFieldData *>
+      modelFields(modelFieldsVector.begin(), modelFieldsVector.end());
 
-  vector<SQLColumnInfo> toAdd;
-  vector<SQLColumnInfo> toRemove;
-  vector<SQLColumnInfo> toModify;
-
-  std::set_difference(modelFields.begin(), modelFields.end(),
-                      dbFields.begin(), dbFields.end(),
-                      std::inserter(toAdd, toAdd.begin()));
-
-  std::set_difference(dbFields.begin(), dbFields.end(),
-                      modelFields.begin(), modelFields.end(),
-                      std::inserter(toRemove, toRemove.begin()));
-
-  vector<SQLColumnInfo> intersection;
+  vector<BaseFieldData *> intersection;
   std::set_intersection(modelFields.begin(), modelFields.end(),
                         dbFields.begin(), dbFields.end(),
                         std::inserter(intersection, intersection.begin()),
-                        [](const SQLColumnInfo &a, const SQLColumnInfo &b) {
-                          return a.name == b.name && !a.equals(b);
+                        [](const BaseFieldData *a, const BaseFieldData *b) {
+                          return a->name == b->name && !(*a == *b);
                         });
-  vector<SQLColumnInfo> nameIntersection;
+  vector<BaseFieldData *> nameIntersection;
   std::set_intersection(modelFields.begin(), modelFields.end(),
                         dbFields.begin(), dbFields.end(),
                         std::inserter(nameIntersection,
-                                      nameIntersection.begin()));
-  // add in toModify the elements that are not in the intersection
-  for (const auto &field : modelFields) {
-    if (std::find(intersection.begin(), intersection.end(), field) ==
-        intersection.end()) {
-      toModify.push_back(field);
-    }
-  }
+                                      nameIntersection.begin()),
+                        [](const BaseFieldData *a, const BaseFieldData *b) {
+                          return a->name == b->name;
+                        });
 
-  if (toAdd.size() + toRemove.size() + toModify.size() > 0) {
-    std::cout << "Migrating model " << tableName << std::endl;
+  if (intersection.size() != modelFields.size()) {
+    std::cout << "Migrating model " << tableName <<
+              std::endl;
 
-    // lets assume the table exists
+// lets assume the table exists
     string sql = SQLGenerator::alterTable(tableName,
 //                                          toAdd,
 //                                          toRemove,
 //                                          toModify,
                                           nameIntersection,
-                                          modelFieldsList);
-    dbManager->execute(sql);
+                                          modelFieldsVector);
+    dbManager->
+        execute(sql);
   }
 
-  // update the model
+// update the model
   {
     std::unique_lock lock(this->mutex_);
-    this->models[typeInfo].migrated = true;
+    this->models[typeInfo].
+        migrated = true;
   }
 
 }

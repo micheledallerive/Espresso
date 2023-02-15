@@ -95,27 +95,29 @@ void SQLiteDatabaseManager::releaseSavepoint(const std::string &name) {
 void SQLiteDatabaseManager::rollbackSavepoint(const std::string &name) {
   this->execute("ROLLBACK TO SAVEPOINT " + name, nullptr);
 }
-std::vector<BaseFieldData> SQLiteDatabaseManager::getTableFields(const std::string &tableName) {
-  std::vector<BaseFieldData> fields;
+std::vector<BaseFieldData *> SQLiteDatabaseManager::getTableFields(const std::string &tableName) {
+  std::vector<BaseFieldData *> fields;
   this->execute("PRAGMA table_info(" + tableName + ")",
                 [&fields](std::unordered_map<std::string, std::string> row) {
-                  BaseFieldData fieldData;
-                  if (row["type"] == "INT") {
-                    fieldData.ctype = typeid(int).name();
+                  auto *fieldData = new BaseFieldData();
+                  if (row["type"] == "INTEGER") {
+                    fieldData->ctype = typeid(int).name();
                   } else if (row["type"] == "TEXT") {
-                    fieldData.ctype = typeid(std::string).name();
+                    fieldData->ctype = typeid(std::string).name();
                   } else if (row["type"] == "REAL") {
-                    fieldData.ctype = typeid(double).name();
+                    fieldData->ctype = typeid(double).name();
                   } else if (row["type"] == "BLOB") {
-                    fieldData.ctype = typeid(std::vector<char>).name();
+                    fieldData->ctype = typeid(std::vector<char>).name();
                   } else {
                     throw db_error("Unknown field type: " + row["type"]);
                   }
-                  fieldData.name = row["name"];
-                  fieldData.primaryKey = row["pk"] == "1";
-                  fieldData.notNull = row["notnull"] == "1";
-                  fieldData.autoIncrement = row["pk"] == "1";
-                  fieldData.defaultValue = row["dflt_value"];
+                  fieldData->name = row["name"];
+                  fieldData->primaryKey = row["pk"] == "1";
+                  fieldData->notNull = row["notnull"] == "1";
+                  fieldData->autoIncrement = row["pk"] == "1";
+                  fieldData->defaultValue =
+                      row["dflt_value"].empty() ? std::nullopt : std::make_optional(
+                          row["dflt_value"]);
                   fields.push_back(fieldData);
                 });
   return fields;
