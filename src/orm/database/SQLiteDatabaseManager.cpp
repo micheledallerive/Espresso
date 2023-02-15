@@ -20,6 +20,8 @@ void SQLiteDatabaseManager::connect(const ConnectionOptions &options) {
     throw db_error("Could not connect to database");
   }
 
+  sqlite3_busy_timeout(db, 1000);
+
   this->connected = true;
 }
 

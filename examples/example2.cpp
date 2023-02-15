@@ -74,7 +74,8 @@ void registerModels() {
   ModelManager::getInstance().registerModel<Dog>(
       "dogs",
       make_pair(FieldParams("pk", true), &Dog::pk),
-      make_pair(FieldParams("name", false, false, false, "michele"), &Dog::name),
+      make_pair(FieldParams("name", false, false, false, "michele"),
+                &Dog::name),
       make_pair(FieldParams("breed"), &Dog::breed),
       make_pair(FieldParams("age"), &Dog::age),
       make_pair(ForeignKeyField("owner", "doggos"),
@@ -98,6 +99,10 @@ int main() {
   DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
   registerModels();
+
+  int h = Human::all().count();
+  std::cout << h << std::endl;
+
 
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;

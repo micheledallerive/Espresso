@@ -73,15 +73,15 @@ TEST(SqliteDatabaseManagerTest, GetTableFields) {
     auto fields = dbManager.getTableFields("test");
     ASSERT_EQ(fields.size(), 2);
 
-    EXPECT_EQ(fields[0].name, "id");
-    EXPECT_EQ(fields[0].ctype, typeid(int).name());
-    EXPECT_EQ(fields[0].primaryKey, true);
-    EXPECT_EQ(fields[0].notNull, true);
+    EXPECT_EQ(fields[0]->name, "id");
+    EXPECT_EQ(fields[0]->ctype, typeid(int).name());
+    EXPECT_EQ(fields[0]->primaryKey, true);
+    EXPECT_EQ(fields[0]->notNull, true);
 
-    EXPECT_EQ(fields[1].name, "name");
-    EXPECT_EQ(fields[1].ctype, typeid(std::string).name());
-    EXPECT_EQ(fields[1].primaryKey, false);
-    EXPECT_EQ(fields[1].notNull, true);
+    EXPECT_EQ(fields[1]->name, "name");
+    EXPECT_EQ(fields[1]->ctype, typeid(std::string).name());
+    EXPECT_EQ(fields[1]->primaryKey, false);
+    EXPECT_EQ(fields[1]->notNull, true);
 
     query = "DROP TABLE test";
     dbManager.execute(query, nullptr);
