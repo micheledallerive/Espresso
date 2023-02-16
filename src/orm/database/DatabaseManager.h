@@ -48,7 +48,7 @@ class DatabaseManager {
 extern std::shared_ptr<DatabaseManager> dbManager;
 
 template<class DM>
-class DatabaseManagerFactory {
+class DBFactory {
  public:
   static void create() {
     dbManager = std::make_shared<DM>();

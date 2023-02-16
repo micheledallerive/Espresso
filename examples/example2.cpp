@@ -96,11 +96,11 @@ int main() {
 
   SQLiteConnectionOptions options;
   options.databasePath = "test.db";
-  DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
+  DBFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
   registerModels();
 
-  int h = Human::all().count();
+  size_t h = Human::all().count();
   std::cout << h << std::endl;
 
 

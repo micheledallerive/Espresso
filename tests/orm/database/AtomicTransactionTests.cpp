@@ -17,7 +17,7 @@ class AtomicTransactionTests : public ::testing::Test {
   void SetUp() override {
     SQLiteConnectionOptions options;
     options.databasePath = "test.db";
-    DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
+    DBFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
     dbManager->execute("DROP TABLE IF EXISTS test");
     dbManager->execute(

@@ -40,7 +40,7 @@ int main() {
   Espresso::Server server;
   SQLiteConnectionOptions options;
   options.databasePath = "example3.db";
-  DatabaseManagerFactory<SQLiteDatabaseManager>::createAndConnect(options);
+  DBFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
   registerModels();
 
