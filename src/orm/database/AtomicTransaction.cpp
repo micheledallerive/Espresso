@@ -8,14 +8,14 @@
 namespace Espresso::ORM {
 
 AtomicTransaction::AtomicTransaction() {
-  dbManager->startTransaction();
+  DatabaseManager::getManager()->startTransaction();
 }
 
 AtomicTransaction::~AtomicTransaction() {
   if (std::uncaught_exceptions())
-    dbManager->rollbackTransaction();
+    DatabaseManager::getManager()->rollbackTransaction();
   else
-    dbManager->commitTransaction();
+    DatabaseManager::getManager()->commitTransaction();
 }
 
 } // ORM

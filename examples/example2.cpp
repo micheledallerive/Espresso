@@ -139,6 +139,6 @@ int main() {
 //  Dog dog = Dog::get({{"name", "Loredana"}});
 //  std::cout << dog.age << std::endl;
 
-  dbManager->disconnect();
+  DatabaseManager::getManager()->disconnect();
   return 0;
 }

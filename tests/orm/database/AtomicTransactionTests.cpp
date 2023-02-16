@@ -19,20 +19,20 @@ class AtomicTransactionTests : public ::testing::Test {
     options.databasePath = "test.db";
     DBFactory<SQLiteDatabaseManager>::createAndConnect(options);
 
-    dbManager->execute("DROP TABLE IF EXISTS test");
-    dbManager->execute(
+    DatabaseManager::getManager()->execute("DROP TABLE IF EXISTS test");
+    DatabaseManager::getManager()->execute(
         "CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY, name TEXT)");
   }
 
   void TearDown() override {
-    dbManager->execute("DROP TABLE IF EXISTS test");
-    dbManager->disconnect();
+    DatabaseManager::getManager()->execute("DROP TABLE IF EXISTS test");
+    DatabaseManager::getManager()->disconnect();
   }
 };
 
 TEST_F(AtomicTransactionTests, ExceptionNotCommitted) {
   // insert a row
-  dbManager->execute("INSERT INTO test (name) VALUES ('test')");
+  DatabaseManager::getManager()->execute("INSERT INTO test (name) VALUES ('test')");
 
   try {
     // start a transaction
@@ -40,14 +40,14 @@ TEST_F(AtomicTransactionTests, ExceptionNotCommitted) {
 
     // insert a row
     auto query = "INSERT INTO test (name) VALUES ('test2')";
-    dbManager->execute(query, nullptr);
+    DatabaseManager::getManager()->execute(query, nullptr);
 
     throw std::runtime_error("test");
   } catch (std::exception &e) {
     // check if the row is not inserted
     auto query = "SELECT * FROM test WHERE name = 'test2'";
     int count = 0;
-    dbManager->execute(query,
+    DatabaseManager::getManager()->execute(query,
                        [&count](const std::unordered_map<std::string,
                                                          std::string> &result) {
                          count++;
@@ -59,7 +59,7 @@ TEST_F(AtomicTransactionTests, ExceptionNotCommitted) {
 
 TEST_F(AtomicTransactionTests, SuccessfulCommit) {
   // insert a row
-  dbManager->execute("INSERT INTO test (name) VALUES ('test')");
+  DatabaseManager::getManager()->execute("INSERT INTO test (name) VALUES ('test')");
 
   {
     // start a transaction
@@ -67,12 +67,12 @@ TEST_F(AtomicTransactionTests, SuccessfulCommit) {
 
     // insert a row
     auto query = "INSERT INTO test (name) VALUES ('test2')";
-    dbManager->execute(query, nullptr);
+    DatabaseManager::getManager()->execute(query, nullptr);
   }
   // check if the row is inserted
   auto query = "SELECT * FROM test WHERE name = 'test2'";
   int count = 0;
-  dbManager->execute(query,
+  DatabaseManager::getManager()->execute(query,
                      [&count](const std::unordered_map<std::string,
                                                        std::string> &result) {
                        count++;
@@ -82,7 +82,7 @@ TEST_F(AtomicTransactionTests, SuccessfulCommit) {
 
 TEST_F(AtomicTransactionTests, MultipleTransactions) {
   // insert a row
-  dbManager->execute("INSERT INTO test (name) VALUES ('test')");
+  DatabaseManager::getManager()->execute("INSERT INTO test (name) VALUES ('test')");
 
   {
     // start a transaction
@@ -90,12 +90,12 @@ TEST_F(AtomicTransactionTests, MultipleTransactions) {
 
     // insert a row
     auto query = "INSERT INTO test (name) VALUES ('test2')";
-    dbManager->execute(query, nullptr);
+    DatabaseManager::getManager()->execute(query, nullptr);
   }
   // check if the row is inserted
   auto query = "SELECT * FROM test WHERE name = 'test2'";
   int count = 0;
-  dbManager->execute(query,
+  DatabaseManager::getManager()->execute(query,
                      [&count](const std::unordered_map<std::string,
                                                        std::string> &result) {
                        count++;
@@ -108,12 +108,12 @@ TEST_F(AtomicTransactionTests, MultipleTransactions) {
 
     // insert a row
     auto query = "INSERT INTO test (name) VALUES ('test3')";
-    dbManager->execute(query, nullptr);
+    DatabaseManager::getManager()->execute(query, nullptr);
   }
   // check if the row is inserted
   query = "SELECT * FROM test WHERE name = 'test3'";
   count = 0;
-  dbManager->execute(query,
+  DatabaseManager::getManager()->execute(query,
                      [&count](const std::unordered_map<std::string,
                                                        std::string> &result) {
                        count++;

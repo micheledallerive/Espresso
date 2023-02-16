@@ -151,7 +151,7 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
   };
 
   std::vector<BaseFieldData *>
-      dbFieldsVector = dbManager->getTableFields(tableName);
+      dbFieldsVector = DatabaseManager::getManager()->getTableFields(tableName);
   std::set<const BaseFieldData *, decltype(baseFieldDataComparator)>
       dbFields(dbFieldsVector.begin(), dbFieldsVector.end());
 
@@ -163,7 +163,7 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
   if (dbFields.empty()) { // there is no table in the database
     // create the table
     string query = SQLGenerator::createTable(tableName, modelFieldsVector);
-    dbManager->execute(query);
+    DatabaseManager::getManager()->execute(query);
     return;
   }
 
@@ -201,7 +201,7 @@ void ModelManager::migrateModel(const std::string &typeInfo) {
   string sql = SQLGenerator::alterTable(tableName,
                                         nameIntersections,
                                         modelFieldsVector);
-  dbManager->execute(sql);
+  DatabaseManager::getManager()->execute(sql);
 
 // update the model
   {

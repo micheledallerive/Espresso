@@ -129,7 +129,7 @@ size_t QueryBuilder<M>::count() {
   query += this->conditionsToSQL();
   query += ";";
   size_t result = 0;
-  dbManager->execute(
+  DatabaseManager::getManager()->execute(
       query,
       [&result](
           const std::unordered_map<std::string,
@@ -256,7 +256,7 @@ std::vector<M> QueryBuilder<M>::execute() {
   const std::string query = sql.str();
   std::vector<M> result;
   bool found = false;
-  dbManager->execute(
+  DatabaseManager::getManager()->execute(
       query,
       [&result, &data, &found](
           const std::unordered_map<std::string,

@@ -21,8 +21,16 @@ class ConnectionOptions {
   virtual ~ConnectionOptions() = default;
 };
 
+class DatabaseManager;
+
+template<class DM>
+class DBFactory;
+
 class DatabaseManager {
  public:
+  template<class DM>
+  friend class DBFactory;
+
   DatabaseManager() = default;
   virtual ~DatabaseManager() = default;
   virtual void connect(const ConnectionOptions &options) = 0;
@@ -40,22 +48,26 @@ class DatabaseManager {
   virtual void releaseSavepoint(const std::string &) = 0;
   virtual void rollbackSavepoint(const std::string &) = 0;
 
+  static std::shared_ptr<DatabaseManager> getManager() {
+    return dbManager;
+  }
+
   bool isConnected();
  protected:
   bool connected{false};
+ private:
+  static std::shared_ptr<DatabaseManager> dbManager;
 };
-
-extern std::shared_ptr<DatabaseManager> dbManager;
 
 template<class DM>
 class DBFactory {
  public:
   static void create() {
-    dbManager = std::make_shared<DM>();
+    DatabaseManager::dbManager = std::make_shared<DM>();
   }
   static void createAndConnect(const ConnectionOptions &options) {
     create();
-    dbManager->connect(options);
+    DatabaseManager::getManager()->connect(options);
   }
 };
 

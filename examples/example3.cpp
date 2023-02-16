@@ -54,7 +54,7 @@ int main() {
                       {
                         AtomicTransaction transaction;
                         for (int i = 0; i < 1000; i++) {
-                          dbManager->execute(
+                          DatabaseManager::getManager()->execute(
                               "INSERT INTO tests (name, count) VALUES ('test', 1)");
                         }
                       }
@@ -72,6 +72,6 @@ int main() {
   server.listen(8888, []() {
     std::cout << "Server started" << std::endl;
   });
-  dbManager->disconnect();
+  DatabaseManager::getManager()->disconnect();
   return 0;
 }

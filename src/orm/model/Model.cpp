@@ -57,7 +57,7 @@ bool Model<T>::remove() {
   std::string primaryKeyValue = instance->get(primaryKeyField);
   string query = SQLGenerator::remove(data.tableName,
                                       {{primaryKeyField, primaryKeyValue}});
-  dbManager->execute(query);
+  DatabaseManager::getManager()->execute(query);
   return true;
 }
 
@@ -91,7 +91,7 @@ void Model<T>::save(bool checkDirty) {
 
   if (!wasSaved) { // instance does not exist: insert
     string query = SQLGenerator::insert(data.tableName, fields, values);
-    dbManager->execute(query,
+    DatabaseManager::getManager()->execute(query,
                        [&instance, &data](std::unordered_map<std::string,
                                                              std::string> &result) {
                          if (result.contains("id") && !data.primaryKey.empty())
@@ -106,7 +106,7 @@ void Model<T>::save(bool checkDirty) {
                                         fields,
                                         values,
                                         {{primaryKeyField, primaryKeyValue}});
-    dbManager->execute(query);
+    DatabaseManager::getManager()->execute(query);
   }
 }
 
