@@ -21,6 +21,14 @@ Query::QueryBuilder<T> Model<T>::all() {
 }
 
 template<class T>
+const std::string &Model<T>::annotated(std::string name) {
+  if (!this->annotated_.contains(name)) {
+    throw model_error("Model has no annotated field " + name);
+  }
+  return this->annotated_[name];
+}
+
+template<class T>
 template<class R>
 Query::QueryBuilder<R> Model<T>::related(const std::string &relatedName) {
   ModelData &data = ModelManager::getInstance().getModel<T>();
@@ -92,11 +100,14 @@ void Model<T>::save(bool checkDirty) {
   if (!wasSaved) { // instance does not exist: insert
     string query = SQLGenerator::insert(data.tableName, fields, values);
     DatabaseManager::getManager()->execute(query,
-                       [&instance, &data](std::unordered_map<std::string,
-                                                             std::string> &result) {
-                         if (result.contains("id") && !data.primaryKey.empty())
-                           instance->set(data.primaryKey, result["id"]);
-                       });
+                                           [&instance, &data](std::unordered_map<
+                                               std::string,
+                                               std::string> &result) {
+                                             if (result.contains("id")
+                                                 && !data.primaryKey.empty())
+                                               instance->set(data.primaryKey,
+                                                             result["id"]);
+                                           });
     wasSaved = true;
   } else { // already exists: update it
     std::string

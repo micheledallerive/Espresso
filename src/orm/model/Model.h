@@ -24,13 +24,14 @@ class Model : public BaseModel {
 
   void save(bool checkDirty = true);
   bool remove();
-
   static Query::QueryBuilder<T> all();
 
   // operator ==
   bool operator==(const Model &other) const;
+
   template<class R>
   Query::QueryBuilder<R> related(const std::string &relatedName);
+  const std::string &annotated(std::string name);
  protected:
   bool wasSaved{false};
 
@@ -47,6 +48,7 @@ class Model : public BaseModel {
   void set(const std::string &field, const std::string &value) override;
   std::string get(const std::string &field) const override;
 
+  std::unordered_map<std::string, std::string> annotated_;
 };
 
 } // ORM
