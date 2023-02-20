@@ -28,7 +28,7 @@ set(SOURCES
         orm/model/query/filter/FilterField.cpp
         orm/model/query/filter/FilterOperation.cpp
         orm/model/query/filter/Operator.cpp
-        orm/database/AtomicTransaction.cpp)
+        orm/database/AtomicTransaction.cpp orm/model/Aggregation.cpp orm/model/Aggregation.h orm/utils/SQLizable.h)
 
 # Create a library target for the Espresso library
 add_library(espresso STATIC ${SOURCES})
