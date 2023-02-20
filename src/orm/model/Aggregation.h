@@ -29,6 +29,7 @@ class Aggregate : public SQLizable {
     return ss.str();
   }
  protected:
+  std::string name_;
   std::string field_;
   bool distinct_;
   std::string function_;
@@ -40,6 +41,7 @@ class Count : public Aggregate {
   explicit Count(std::string field, bool distinct = false)
       : Aggregate(std::move(field), distinct) {
     function_ = "COUNT";
+    name_ = "count";
   }
 };
 
@@ -49,6 +51,7 @@ class Sum : public Aggregate {
   explicit Sum(std::string field, bool distinct = false)
       : Aggregate(std::move(field), distinct) {
     function_ = "SUM";
+    name_ = "sum";
   }
 };
 
@@ -58,6 +61,7 @@ class Avg : public Aggregate {
   explicit Avg(std::string field, bool distinct = false)
       : Aggregate(std::move(field), distinct) {
     function_ = "AVG";
+    name_ = "avg";
   }
 };
 
@@ -67,6 +71,7 @@ class Min : public Aggregate {
   explicit Min(std::string field, bool distinct = false)
       : Aggregate(std::move(field), distinct) {
     function_ = "MIN";
+    name_ = "min";
   }
 };
 
@@ -76,6 +81,7 @@ class Max : public Aggregate {
   explicit Max(std::string field, bool distinct = false)
       : Aggregate(std::move(field), distinct) {
     function_ = "MAX";
+    name_ = "max";
   }
 };
 
