@@ -28,6 +28,13 @@ class Aggregate : public SQLizable {
     ss << field_ << ")";
     return ss.str();
   }
+
+  [[nodiscard]] std::string getField() const {
+    return field_;
+  }
+  [[nodiscard]] std::string getResultName() const {
+    return field_ + "/" + name_;
+  }
  protected:
   std::string name_;
   std::string field_;
