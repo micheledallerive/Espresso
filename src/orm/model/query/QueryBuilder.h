@@ -6,6 +6,7 @@
 #define ESPRESSO_SRC_ORM_MODEL_QUERY_QUERYBUILDER_H_
 
 #include <orm/model/query/filter/FilterOperation.h>
+#include <orm/model/Aggregation.h>
 #include <vector>
 #include <optional>
 
@@ -49,15 +50,15 @@ class QueryBuilder {
   QueryBuilder() = default;
   virtual ~QueryBuilder() = default;
 
+  // return new QueryBuilder
   QueryBuilder &filter(const FilterOperation &filter);
   QueryBuilder &exclude(const FilterOperation &filter);
-  // annotate
   QueryBuilder &order_by(const std::vector<std::string> &);
   QueryBuilder &reverse();
   QueryBuilder &distinct();
-
   QueryBuilder &limit(int limit);
 
+  // terminating functions
   template<typename... Args>
   M create(Args &&... args);
   void bulkCreate(std::vector<M> args);
@@ -68,15 +69,19 @@ class QueryBuilder {
   std::optional<M> last();
   bool exists();
   bool contains(M &);
+  template<typename Fn>
+  typename Fn::value_type aggregate(Fn &&fn);
 
+  // dereference functions
   operator std::vector<M>();
   std::vector<M> execute();
  private:
   template<class A>
-  friend class Espresso::ORM::Model;
+  friend
+  class Espresso::ORM::Model;
 
   QueryBuilder(const std::string &fkField, const std::string &fkValue)
-      : relationship_context_({fkField, fkValue}) { }
+      : relationship_context_({fkField, fkValue}) {}
 };
 
 } // ORM

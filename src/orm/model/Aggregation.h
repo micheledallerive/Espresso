@@ -13,6 +13,8 @@ namespace Espresso::ORM {
 
 class Aggregate : public SQLizable {
  public:
+  typedef int value_type;
+
   Aggregate() = default;
   Aggregate(std::string field, bool distinct)
       : field_(std::move(field)), distinct_(distinct) {}

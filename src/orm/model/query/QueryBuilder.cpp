@@ -8,6 +8,7 @@
 #include "orm/database/AtomicTransaction.h"
 #include <orm/model/ModelManager.h>
 #include <sstream>
+#include <charconv>
 
 namespace Espresso::ORM::Query {
 
@@ -184,6 +185,26 @@ bool QueryBuilder<M>::contains(M &obj) {
     }
     return query.exists();
   }
+}
+
+template<typename M>
+template<typename Fn>
+typename Fn::value_type QueryBuilder<M>::aggregate(Fn &&fn) {
+  typename Fn::value_type result;
+  std::string query = "SELECT " + fn.toSQL() + " FROM " + this->getTableName();
+  query += this->conditionsToSQL();
+  query += ";";
+  DatabaseManager::getManager()->execute(
+      query,
+      [&result](
+          const std::unordered_map<std::string,
+                                   std::string> &row) {
+        std::string resultString = row.begin()->second;
+        std::from_chars(resultString.data(),
+                        resultString.data() + resultString.size(),
+                        result);
+      });
+  return result;
 }
 
 template<typename M>

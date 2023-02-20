@@ -100,9 +100,8 @@ int main() {
 
   registerModels();
 
-  size_t h = Human::all().count();
-  std::cout << h << std::endl;
-
+  int age_sum = Dog::all().aggregate(Sum("age"));
+  cout << age_sum << endl;
 
 //  for (Dog &d : dogs) {
 //    std::cout << d.name << std::endl;
