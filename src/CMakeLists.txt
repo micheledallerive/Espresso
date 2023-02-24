@@ -12,6 +12,7 @@ set(SOURCES
 
         lib/json/JSONBase.cpp
         lib/json/JSONLiteral.cpp
+        lib/json/JSONBoolean.cpp
         )
 
 set(HEADERS Cookies.h
