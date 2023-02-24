@@ -8,19 +8,22 @@
 #include <utility>
 
 #include "JSONBase.h"
+#include "JSONPrimitive.h"
 namespace Espresso::JSON {
 
-class JSONLiteral : public JSONBase {
+class JSONLiteral : public JSONPrimitive<std::string> {
  public:
-  JSONLiteral() = default;
-  explicit JSONLiteral(std::string value) : value_(std::move(value)) {}
+  JSONLiteral() {
+    type_ = JSONType::JSONLiteral;
+  }
+  explicit JSONLiteral(std::string value)
+      : JSONPrimitive<std::string>(std::move(value)) {
+    type_ = JSONType::JSONLiteral;
+  }
   ~JSONLiteral() override = default;
   JSONLiteral &operator=(const JSONLiteral &other) = default;
 
   [[nodiscard]] std::string toJSON() const override;
-
- private:
-  std::string value_;
 };
 
 } // JSON

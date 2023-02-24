@@ -9,6 +9,14 @@
 
 namespace Espresso::JSON {
 
+enum class JSONType {
+  JSONLiteral,
+  JSONNumber,
+  JSONBoolean,
+  JSONObject,
+  JSONArray,
+};
+
 class JSONBase {
  public:
   JSONBase() = default;
@@ -16,6 +24,8 @@ class JSONBase {
   JSONBase &operator=(const JSONBase &other) = default;
 
   virtual std::string toJSON() const = 0;
+ protected:
+  JSONType type_;
 };
 
 } // JSON

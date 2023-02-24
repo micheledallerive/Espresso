@@ -1,0 +1,38 @@
+//
+// Created by michele on 24.02.23.
+//
+
+#ifndef ESPRESSO_SRC_LIB_JSON_JSONPRIMITIVE_H_
+#define ESPRESSO_SRC_LIB_JSON_JSONPRIMITIVE_H_
+
+#include <string>
+#include "JSONBase.h"
+
+namespace Espresso::JSON {
+
+template<typename T>
+class JSONPrimitive : public JSONBase {
+ public:
+  JSONPrimitive() = default;
+  explicit JSONPrimitive(T value)
+      : value_(value) {
+  }
+  ~JSONPrimitive() = default;
+  JSONPrimitive &operator=(const JSONPrimitive &other) = default;
+  JSONPrimitive &operator=(const T &other) {
+    value_ = other;
+    return *this;
+  }
+
+  operator T() const {
+    return value_;
+  }
+ protected:
+  T value_;
+};
+
+} // JSON
+
+#include "JSONPrimitive.cpp"
+
+#endif //ESPRESSO_SRC_LIB_JSON_JSONPRIMITIVE_H_
