@@ -8,7 +8,9 @@ set(SOURCES
         Router.cpp
         Server.cpp
         utils.cpp
-        PathRegex.cpp Route.cpp)
+        PathRegex.cpp Route.cpp
+        lib/json/JSONBase.cpp
+        )
 
 set(HEADERS Cookies.h
         HTTPMessage.h
