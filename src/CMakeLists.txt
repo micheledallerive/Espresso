@@ -9,7 +9,9 @@ set(SOURCES
         Server.cpp
         utils.cpp
         PathRegex.cpp Route.cpp
+
         lib/json/JSONBase.cpp
+        lib/json/JSONLiteral.cpp
         )
 
 set(HEADERS Cookies.h
