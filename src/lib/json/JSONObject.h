@@ -16,7 +16,7 @@ class JSONObject : public JSONBase,
   JSONObject() : JSONBase(), std::unordered_map<std::string, JSONBase *>() {
     this->type_ = JSONType::JSONObject;
   }
-  virtual ~JSONObject() = default;
+  ~JSONObject() override;
   JSONObject &operator=(const JSONObject &other) = default;
 
   std::string toJSON() const override;

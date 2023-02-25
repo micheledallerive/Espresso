@@ -22,5 +22,10 @@ namespace Espresso::JSON {
   json << " }";
   return json.str();
 }
+JSONObject::~JSONObject() {
+  for (auto &pair : *this) {
+    delete pair.second;
+  }
+}
 
 } // JSON
