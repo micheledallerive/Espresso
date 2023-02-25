@@ -15,6 +15,7 @@ set(SOURCES
         lib/json/JSONBoolean.cpp
         lib/json/JSONNumber.cpp
         lib/json/JSONArray.cpp
+        lib/json/JSONObject.cpp
         )
 
 set(HEADERS Cookies.h
