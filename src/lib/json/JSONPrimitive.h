@@ -24,6 +24,9 @@ class JSONPrimitive : public JSONBase {
     return *this;
   }
 
+  T value() const {
+    return value_;
+  }
   operator T() const {
     return value_;
   }
