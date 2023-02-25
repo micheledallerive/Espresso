@@ -7,10 +7,23 @@
 #include "JSONNumber.h"
 #include "JSONBoolean.h"
 #include "JSONArray.h"
+#include "JSONObject.h"
+#include "expections.h"
 
 namespace Espresso::JSON {
 
 JSONBase *parse(const std::string &json) {
+  if (json[0] == ' ' || json.back() == ' ') {
+    auto start_it = json.begin();
+    auto end_it = json.end();
+    while (*start_it == ' ') {
+      ++start_it;
+    }
+    while (*(end_it - 1) == ' ') {
+      --end_it;
+    }
+    return parse(std::string(start_it, end_it));
+  }
   if (json[0] == '"') {
     return JSONLiteral::fromJSON(json);
   } else if (json[0] == 't' || json[0] == 'f') {
@@ -19,8 +32,12 @@ JSONBase *parse(const std::string &json) {
     return JSONNumber::fromJSON(json);
   } else if (json[0] == '[') {
     return JSONArray::fromJSON(json);
+  } else if (json[0] == '{') {
+    return JSONObject::fromJSON(json);
+  } else if (json[0] == 'n' && json == "null") {
+    return nullptr;
   }
-  return new JSONLiteral("");
+  throw JSONParseException("Invalid JSON");
 }
 
 } // JSON

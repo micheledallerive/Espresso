@@ -63,12 +63,12 @@ TEST(JSONParse, EmptyObject) {
 }
 
 TEST(JSONParse, SimpleObject) {
-  JSONBase *json = parse("{\"key\": \"value\"}");
+  auto *json = parse("{\"key\": \"value\"}")->as<JSONObject>();
   EXPECT_EQ(json->getType(), JSONType::JSONObject);
-  EXPECT_EQ(json->as<JSONObject>()->size(), 1);
-  EXPECT_EQ(json->as<JSONObject>()->at("key")->getType(),
+  EXPECT_EQ(json->size(), 1);
+  EXPECT_EQ(json->at("key")->getType(),
             JSONType::JSONLiteral);
-  EXPECT_EQ(json->as<JSONObject>()->at("key")->as<JSONLiteral>()->value(),
+  EXPECT_EQ(json->at("key")->as<JSONLiteral>()->value(),
             "value");
 }
 

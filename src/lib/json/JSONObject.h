@@ -20,6 +20,7 @@ class JSONObject : public JSONBase,
   JSONObject &operator=(const JSONObject &other) = default;
 
   std::string toJSON() const override;
+  static JSONBase *fromJSON(const std::string &json);
 };
 
 } // JSON

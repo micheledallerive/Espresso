@@ -3,9 +3,17 @@
 //
 
 #include "JSONObject.h"
+#include "expections.h"
+#include "json.h"
 #include <sstream>
 
 namespace Espresso::JSON {
+
+JSONObject::~JSONObject() {
+  for (auto &pair : *this) {
+    delete pair.second;
+  }
+}
 
 [[nodiscard]] std::string JSONObject::toJSON() const {
   if (this->empty()) {
@@ -22,10 +30,25 @@ namespace Espresso::JSON {
   json << " }";
   return json.str();
 }
-JSONObject::~JSONObject() {
-  for (auto &pair : *this) {
-    delete pair.second;
+
+JSONBase *JSONObject::fromJSON(const std::string &json) {
+  if (json[0] != '{' || json[json.size() - 1] != '}') {
+    throw JSONParseException("Invalid JSON object");
   }
+
+  auto *object = new JSONObject();
+  std::stringstream ss(json.substr(1, json.size() - 2));
+  std::string key;
+  std::string value;
+  std::string keyValuePair;
+  while (std::getline(ss, keyValuePair, ',')) {
+    std::stringstream ss2(keyValuePair);
+    std::getline(ss2, key, ':');
+    std::getline(ss2, value);
+    key = key.substr(1, key.size() - 2);
+    object->insert({key, parse(value)});
+  }
+  return object;
 }
 
 } // JSON
