@@ -31,7 +31,7 @@ JSONObject::~JSONObject() {
   return json.str();
 }
 
-JSONBase *JSONObject::fromJSON(const std::string &json) {
+JSON *JSONObject::fromJSON(const std::string &json) {
   if (json[0] != '{' || json[json.size() - 1] != '}') {
     throw JSONParseException("Invalid JSON object");
   }

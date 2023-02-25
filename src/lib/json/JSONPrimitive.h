@@ -6,12 +6,12 @@
 #define ESPRESSO_SRC_LIB_JSON_JSONPRIMITIVE_H_
 
 #include <string>
-#include "JSONBase.h"
+#include "JSON.h"
 
 namespace Espresso::JSON {
 
 template<typename T>
-class JSONPrimitive : public JSONBase {
+class JSONPrimitive : public JSON {
  public:
   JSONPrimitive() = default;
   explicit JSONPrimitive(T value)

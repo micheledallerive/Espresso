@@ -17,13 +17,13 @@ enum class JSONType {
   JSONArray,
 };
 
-class JSONBase {
+class JSON {
  public:
-  friend JSONBase *parse(const std::string &json);
+  friend JSON *parse(const std::string &json);
 
-  JSONBase() = default;
-  virtual ~JSONBase() = default;
-  JSONBase &operator=(const JSONBase &other) = default;
+  JSON() = default;
+  virtual ~JSON() = default;
+  JSON &operator=(const JSON &other) = default;
 
   virtual std::string toJSON() const = 0;
 
@@ -36,10 +36,10 @@ class JSONBase {
   JSONType type_;
 };
 template<class T>
-T *JSONBase::as() {
+T *JSON::as() {
   return dynamic_cast<T *>(this);
 }
 
 } // JSON
 
-#endif //ESPRESSO_SRC_LIB_JSON_JSONBASE_H_
+#endif //ESPRESSO_SRC_LIB_JSON_JSON_H_

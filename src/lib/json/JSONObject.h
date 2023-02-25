@@ -5,22 +5,22 @@
 #ifndef ESPRESSO_SRC_LIB_JSON_JSONOBJECT_H_
 #define ESPRESSO_SRC_LIB_JSON_JSONOBJECT_H_
 
-#include "JSONBase.h"
+#include "JSON.h"
 #include <unordered_map>
 
 namespace Espresso::JSON {
 
-class JSONObject : public JSONBase,
-                   public std::unordered_map<std::string, JSONBase *> {
+class JSONObject : public JSON,
+                   public std::unordered_map<std::string, JSON *> {
  public:
-  JSONObject() : JSONBase(), std::unordered_map<std::string, JSONBase *>() {
+  JSONObject() : JSON(), std::unordered_map<std::string, JSON *>() {
     this->type_ = JSONType::JSONObject;
   }
   ~JSONObject() override;
   JSONObject &operator=(const JSONObject &other) = default;
 
   std::string toJSON() const override;
-  static JSONBase *fromJSON(const std::string &json);
+  static JSON *fromJSON(const std::string &json);
 };
 
 } // JSON

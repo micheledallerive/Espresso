@@ -32,7 +32,7 @@ std::string JSONArray::toJSON() const {
   json << "]";
   return json.str();
 }
-JSONBase *JSONArray::fromJSON(const std::string &json) {
+JSON *JSONArray::fromJSON(const std::string &json) {
   if (json[0] != '[' || json[json.size() - 1] != ']')
     throw JSONParseException("Invalid JSON array");
   auto *array = new JSONArray();

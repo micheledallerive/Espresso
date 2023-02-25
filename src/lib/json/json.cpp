@@ -12,7 +12,7 @@
 
 namespace Espresso::JSON {
 
-JSONBase *parse(const std::string &json) {
+JSON *parse(const std::string &json) {
   if (json[0] == ' ' || json.back() == ' ') {
     auto start_it = json.begin();
     auto end_it = json.end();

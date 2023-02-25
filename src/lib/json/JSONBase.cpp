@@ -2,7 +2,7 @@
 // Created by michele on 24.02.23.
 //
 
-#include "JSONBase.h"
+#include "JSON.h"
 
 namespace Espresso::JSON {
 

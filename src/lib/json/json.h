@@ -4,12 +4,12 @@
 
 #ifndef ESPRESSO_SRC_LIB_JSON_JSON_H_
 #define ESPRESSO_SRC_LIB_JSON_JSON_H_
-#include "JSONBase.h"
+#include "JSON.h"
 #include <string>
 
 namespace Espresso::JSON {
 
-JSONBase *parse(const std::string &json);
+JSON *parse(const std::string &json);
 
 } // JSON
 
