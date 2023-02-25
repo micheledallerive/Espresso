@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <lib/json/JSONLiteral.h>
 #include <lib/json/JSONBoolean.h>
+#include "lib/json/JSONNumber.h"
 
 using namespace Espresso::JSON;
 
@@ -28,4 +29,12 @@ TEST(JSONBoolean, toJSONFalse) {
   ASSERT_EQ(boolean.toJSON(), "false");
 }
 
+TEST(JSONNumber, toJSON) {
+  JSONNumber number(1.0);
+  ASSERT_EQ(number.toJSON(), "1");
+}
 
+TEST(JSONNumber, toJSONWithPrecision) {
+  JSONNumber number(1.1234567891234567);
+  ASSERT_EQ(number.toJSON(), "1.123456789123457");
+}
