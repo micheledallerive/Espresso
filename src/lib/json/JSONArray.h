@@ -14,7 +14,9 @@ namespace Espresso::JSON {
 class JSONArray
     : public JSONBase, public std::vector<JSONBase *> {
  public:
-  JSONArray() = default;
+  JSONArray() {
+    this->type_ = JSONType::JSONArray;
+  }
   ~JSONArray() override;
   JSONArray(const JSONArray &other) = default;
   JSONArray &operator=(const JSONArray &other) = default;
