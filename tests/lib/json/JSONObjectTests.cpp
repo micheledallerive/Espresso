@@ -48,17 +48,17 @@ TEST(JSONObject, AddMultiple) {
 
 TEST(JSONObject, AddArrayWithValue) {
   JSONObject object;
-  JSONArray array;
-  array.push_back(new JSONLiteral("test"));
-  object["test"] = &array;
+  auto *array = new JSONArray();
+  array->push_back(new JSONLiteral("test"));
+  object["test"] = array;
   EXPECT_EQ(object.toJSON(), "{ \"test\": [\"test\"] }");
 }
 
 TEST(JSONObject, AddObjectWithValue) {
   JSONObject object;
-  JSONObject other;
-  other["test"] = new JSONLiteral("test");
-  object["test"] = &other;
+  auto *other = new JSONObject();
+  (*other)["test"] = new JSONLiteral("test");
+  object["test"] = other;
   EXPECT_EQ(object.toJSON(), "{ \"test\": { \"test\": \"test\" } }");
 }
 

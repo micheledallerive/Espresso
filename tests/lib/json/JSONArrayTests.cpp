@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <lib/json/JSONArray.h>
+#include "lib/json/JSONArray.h"
 #include "lib/json/JSONLiteral.h"
 #include "lib/json/JSONNumber.h"
 #include "lib/json/JSONBoolean.h"
