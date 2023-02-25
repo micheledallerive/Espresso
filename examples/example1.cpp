@@ -27,6 +27,10 @@ int main() {
                       response.send("Hello " + request.params["id"]);
                     });
 
+  server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
+    response.send("Hello World!");
+  });
+
   server.router.get("/*", [](HTTPRequest &request, HTTPResponse &response) {
     response.send("404");
   });

@@ -4,7 +4,7 @@
 
 #include "JSONArray.h"
 #include "expections.h"
-#include "json.h"
+#include "JSON.h"
 #include <sstream>
 
 namespace Espresso::JSON {
@@ -34,12 +34,12 @@ std::string JSONArray::toJSON() const {
 }
 JSON *JSONArray::fromJSON(const std::string &json) {
   if (json[0] != '[' || json[json.size() - 1] != ']')
-    throw JSONParseException("Invalid JSON array");
+    throw JSONParseException("Invalid JSON array: " + json);
   auto *array = new JSONArray();
   std::stringstream ss(json.substr(1, json.size() - 2));
   std::string token;
   while (std::getline(ss, token, ',')) {
-    array->push_back(parse(token));
+    array->push_back(JSON::parse(token, false));
   }
   return array;
 }

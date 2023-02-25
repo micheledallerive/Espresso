@@ -4,7 +4,7 @@
 
 #include "JSONObject.h"
 #include "expections.h"
-#include "json.h"
+#include "JSON.h"
 #include <sstream>
 
 namespace Espresso::JSON {
@@ -46,7 +46,7 @@ JSON *JSONObject::fromJSON(const std::string &json) {
     std::getline(ss2, key, ':');
     std::getline(ss2, value);
     key = key.substr(1, key.size() - 2);
-    object->insert({key, parse(value)});
+    object->insert({key, JSON::parse(value, false)});
   }
   return object;
 }

@@ -19,8 +19,6 @@ enum class JSONType {
 
 class JSON {
  public:
-  friend JSON *parse(const std::string &json);
-
   JSON() = default;
   virtual ~JSON() = default;
   JSON &operator=(const JSON &other) = default;
@@ -28,6 +26,7 @@ class JSON {
   virtual std::string toJSON() const = 0;
 
   [[nodiscard]] JSONType getType() const { return type_; }
+  static JSON *parse(const std::string &json, bool removeSpaces = true);
 
   // how can I write a template that is child of JSONBase?
   template<class T>
