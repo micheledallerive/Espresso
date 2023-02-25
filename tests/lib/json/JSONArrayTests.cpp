@@ -52,4 +52,10 @@ TEST(JSONArray, NullElement) {
   EXPECT_EQ(array.toJSON(), "[\"test\", null, \"test2\"]");
 }
 
+TEST(JSONArray, As) {
+  JSONArray *arr = new JSONArray();
+  EXPECT_TRUE(arr->as<JSONArray>() != nullptr);
+  EXPECT_TRUE(arr->as<JSONLiteral>() == nullptr);
+}
+
 

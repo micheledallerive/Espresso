@@ -24,9 +24,19 @@ class JSONBase {
   JSONBase &operator=(const JSONBase &other) = default;
 
   virtual std::string toJSON() const = 0;
+
+  [[nodiscard]] JSONType getType() const { return type_; }
+
+  // how can I write a template that is child of JSONBase?
+  template<class T>
+  T *as();
  protected:
   JSONType type_;
 };
+template<class T>
+T *JSONBase::as() {
+  return dynamic_cast<T *>(this);
+}
 
 } // JSON
 

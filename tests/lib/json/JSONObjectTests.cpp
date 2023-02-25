@@ -61,3 +61,9 @@ TEST(JSONObject, AddObjectWithValue) {
   object["test"] = &other;
   EXPECT_EQ(object.toJSON(), "{ \"test\": { \"test\": \"test\" } }");
 }
+
+TEST(JSONObject, As) {
+  auto *obj = new JSONObject();
+  EXPECT_EQ(obj->as<JSONObject>(), obj);
+  EXPECT_EQ(obj->as<JSONArray>(), nullptr);
+}
