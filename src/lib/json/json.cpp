@@ -6,6 +6,7 @@
 #include "JSONLiteral.h"
 #include "JSONNumber.h"
 #include "JSONBoolean.h"
+#include "JSONArray.h"
 
 namespace Espresso::JSON {
 
@@ -16,6 +17,8 @@ JSONBase *parse(const std::string &json) {
     return JSONBoolean::fromJSON(json);
   } else if (json[0] >= '0' && json[0] <= '9') {
     return JSONNumber::fromJSON(json);
+  } else if (json[0] == '[') {
+    return JSONArray::fromJSON(json);
   }
   return new JSONLiteral("");
 }

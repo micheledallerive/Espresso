@@ -42,16 +42,24 @@ TEST(JSONParse, Boolean) {
   EXPECT_TRUE(json->as<JSONBoolean>()->value());
 }
 
-TEST(JSONParse, EmptyObject) {
-  JSONBase *json = parse("{}");
-  EXPECT_EQ(json->getType(), JSONType::JSONObject);
-  EXPECT_EQ(json->as<JSONObject>()->size(), 0);
-}
-
 TEST(JSONParse, EmptyArray) {
   JSONBase *json = parse("[]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 0);
+}
+
+TEST(JSONParse, SimpleArray) {
+  JSONBase *json = parse("[\"value\"]");
+  EXPECT_EQ(json->getType(), JSONType::JSONArray);
+  EXPECT_EQ(json->as<JSONArray>()->size(), 1);
+  EXPECT_EQ(json->as<JSONArray>()->at(0)->getType(), JSONType::JSONLiteral);
+  EXPECT_EQ(json->as<JSONArray>()->at(0)->as<JSONLiteral>()->value(), "value");
+}
+
+TEST(JSONParse, EmptyObject) {
+  JSONBase *json = parse("{}");
+  EXPECT_EQ(json->getType(), JSONType::JSONObject);
+  EXPECT_EQ(json->as<JSONObject>()->size(), 0);
 }
 
 TEST(JSONParse, SimpleObject) {
@@ -62,14 +70,6 @@ TEST(JSONParse, SimpleObject) {
             JSONType::JSONLiteral);
   EXPECT_EQ(json->as<JSONObject>()->at("key")->as<JSONLiteral>()->value(),
             "value");
-}
-
-TEST(JSONParse, SimpleArray) {
-  JSONBase *json = parse("[\"value\"]");
-  EXPECT_EQ(json->getType(), JSONType::JSONArray);
-  EXPECT_EQ(json->as<JSONArray>()->size(), 1);
-  EXPECT_EQ(json->as<JSONArray>()->at(0)->getType(), JSONType::JSONLiteral);
-  EXPECT_EQ(json->as<JSONArray>()->at(0)->as<JSONLiteral>()->value(), "value");
 }
 
 TEST(JSONParse, ObjectNestedArray) {

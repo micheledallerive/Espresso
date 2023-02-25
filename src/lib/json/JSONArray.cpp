@@ -3,6 +3,8 @@
 //
 
 #include "JSONArray.h"
+#include "expections.h"
+#include "json.h"
 #include <sstream>
 
 namespace Espresso::JSON {
@@ -29,6 +31,17 @@ std::string JSONArray::toJSON() const {
   }
   json << "]";
   return json.str();
+}
+JSONBase *JSONArray::fromJSON(const std::string &json) {
+  if (json[0] != '[' || json[json.size() - 1] != ']')
+    throw JSONParseException("Invalid JSON array");
+  auto *array = new JSONArray();
+  std::stringstream ss(json.substr(1, json.size() - 2));
+  std::string token;
+  while (std::getline(ss, token, ',')) {
+    array->push_back(parse(token));
+  }
+  return array;
 }
 
 } // JSON

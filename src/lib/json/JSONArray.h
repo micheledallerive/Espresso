@@ -22,6 +22,7 @@ class JSONArray
   JSONArray &operator=(const JSONArray &other) = default;
 
   [[nodiscard]] std::string toJSON() const override;
+  static JSONBase *fromJSON(const std::string &json);
 };
 
 } // JSON
