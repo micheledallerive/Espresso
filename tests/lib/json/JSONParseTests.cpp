@@ -12,6 +12,36 @@
 
 using namespace Espresso::JSON;
 
+TEST(JSONParse, EmptyString) {
+  JSONBase *json = parse("\"\"");
+  EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
+  EXPECT_EQ(json->as<JSONLiteral>()->value(), "");
+}
+
+TEST(JSONParse, String) {
+  JSONBase *json = parse("\"test\"");
+  EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
+  EXPECT_EQ(json->as<JSONLiteral>()->value(), "test");
+}
+
+TEST(JSONParse, Number) {
+  JSONBase *json = parse("0");
+  EXPECT_EQ(json->getType(), JSONType::JSONNumber);
+  EXPECT_EQ(json->as<JSONNumber>()->value(), 0);
+}
+
+TEST(JSONParse, DecimalNumber) {
+  JSONBase *json = parse("1.251");
+  EXPECT_EQ(json->getType(), JSONType::JSONNumber);
+  EXPECT_EQ(json->as<JSONNumber>()->value(), 1.251);
+}
+
+TEST(JSONParse, Boolean) {
+  JSONBase *json = parse("true");
+  EXPECT_EQ(json->getType(), JSONType::JSONBoolean);
+  EXPECT_TRUE(json->as<JSONBoolean>()->value());
+}
+
 TEST(JSONParse, EmptyObject) {
   JSONBase *json = parse("{}");
   EXPECT_EQ(json->getType(), JSONType::JSONObject);
@@ -22,24 +52,6 @@ TEST(JSONParse, EmptyArray) {
   JSONBase *json = parse("[]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 0);
-}
-
-TEST(JSONParse, EmptyString) {
-  JSONBase *json = parse("\"\"");
-  EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
-  EXPECT_EQ(json->as<JSONLiteral>()->value(), "");
-}
-
-TEST(JSONParse, EmptyNumber) {
-  JSONBase *json = parse("0");
-  EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
-  EXPECT_EQ(json->as<JSONNumber>()->value(), 0);
-}
-
-TEST(JSONParse, EmptyTrue) {
-  JSONBase *json = parse("true");
-  EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
-  EXPECT_TRUE(json->as<JSONBoolean>()->value());
 }
 
 TEST(JSONParse, SimpleObject) {

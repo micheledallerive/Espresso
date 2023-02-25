@@ -24,6 +24,8 @@ class JSONLiteral : public JSONPrimitive<std::string> {
   JSONLiteral &operator=(const JSONLiteral &other) = default;
 
   [[nodiscard]] std::string toJSON() const override;
+
+  static JSONLiteral *fromJSON(const std::string &json);
 };
 
 } // JSON
