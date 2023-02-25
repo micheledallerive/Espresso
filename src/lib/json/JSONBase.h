@@ -19,6 +19,8 @@ enum class JSONType {
 
 class JSONBase {
  public:
+  friend JSONBase *parse(const std::string &json);
+
   JSONBase() = default;
   virtual ~JSONBase() = default;
   JSONBase &operator=(const JSONBase &other) = default;
