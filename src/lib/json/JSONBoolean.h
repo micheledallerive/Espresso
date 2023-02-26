@@ -12,10 +12,10 @@ namespace Espresso::JSON {
 class JSONBoolean : public JSONPrimitive<bool> {
  public:
   JSONBoolean() : JSONPrimitive(false) {
-    type_ = JSONType::JSONBoolean;
+    type_ = JSONType::BOOLEAN;
   }
   explicit JSONBoolean(bool value) : JSONPrimitive(value) {
-    type_ = JSONType::JSONBoolean;
+    type_ = JSONType::BOOLEAN;
   }
   std::string toJSON() const override;
   static std::shared_ptr<JSONBoolean> fromJSON(const std::string &json);

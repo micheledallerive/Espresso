@@ -607,5 +607,5 @@ TEST(JSONEntity, ParseHugeJSON) {
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);
   std::cout << "Time taken by function: " << duration.count() << " microseconds"
             << std::endl;
-  EXPECT_EQ(json->getType(), JSONType::JSONArray);
+  EXPECT_EQ(json->getType(), JSONType::ARRAY);
 }

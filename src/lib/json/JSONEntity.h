@@ -11,11 +11,11 @@
 namespace Espresso::JSON {
 
 enum class JSONType {
-  JSONLiteral,
-  JSONNumber,
-  JSONBoolean,
-  JSONObject,
-  JSONArray,
+  LITERAL,
+  NUMBER,
+  BOOLEAN,
+  OBJECT,
+  ARRAY,
 };
 
 class JSONEntity : public std::enable_shared_from_this<JSONEntity> {

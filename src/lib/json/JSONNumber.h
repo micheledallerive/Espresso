@@ -13,10 +13,10 @@ namespace Espresso::JSON {
 class JSONNumber : public JSONPrimitive<double> {
  public:
   JSONNumber() : JSONPrimitive(0.0) {
-    type_ = JSONType::JSONNumber;
+    type_ = JSONType::NUMBER;
   }
   explicit JSONNumber(double value) : JSONPrimitive(value) {
-    type_ = JSONType::JSONNumber;
+    type_ = JSONType::NUMBER;
   }
   [[nodiscard]] std::string toJSON() const override;
   static std::shared_ptr<JSONNumber> fromJSON(const std::string &json);

@@ -15,7 +15,7 @@ class JSONArray
     : public JSONEntity, public std::vector<std::shared_ptr<JSONEntity> > {
  public:
   JSONArray() {
-    this->type_ = JSONType::JSONArray;
+    this->type_ = JSONType::ARRAY;
   }
   ~JSONArray() override = default;
   JSONArray(const JSONArray &other) = default;

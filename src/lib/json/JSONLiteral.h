@@ -14,11 +14,11 @@ namespace Espresso::JSON {
 class JSONLiteral : public JSONPrimitive<std::string> {
  public:
   JSONLiteral() {
-    type_ = JSONType::JSONLiteral;
+    type_ = JSONType::LITERAL;
   }
   explicit JSONLiteral(std::string value)
       : JSONPrimitive<std::string>(std::move(value)) {
-    type_ = JSONType::JSONLiteral;
+    type_ = JSONType::LITERAL;
   }
   ~JSONLiteral() override = default;
   JSONLiteral &operator=(const JSONLiteral &other) = default;
