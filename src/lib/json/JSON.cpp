@@ -36,8 +36,10 @@ JSONEntity *JSONEntity::parse(const std::string &json, bool removeSpaces) {
     return JSONLiteral::fromJSON(json);
   } else if (json == "true" || json == "false") {
     return JSONBoolean::fromJSON(json);
-  } else {
+  } else if (json[0] >= '0' && json[0] <= '9') {
     return JSONNumber::fromJSON(json);
+  } else {
+    return nullptr;
   }
 }
 std::string JSONEntity::nextToken(std::string::iterator start,
