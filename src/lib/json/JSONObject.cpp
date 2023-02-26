@@ -33,7 +33,7 @@ JSONObject::~JSONObject() {
 
 JSON *JSONObject::fromJSON(const std::string &json) {
   if (json[0] != '{' || json[json.size() - 1] != '}') {
-    throw JSONParseException("Invalid JSON object");
+    throw JSONParseException("Invalid JSON object: " + json);
   }
 
   auto *object = new JSONObject();
@@ -50,7 +50,7 @@ JSON *JSONObject::fromJSON(const std::string &json) {
         || key.empty()
         || key[0] != '"'
         || key[key.size() - 1] != '"') {
-      throw JSONParseException("Invalid JSON object");
+      throw JSONParseException("Invalid JSON object (key error): " + json);
     }
     key = key.substr(1, key.size() - 2);
     ++it;

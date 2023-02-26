@@ -12,7 +12,7 @@ std::string JSONLiteral::toJSON() const {
 }
 JSONLiteral *JSONLiteral::fromJSON(const std::string &json) {
   if (json[0] != '"' || json[json.size() - 1] != '"')
-    throw JSONParseException("Invalid JSON literal");
+    throw JSONParseException("Invalid JSON literal: " + json);
   return new JSONLiteral(json.substr(1, json.size() - 2));
 }
 

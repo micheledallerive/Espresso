@@ -45,6 +45,16 @@ std::string JSON::nextToken(std::string::iterator start,
   std::stack<char> parenthesis;
   bool everOpened = false;
   std::stringstream result;
+  if (*start == '"') {
+    do {
+      result << *start;
+      start++;
+    } while (start != end && *start != '"');
+    if (start == end)
+      throw JSONParseException("Unbalanced parenthesis");
+    result << *start;
+    return result.str();
+  }
   for (auto it = start; it != end; it++) {
     if (*it == '{' || *it == '[') {
       parenthesis.push(*it);
