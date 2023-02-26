@@ -32,8 +32,7 @@ int main() {
                     });
 
   server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    Espresso::JSON::JSONEntity
-        *json = any_cast<Espresso::JSON::JSONEntity *>(request.data["json"]);
+    JSONEntity *json = request.getJSON();
     response.send("Hello " + json->toJSON());
   });
 

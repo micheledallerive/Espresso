@@ -9,6 +9,7 @@
 #include <any>
 #include "HTTPMessage.h"
 #include "HTTPMethod.h"
+#include "lib/json/JSONEntity.h"
 namespace Espresso {
 
 class HTTPRequest : public HTTPMessage{
@@ -23,6 +24,7 @@ class HTTPRequest : public HTTPMessage{
   std::unordered_map<std::string, std::string> query;
   std::unordered_map<std::string, std::string> cookies;
   std::unordered_map<std::string, std::any> data;
+  JSON::JSONEntity *getJSON();
  private:
   HTTPMethod method_;
   std::string path_;
