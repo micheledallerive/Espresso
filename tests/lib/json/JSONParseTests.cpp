@@ -56,6 +56,13 @@ TEST(JSONParse, SimpleArray) {
   EXPECT_EQ(json->as<JSONArray>()->at(0)->as<JSONLiteral>()->value(), "value");
 }
 
+TEST(JSONParse, ArrayNestedArrays) {
+  std::string json = R"(["value", ["value2", "value3"], ["value4", "value5"]])";
+  JSON *parsed = JSON::parse(json);
+  EXPECT_EQ(parsed->getType(), JSONType::JSONArray);
+  EXPECT_EQ(parsed->as<JSONArray>()->size(), 3);
+}
+
 TEST(JSONParse, EmptyObject) {
   JSON *json = JSON::parse("{}");
   EXPECT_EQ(json->getType(), JSONType::JSONObject);

@@ -36,9 +36,11 @@ JSON *JSONArray::fromJSON(const std::string &json) {
   if (json[0] != '[' || json[json.size() - 1] != ']')
     throw JSONParseException("Invalid JSON array: " + json);
   auto *array = new JSONArray();
-  std::stringstream ss(json.substr(1, json.size() - 2));
-  std::string token;
-  while (std::getline(ss, token, ',')) {
+  std::string arrayContent = json.substr(1, json.size() - 2);
+  auto it = arrayContent.begin();
+  while (it < arrayContent.end()) {
+    std::string token = JSON::nextToken(it, arrayContent.end());
+    it += token.size() + 1;
     array->push_back(JSON::parse(token, false));
   }
   return array;

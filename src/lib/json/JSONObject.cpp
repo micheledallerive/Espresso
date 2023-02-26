@@ -37,16 +37,27 @@ JSON *JSONObject::fromJSON(const std::string &json) {
   }
 
   auto *object = new JSONObject();
-  std::stringstream ss(json.substr(1, json.size() - 2));
-  std::string key;
-  std::string value;
-  std::string keyValuePair;
-  while (std::getline(ss, keyValuePair, ',')) {
-    std::stringstream ss2(keyValuePair);
-    std::getline(ss2, key, ':');
-    std::getline(ss2, value);
+  std::string objectContent = json.substr(1, json.size() - 2);
+  auto it = objectContent.begin();
+  while (it < objectContent.end()) {
+    // read until the :
+    std::string key;
+    while (it < objectContent.end() && *it != ':') {
+      key += *it;
+      ++it;
+    }
+    if (it == objectContent.end()
+        || key.empty()
+        || key[0] != '"'
+        || key[key.size() - 1] != '"') {
+      throw JSONParseException("Invalid JSON object");
+    }
     key = key.substr(1, key.size() - 2);
-    object->insert({key, JSON::parse(value, false)});
+    ++it;
+    std::string value = JSON::nextToken(it, objectContent.end());
+    it += value.size() + 1;
+    JSON *parsed = JSON::parse(value, false);
+    (*object)[key] = parsed;
   }
   return object;
 }

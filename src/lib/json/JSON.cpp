@@ -21,7 +21,7 @@ JSON *JSON::parse(const std::string &json, bool removeSpaces) {
     for (const char &c : json) {
       if (c == '\"') {
         inWord = !inWord;
-      } else if (!inWord && c == ' ') {
+      } else if (!inWord && (isspace(c) || c == '\r' || c == '\n')) {
         continue;
       }
       ss << c;
