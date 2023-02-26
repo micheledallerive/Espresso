@@ -5,14 +5,14 @@
 #ifndef ESPRESSO_SRC_LIB_JSON_JSONARRAY_H_
 #define ESPRESSO_SRC_LIB_JSON_JSONARRAY_H_
 
-#include "JSON.h"
+#include "JSONEntity.h"
 #include <vector>
 #include <memory>
 
 namespace Espresso::JSON {
 
 class JSONArray
-    : public JSON, public std::vector<JSON *> {
+    : public JSONEntity, public std::vector<JSONEntity *> {
  public:
   JSONArray() {
     this->type_ = JSONType::JSONArray;
@@ -22,7 +22,7 @@ class JSONArray
   JSONArray &operator=(const JSONArray &other) = default;
 
   [[nodiscard]] std::string toJSON() const override;
-  static JSON *fromJSON(const std::string &json);
+  static JSONEntity *fromJSON(const std::string &json);
 };
 
 } // JSON

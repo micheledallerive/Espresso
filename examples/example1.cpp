@@ -4,7 +4,7 @@
 
 #include "Server.h"
 #include "middleware/JSONMiddleware.h"
-#include "lib/json/JSON.h"
+#include "lib/json/JSONEntity.h"
 #include <iostream>
 
 using namespace std;
@@ -32,8 +32,8 @@ int main() {
                     });
 
   server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    Espresso::JSON::JSON
-        *json = any_cast<Espresso::JSON::JSON *>(request.data["json"]);
+    Espresso::JSON::JSONEntity
+        *json = any_cast<Espresso::JSON::JSONEntity *>(request.data["json"]);
     response.send("Hello " + json->toJSON());
   });
 

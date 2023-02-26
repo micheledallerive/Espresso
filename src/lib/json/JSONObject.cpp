@@ -4,7 +4,7 @@
 
 #include "JSONObject.h"
 #include "expections.h"
-#include "JSON.h"
+#include "JSONEntity.h"
 #include <sstream>
 
 namespace Espresso::JSON {
@@ -31,7 +31,7 @@ JSONObject::~JSONObject() {
   return json.str();
 }
 
-JSON *JSONObject::fromJSON(const std::string &json) {
+JSONEntity *JSONObject::fromJSON(const std::string &json) {
   if (json[0] != '{' || json[json.size() - 1] != '}') {
     throw JSONParseException("Invalid JSON object: " + json);
   }
@@ -54,9 +54,9 @@ JSON *JSONObject::fromJSON(const std::string &json) {
     }
     key = key.substr(1, key.size() - 2);
     ++it;
-    std::string value = JSON::nextToken(it, objectContent.end());
+    std::string value = JSONEntity::nextToken(it, objectContent.end());
     it += value.size() + 1;
-    JSON *parsed = JSON::parse(value, false);
+    JSONEntity *parsed = JSONEntity::parse(value, false);
     (*object)[key] = parsed;
   }
   return object;

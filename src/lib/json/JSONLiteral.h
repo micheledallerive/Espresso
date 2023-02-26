@@ -7,7 +7,7 @@
 
 #include <utility>
 
-#include "JSON.h"
+#include "JSONEntity.h"
 #include "JSONPrimitive.h"
 namespace Espresso::JSON {
 

@@ -1,7 +1,7 @@
 //
 // Created by michele on 25.02.23.
 //
-#include "JSON.h"
+#include "JSONEntity.h"
 #include "JSONNumber.h"
 #include "JSONBoolean.h"
 #include "JSONLiteral.h"
@@ -14,7 +14,7 @@
 
 namespace Espresso::JSON {
 
-JSON *JSON::parse(const std::string &json, bool removeSpaces) {
+JSONEntity *JSONEntity::parse(const std::string &json, bool removeSpaces) {
   if (removeSpaces) {
     std::stringstream ss;
     bool inWord;
@@ -40,8 +40,8 @@ JSON *JSON::parse(const std::string &json, bool removeSpaces) {
     return JSONNumber::fromJSON(json);
   }
 }
-std::string JSON::nextToken(std::string::iterator start,
-                            std::string::iterator end) {
+std::string JSONEntity::nextToken(std::string::iterator start,
+                                  std::string::iterator end) {
   std::stack<char> parenthesis;
   bool everOpened = false;
   std::stringstream result;

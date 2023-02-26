@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <lib/json/JSON.h>
+#include "lib/json/JSONEntity.h"
 
 using namespace Espresso::JSON;
 
@@ -599,9 +599,9 @@ const std::string huge_json = R"(
 
 #include <chrono>
 
-TEST(JSON, ParseHugeJSON) {
+TEST(JSONEntity, ParseHugeJSON) {
   auto start = std::chrono::high_resolution_clock::now();
-  JSON *json = JSON::parse(huge_json);
+  JSONEntity *json = JSONEntity::parse(huge_json);
   auto end = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);

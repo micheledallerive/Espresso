@@ -17,16 +17,16 @@ enum class JSONType {
   JSONArray,
 };
 
-class JSON {
+class JSONEntity {
  public:
-  JSON() = default;
-  virtual ~JSON() = default;
-  JSON &operator=(const JSON &other) = default;
+  JSONEntity() = default;
+  virtual ~JSONEntity() = default;
+  JSONEntity &operator=(const JSONEntity &other) = default;
 
   virtual std::string toJSON() const = 0;
 
   [[nodiscard]] JSONType getType() const { return type_; }
-  static JSON *parse(const std::string &json, bool removeSpaces = true);
+  static JSONEntity *parse(const std::string &json, bool removeSpaces = true);
 
   // how can I write a template that is child of JSONBase?
   template<class T>
@@ -37,7 +37,7 @@ class JSON {
 };
 
 template<class T>
-T *JSON::as() {
+T *JSONEntity::as() {
   return dynamic_cast<T *>(this);
 }
 
