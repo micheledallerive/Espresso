@@ -33,7 +33,9 @@ class JSON {
   T *as();
  protected:
   JSONType type_;
+  static std::string nextToken(std::string::iterator start, std::string::iterator end);
 };
+
 template<class T>
 T *JSON::as() {
   return dynamic_cast<T *>(this);
