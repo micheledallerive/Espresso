@@ -12,17 +12,17 @@
 namespace Espresso::JSON {
 
 class JSONArray
-    : public JSONEntity, public std::vector<JSONEntity *> {
+    : public JSONEntity, public std::vector<std::shared_ptr<JSONEntity> > {
  public:
   JSONArray() {
     this->type_ = JSONType::JSONArray;
   }
-  ~JSONArray() override;
+  ~JSONArray() override = default;
   JSONArray(const JSONArray &other) = default;
   JSONArray &operator=(const JSONArray &other) = default;
 
   [[nodiscard]] std::string toJSON() const override;
-  static JSONEntity *fromJSON(const std::string &json);
+  static std::shared_ptr<JSONEntity> fromJSON(const std::string &json);
 };
 
 } // JSON

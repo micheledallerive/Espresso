@@ -6,14 +6,9 @@
 #include "expections.h"
 #include "JSONEntity.h"
 #include <sstream>
+#include <memory>
 
 namespace Espresso::JSON {
-
-JSONObject::~JSONObject() {
-  for (auto &pair : *this) {
-    delete pair.second;
-  }
-}
 
 [[nodiscard]] std::string JSONObject::toJSON() const {
   if (this->empty()) {
@@ -31,12 +26,12 @@ JSONObject::~JSONObject() {
   return json.str();
 }
 
-JSONEntity *JSONObject::fromJSON(const std::string &json) {
+std::shared_ptr<JSONEntity> JSONObject::fromJSON(const std::string &json) {
   if (json[0] != '{' || json[json.size() - 1] != '}') {
     throw JSONParseException("Invalid JSON object: " + json);
   }
 
-  auto *object = new JSONObject();
+  auto object = std::make_shared<JSONObject>();
   std::string objectContent = json.substr(1, json.size() - 2);
   auto it = objectContent.begin();
   while (it < objectContent.end()) {
@@ -56,7 +51,7 @@ JSONEntity *JSONObject::fromJSON(const std::string &json) {
     ++it;
     std::string value = JSONEntity::nextToken(it, objectContent.end());
     it += value.size() + 1;
-    JSONEntity *parsed = JSONEntity::parse(value, false);
+    std::shared_ptr<JSONEntity> parsed = JSONEntity::parse(value, false);
     (*object)[key] = parsed;
   }
   return object;

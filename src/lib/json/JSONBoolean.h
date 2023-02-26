@@ -18,7 +18,7 @@ class JSONBoolean : public JSONPrimitive<bool> {
     type_ = JSONType::JSONBoolean;
   }
   std::string toJSON() const override;
-  static JSONBoolean *fromJSON(const std::string &json);
+  static std::shared_ptr<JSONBoolean> fromJSON(const std::string &json);
 };
 
 }

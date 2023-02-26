@@ -16,7 +16,7 @@ set(SOURCES
         lib/json/JSONNumber.cpp
         lib/json/JSONArray.cpp
         lib/json/JSONObject.cpp
-        lib/json/JSON.cpp
+        lib/json/JSONEntity.cpp
 
         middleware/JSONMiddleware.cpp
         )

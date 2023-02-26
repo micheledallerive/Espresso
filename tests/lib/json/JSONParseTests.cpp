@@ -13,43 +13,43 @@
 using namespace Espresso::JSON;
 
 TEST(JSONParse, EmptyString) {
-  JSONEntity *json = JSONEntity::parse("\"\"");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("\"\"");
   EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
   EXPECT_EQ(json->as<JSONLiteral>()->value(), "");
 }
 
 TEST(JSONParse, String) {
-  JSONEntity *json = JSONEntity::parse("\"test\"");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("\"test\"");
   EXPECT_EQ(json->getType(), JSONType::JSONLiteral);
   EXPECT_EQ(json->as<JSONLiteral>()->value(), "test");
 }
 
 TEST(JSONParse, Number) {
-  JSONEntity *json = JSONEntity::parse("0");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("0");
   EXPECT_EQ(json->getType(), JSONType::JSONNumber);
   EXPECT_EQ(json->as<JSONNumber>()->value(), 0);
 }
 
 TEST(JSONParse, DecimalNumber) {
-  JSONEntity *json = JSONEntity::parse("1.251");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("1.251");
   EXPECT_EQ(json->getType(), JSONType::JSONNumber);
   EXPECT_EQ(json->as<JSONNumber>()->value(), 1.251);
 }
 
 TEST(JSONParse, Boolean) {
-  JSONEntity *json = JSONEntity::parse("true");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("true");
   EXPECT_EQ(json->getType(), JSONType::JSONBoolean);
   EXPECT_TRUE(json->as<JSONBoolean>()->value());
 }
 
 TEST(JSONParse, EmptyArray) {
-  JSONEntity *json = JSONEntity::parse("[]");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("[]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 0);
 }
 
 TEST(JSONParse, SimpleArray) {
-  JSONEntity *json = JSONEntity::parse("[\"value\"]");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("[\"value\"]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 1);
   EXPECT_EQ(json->as<JSONArray>()->at(0)->getType(), JSONType::JSONLiteral);
@@ -58,19 +58,19 @@ TEST(JSONParse, SimpleArray) {
 
 TEST(JSONParse, ArrayNestedArrays) {
   std::string json = R"(["value", ["value2", "value3"], ["value4", "value5"]])";
-  JSONEntity *parsed = JSONEntity::parse(json);
+  std::shared_ptr<JSONEntity> parsed = JSONEntity::parse(json);
   EXPECT_EQ(parsed->getType(), JSONType::JSONArray);
   EXPECT_EQ(parsed->as<JSONArray>()->size(), 3);
 }
 
 TEST(JSONParse, EmptyObject) {
-  JSONEntity *json = JSONEntity::parse("{}");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("{}");
   EXPECT_EQ(json->getType(), JSONType::JSONObject);
   EXPECT_EQ(json->as<JSONObject>()->size(), 0);
 }
 
 TEST(JSONParse, SimpleObject) {
-  auto *json = JSONEntity::parse("{\"key\": \"value\"}")->as<JSONObject>();
+  auto json = JSONEntity::parse("{\"key\": \"value\"}")->as<JSONObject>();
   EXPECT_EQ(json->getType(), JSONType::JSONObject);
   EXPECT_EQ(json->size(), 1);
   EXPECT_EQ(json->at("key")->getType(),
@@ -80,7 +80,7 @@ TEST(JSONParse, SimpleObject) {
 }
 
 TEST(JSONParse, ObjectNestedArray) {
-  JSONEntity *json = JSONEntity::parse("{\"key\": [\"value\"]}");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("{\"key\": [\"value\"]}");
   EXPECT_EQ(json->getType(), JSONType::JSONObject);
   EXPECT_EQ(json->as<JSONObject>()->size(), 1);
   EXPECT_EQ(json->as<JSONObject>()->at("key")->getType(),
@@ -94,7 +94,7 @@ TEST(JSONParse, ObjectNestedArray) {
 }
 
 TEST(JSONParse, ArrayNestedObject) {
-  JSONEntity *json = JSONEntity::parse("[{\"key\": \"value\"}]");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("[{\"key\": \"value\"}]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 1);
   EXPECT_EQ(json->as<JSONArray>()->at(0)->getType(), JSONType::JSONObject);
@@ -107,7 +107,7 @@ TEST(JSONParse, ArrayNestedObject) {
 }
 
 TEST(JSONParse, ArrayMultipleNestedObjects) {
-  JSONEntity *json = JSONEntity::parse("[{\"key\": \"value\"}, {\"key\": \"value\"}]");
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse("[{\"key\": \"value\"}, {\"key\": \"value\"}]");
   EXPECT_EQ(json->getType(), JSONType::JSONArray);
   EXPECT_EQ(json->as<JSONArray>()->size(), 2);
   EXPECT_EQ(json->as<JSONArray>()->at(0)->getType(), JSONType::JSONObject);

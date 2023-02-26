@@ -19,7 +19,7 @@ class JSONNumber : public JSONPrimitive<double> {
     type_ = JSONType::JSONNumber;
   }
   [[nodiscard]] std::string toJSON() const override;
-  static JSONNumber *fromJSON(const std::string &json);
+  static std::shared_ptr<JSONNumber> fromJSON(const std::string &json);
 };
 
 } // JSON

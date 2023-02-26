@@ -11,16 +11,16 @@
 namespace Espresso::JSON {
 
 class JSONObject : public JSONEntity,
-                   public std::unordered_map<std::string, JSONEntity *> {
+                   public std::unordered_map<std::string, std::shared_ptr<JSONEntity> > {
  public:
-  JSONObject() : JSONEntity(), std::unordered_map<std::string, JSONEntity *>() {
+  JSONObject() : JSONEntity(), std::unordered_map<std::string, std::shared_ptr<JSONEntity> >() {
     this->type_ = JSONType::JSONObject;
   }
-  ~JSONObject() override;
+  ~JSONObject() override = default;
   JSONObject &operator=(const JSONObject &other) = default;
 
   std::string toJSON() const override;
-  static JSONEntity *fromJSON(const std::string &json);
+  static std::shared_ptr<JSONEntity> fromJSON(const std::string &json);
 };
 
 } // JSON

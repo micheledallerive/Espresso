@@ -13,9 +13,9 @@ std::string JSONNumber::toJSON() const {
   ss << std::setprecision(16) << value_;
   return ss.str();
 }
-JSONNumber *JSONNumber::fromJSON(const std::string &json) {
+std::shared_ptr<JSONNumber> JSONNumber::fromJSON(const std::string &json) {
   try {
-    return new JSONNumber(std::stod(json));
+    return std::make_shared<JSONNumber>(std::stod(json));
   } catch (std::invalid_argument &e) {
     throw JSONParseException("Invalid JSON number");
   }

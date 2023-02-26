@@ -25,7 +25,7 @@ class JSONLiteral : public JSONPrimitive<std::string> {
 
   [[nodiscard]] std::string toJSON() const override;
 
-  static JSONLiteral *fromJSON(const std::string &json);
+  static std::shared_ptr<JSONLiteral> fromJSON(const std::string &json);
 };
 
 } // JSON

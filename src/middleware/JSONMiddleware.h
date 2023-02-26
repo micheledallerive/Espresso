@@ -13,8 +13,7 @@ namespace Espresso {
 Middleware JSONMiddleware = [](HTTPRequest &req, HTTPResponse &res, auto next) {
   if (req.hasHeader("Content-Type") &&
       req.getHeader("Content-Type") == "application/json") {
-    req.data["json"] =
-        std::shared_ptr<JSON::JSONEntity>(JSON::JSONEntity::parse(req.getBody()));
+    req.data["json"] = JSON::JSONEntity::parse(req.getBody());
   }
   next();
 };

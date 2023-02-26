@@ -9,12 +9,6 @@
 
 namespace Espresso::JSON {
 
-JSONArray::~JSONArray() {
-  for (auto it = this->begin(); it != this->end(); ++it) {
-    delete *it;
-  }
-}
-
 std::string JSONArray::toJSON() const {
   if (this->empty()) return "[ ]";
   std::stringstream json;
@@ -32,10 +26,10 @@ std::string JSONArray::toJSON() const {
   json << "]";
   return json.str();
 }
-JSONEntity *JSONArray::fromJSON(const std::string &json) {
+std::shared_ptr<JSONEntity> JSONArray::fromJSON(const std::string &json) {
   if (json[0] != '[' || json[json.size() - 1] != ']')
     throw JSONParseException("Invalid JSON array: " + json);
-  auto *array = new JSONArray();
+  auto array = std::make_shared<JSONArray>();
   std::string arrayContent = json.substr(1, json.size() - 2);
   auto it = arrayContent.begin();
   while (it < arrayContent.end()) {

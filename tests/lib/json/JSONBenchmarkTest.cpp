@@ -601,7 +601,7 @@ const std::string huge_json = R"(
 
 TEST(JSONEntity, ParseHugeJSON) {
   auto start = std::chrono::high_resolution_clock::now();
-  JSONEntity *json = JSONEntity::parse(huge_json);
+  std::shared_ptr<JSONEntity> json = JSONEntity::parse(huge_json);
   auto end = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);

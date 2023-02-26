@@ -32,7 +32,7 @@ int main() {
                     });
 
   server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    JSONEntity *json = request.getJSON();
+    std::shared_ptr<JSONEntity> json = request.getJSON();
     response.send("Hello " + json->toJSON());
   });
 
