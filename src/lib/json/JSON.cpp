@@ -17,7 +17,7 @@ namespace Espresso::JSON {
 JSONEntity *JSONEntity::parse(const std::string &json, bool removeSpaces) {
   if (removeSpaces) {
     std::stringstream ss;
-    bool inWord;
+    bool inWord = false;
     for (const char &c : json) {
       if (c == '\"') {
         inWord = !inWord;
