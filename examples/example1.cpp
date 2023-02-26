@@ -3,14 +3,18 @@
 //
 
 #include "Server.h"
+#include "middleware/JSONMiddleware.h"
+#include "lib/json/JSON.h"
 #include <iostream>
 
 using namespace std;
+using namespace Espresso::JSON;
 using namespace Espresso;
 
 int main() {
   Espresso::Server server;
 
+  server.middlewares.use(JSONMiddleware);
   server.middlewares.use([](HTTPRequest &request,
                             HTTPResponse &response,
                             auto next) {
@@ -28,7 +32,9 @@ int main() {
                     });
 
   server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send("Hello World!");
+    Espresso::JSON::JSON
+        *json = any_cast<Espresso::JSON::JSON *>(request.data["json"]);
+    response.send("Hello " + json->toJSON());
   });
 
   server.router.get("/*", [](HTTPRequest &request, HTTPResponse &response) {

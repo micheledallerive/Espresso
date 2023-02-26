@@ -16,7 +16,10 @@ set(SOURCES
         lib/json/JSONNumber.cpp
         lib/json/JSONArray.cpp
         lib/json/JSONObject.cpp
-        lib/json/JSON.cpp)
+        lib/json/JSON.cpp
+
+        middleware/JSONMiddleware.cpp
+        )
 
 set(HEADERS Cookies.h
         HTTPMessage.h
