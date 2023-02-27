@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "Server.h"
+#include "utils.h"
 
 namespace Espresso {
 std::vector<std::string> split(const std::string &s, char delim) {
@@ -59,6 +60,23 @@ void splitListOfPairs(const std::string &line,
 
     callback(key, value);
   }
+}
+
+std::string urlDecode(const std::string &str) {
+  std::stringstream result;
+  char ch;
+  int i, ii;
+  for (i = 0; i < str.size(); i++) {
+    if (int(str[i]) == 37) {
+      sscanf(str.substr(i + 1, 2).c_str(), "%x", &ii);
+      ch = static_cast<char>(ii);
+      result << ch;
+      i = i + 2;
+    } else {
+      result << str[i];
+    }
+  }
+  return result.str();
 }
 
 }

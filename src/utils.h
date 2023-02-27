@@ -22,6 +22,8 @@ void splitListOfPairs(const std::string &line,
                       std::function<void(const std::string &,
                                          const std::string &)> callback);
 
+std::string urlDecode(const std::string &str);
+
 }
 
 #endif //ESPRESSO_SRC_UTILS_H_
