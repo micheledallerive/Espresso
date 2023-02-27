@@ -12,13 +12,35 @@ MiddlewareList::MiddlewareList() = default;
 
 MiddlewareList::~MiddlewareList() = default;
 
-void MiddlewareList::use(const Middleware &middleware) {
+void MiddlewareList::use(const MiddlewareFunc &middleware) {
   this->middlewares_.emplace_back(PathRegex::pathToRegex("/*"), middleware);
 }
 
 void MiddlewareList::use(const std::string &path,
-                         const Middleware &middleware) {
+                         const MiddlewareFunc &middleware) {
   this->middlewares_.emplace_back(PathRegex::pathToRegex(path), middleware);
+}
+
+void MiddlewareList::use(BaseMiddleware &middleware) {
+  this->use([&](auto &req, auto &res, const auto &next) {
+    middleware.handle(req, res, next);
+  });
+}
+
+void MiddlewareList::use(const std::string &path,
+                         BaseMiddleware &middleware) {
+  this->use(path, [&](auto &req, auto &res, const auto &next) {
+    middleware.handle(req, res, next);
+  });
+}
+
+void MiddlewareList::use(BaseMiddleware &&middleware) {
+  this->use(middleware);
+}
+
+void MiddlewareList::use(const std::string &path,
+                         BaseMiddleware &&middleware) {
+  this->use(path, middleware);
 }
 
 void MiddlewareList::run(HTTPRequest &request,

@@ -96,8 +96,8 @@ TEST(MiddlewareList, UseWithPathAndNext) {
     next();
   });
   list.use("/hell", [](HTTPRequest &request,
-                        HTTPResponse &response,
-                        const std::function<void()> &next) {
+                       HTTPResponse &response,
+                       const std::function<void()> &next) {
     response.setBody(response.getBody() + " :(");
   });
   HTTPRequest request(GET, "/hello", "HTTP/1.1", "", "");
@@ -107,5 +107,25 @@ TEST(MiddlewareList, UseWithPathAndNext) {
   ASSERT_EQ(response.getBody(), "Hello! World!");
 }
 
+TEST(MiddlewareList, ClassMiddleware) {
+  class SimpleMiddleware : public BaseMiddleware {
+   public:
+    void handle(HTTPRequest &request,
+                HTTPResponse &response,
+                const std::function<void()> &next) override {
+      std::cout << "Test" << std::endl;
+      response.setBody("Hello World!");
+      next();
+    }
+  };
+  MiddlewareList list;
+  SimpleMiddleware m = SimpleMiddleware();
+  list.use(m);
+  HTTPRequest request(GET, "/", "HTTP/1.1", "", "");
+  HTTPResponse response;
+  ASSERT_EQ(response.getBody(), "");
+  list.run(request, response);
+  ASSERT_EQ(response.getBody(), "Hello World!");
+};
 
 }
