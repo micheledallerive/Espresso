@@ -18,13 +18,13 @@ HTTPMessage generate() {
 TEST(HTTPMessage, DefaultConstructor) {
   HTTPMessage message;
   EXPECT_EQ(message.getVersion(), "");
-  EXPECT_EQ(message.getBody(), "");
+  EXPECT_EQ(message.getRawBody(), "");
 }
 
 TEST(HTTPMessage, Constructor) {
   auto message = generate();
   EXPECT_EQ(message.getVersion(), "HTTP/1.0");
-  EXPECT_EQ(message.getBody(), "Hello World!");
+  EXPECT_EQ(message.getRawBody(), "Hello World!");
   EXPECT_EQ(message.getHeader("Content-Type"), "text/plain");
 }
 
@@ -69,14 +69,14 @@ TEST(HTTPMessage, GetHeader) {
 
 TEST(HTTPMessage, SetBody) {
   HTTPMessage message;
-  message.setBody("test");
-  EXPECT_EQ(message.getBody(), "test");
+  message.setRawBody("test");
+  EXPECT_EQ(message.getRawBody(), "test");
 }
 
 TEST(HTTPMessage, GetBody) {
   HTTPMessage message;
-  message.setBody("test");
-  EXPECT_EQ(message.getBody(), "test");
+  message.setRawBody("test");
+  EXPECT_EQ(message.getRawBody(), "test");
 }
 
 TEST(HTTPMessage, HeadersToString) {

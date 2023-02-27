@@ -18,7 +18,7 @@ HTTPMessage::HTTPMessage(std::string version,
                          std::string body) {
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
-  this->body_ = std::move(body);
+  this->rawBody_ = std::move(body);
 }
 
 HTTPMessage::~HTTPMessage() = default;
@@ -48,12 +48,12 @@ std::string HTTPMessage::getHeader(const std::string &name) {
   return this->headers_.at(name);
 }
 
-void HTTPMessage::setBody(std::string body) {
-  this->body_ = std::move(body);
+void HTTPMessage::setRawBody(std::string body) {
+  this->rawBody_ = std::move(body);
 }
 
-std::string HTTPMessage::getBody() {
-  return this->body_;
+std::string HTTPMessage::getRawBody() {
+  return this->rawBody_;
 }
 
 std::string HTTPMessage::getVersion() {

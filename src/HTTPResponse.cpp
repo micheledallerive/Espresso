@@ -110,12 +110,12 @@ std::string HTTPResponse::toString() {
     response += "Set-Cookie: " + it.second.toString() + "\r\n";
   }
   response += "\r\n";
-  response += this->getBody();
+  response += this->getRawBody();
   return response;
 }
 
 void HTTPResponse::send(const std::string &body) {
-  this->setBody(body);
+  this->setRawBody(body);
   this->setHeader("Content-Length", std::to_string(body.length()));
 }
 
@@ -125,7 +125,7 @@ void HTTPResponse::sendFile(const std::string &path) {
   if (!file.fail() && file.is_open()) {
     std::stringstream buffer;
     buffer << file.rdbuf();
-    this->setBody(buffer.str());
+    this->setRawBody(buffer.str());
     this->setHeader("Content-Length", std::to_string(buffer.str().length()));
     this->setStatus(200);
   } else {

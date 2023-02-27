@@ -35,7 +35,7 @@ TEST(HTTPResponse, ToString) {
             "HTTP/1.1 200 OK\r\n"
                 + dateHeader
                 + "\r\n");
-  response.setBody("Hello World!");
+  response.setRawBody("Hello World!");
   EXPECT_EQ(response.toString(),
             "HTTP/1.1 200 OK\r\n"
                 + dateHeader
@@ -66,7 +66,7 @@ TEST(HTTPResponse, Send) {
             "Date: " + getUTCDate() + "\r\n"
                 + "\r\n"
                   "Hello World!");
-  EXPECT_EQ(response.getBody(), "Hello World!");
+  EXPECT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(HTTPResponse, SendFile) {
@@ -78,7 +78,7 @@ TEST(HTTPResponse, SendFile) {
             "Date: " + getUTCDate() + "\r\n"
                 + "\r\n"
                   "Hello World!");
-  EXPECT_EQ(response.getBody(), "Hello World!");
+  EXPECT_EQ(response.getRawBody(), "Hello World!");
   EXPECT_THROW(response.sendFile("tests/does_not_exist.txt"),
                std::runtime_error);
 }
@@ -93,7 +93,7 @@ TEST(HTTPResponse, DownloadFile) {
             "Date: " + getUTCDate() + "\r\n"
                 + "\r\n"
                   "Hello World!");
-  EXPECT_EQ(response.getBody(), "Hello World!");
+  EXPECT_EQ(response.getRawBody(), "Hello World!");
   response.downloadFile(TESTS_PATH + std::string("files/test.html"),
                         "test.txt");
   EXPECT_EQ(response.toString(),
@@ -103,7 +103,7 @@ TEST(HTTPResponse, DownloadFile) {
             "Date: " + getUTCDate() + "\r\n"
                 + "\r\n"
                   "Hello World!");
-  EXPECT_EQ(response.getBody(), "Hello World!");
+  EXPECT_EQ(response.getRawBody(), "Hello World!");
   EXPECT_THROW(
       response.downloadFile(TESTS_PATH
                                 + std::string("files/doesntexist.html"),
@@ -119,7 +119,7 @@ TEST(HTTPResponse, Redirect) {
             "Date: " + d + "\r\n"
                            "Location: http://www.google.com\r\n"
                 + "\r\n");
-  EXPECT_EQ(response.getBody(), "");
+  EXPECT_EQ(response.getRawBody(), "");
 
   response.redirect("http://www.google.com", 301);
   EXPECT_EQ(response.toString(),

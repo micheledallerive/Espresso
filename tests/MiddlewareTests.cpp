@@ -11,14 +11,14 @@ TEST(MiddlewareList, SimpleUse) {
               HTTPResponse &response,
               const std::function<void()> &next) {
     std::cout << "executing " << std::endl;
-    response.setBody("Hello World!");
+    response.setRawBody("Hello World!");
     next();
   });
   HTTPRequest request(GET, "/", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(MiddlewareList, ManyMiddlewares) {
@@ -26,20 +26,20 @@ TEST(MiddlewareList, ManyMiddlewares) {
   list.use([](HTTPRequest &request,
               HTTPResponse &response,
               const std::function<void()> &next) {
-    response.setBody("Hello World!");
+    response.setRawBody("Hello World!");
     next();
   });
   list.use([](HTTPRequest &request,
               HTTPResponse &response,
               const std::function<void()> &next) {
-    response.setBody(response.getBody() + " Hello World!");
+    response.setRawBody(response.getRawBody() + " Hello World!");
     next();
   });
   HTTPRequest request(GET, "/", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World! Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World! Hello World!");
 }
 
 TEST(MiddlewareList, DontNextMiddleware) {
@@ -47,18 +47,18 @@ TEST(MiddlewareList, DontNextMiddleware) {
   list.use([](HTTPRequest &request,
               HTTPResponse &response,
               const std::function<void()> &next) {
-    response.setBody("Hello World!");
+    response.setRawBody("Hello World!");
   });
   list.use([](HTTPRequest &request,
               HTTPResponse &response,
               const std::function<void()> &next) {
-    response.setBody(response.getBody() + " Hello World!");
+    response.setRawBody(response.getRawBody() + " Hello World!");
   });
   HTTPRequest request(GET, "/", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(MiddlewareList, UseWithPath) {
@@ -66,19 +66,19 @@ TEST(MiddlewareList, UseWithPath) {
   list.use("/hello", [](HTTPRequest &request,
                         HTTPResponse &response,
                         const std::function<void()> &next) {
-    response.setBody("Hello!");
+    response.setRawBody("Hello!");
     next();
   });
   list.use("/world", [](HTTPRequest &request,
                         HTTPResponse &response,
                         const std::function<void()> &next) {
-    response.setBody("World!");
+    response.setRawBody("World!");
   });
   HTTPRequest request(GET, "/hello", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello!");
+  ASSERT_EQ(response.getRawBody(), "Hello!");
 }
 
 TEST(MiddlewareList, UseWithPathAndNext) {
@@ -86,25 +86,25 @@ TEST(MiddlewareList, UseWithPathAndNext) {
   list.use("/hello", [](HTTPRequest &request,
                         HTTPResponse &response,
                         const std::function<void()> &next) {
-    response.setBody("Hello!");
+    response.setRawBody("Hello!");
     next();
   });
   list.use("/hello", [](HTTPRequest &request,
                         HTTPResponse &response,
                         const std::function<void()> &next) {
-    response.setBody(response.getBody() + " World!");
+    response.setRawBody(response.getRawBody() + " World!");
     next();
   });
   list.use("/hell", [](HTTPRequest &request,
                        HTTPResponse &response,
                        const std::function<void()> &next) {
-    response.setBody(response.getBody() + " :(");
+    response.setRawBody(response.getRawBody() + " :(");
   });
   HTTPRequest request(GET, "/hello", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello! World!");
+  ASSERT_EQ(response.getRawBody(), "Hello! World!");
 }
 
 TEST(MiddlewareList, ClassMiddleware) {
@@ -114,7 +114,7 @@ TEST(MiddlewareList, ClassMiddleware) {
                 HTTPResponse &response,
                 const std::function<void()> &next) override {
       std::cout << "Test" << std::endl;
-      response.setBody("Hello World!");
+      response.setRawBody("Hello World!");
       next();
     }
   };
@@ -123,9 +123,9 @@ TEST(MiddlewareList, ClassMiddleware) {
   list.use(m);
   HTTPRequest request(GET, "/", "HTTP/1.1", "", "");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   list.run(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 };
 
 }

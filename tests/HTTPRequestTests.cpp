@@ -29,7 +29,7 @@ TEST(HTTPRequest, Constructor) {
   ASSERT_EQ(request.getPath(), "/test");
   ASSERT_EQ(request.getVersion(), "HTTP/1.1");
   ASSERT_EQ(request.getHeader("Host"), "localhost");
-  ASSERT_EQ(request.getBody(), "Hello World!");
+  ASSERT_EQ(request.getRawBody(), "Hello World!");
 }
 
 TEST(HTTPRequest, ConstructorFromString) {
@@ -40,7 +40,7 @@ TEST(HTTPRequest, ConstructorFromString) {
   ASSERT_EQ(request.getVersion(), "HTTP/1.1");
   ASSERT_EQ(request.getHeader("Host"), "localhost");
   ASSERT_TRUE(request.hasHeader("Cookie"));
-  ASSERT_EQ(request.getBody(), "Hello World!");
+  ASSERT_EQ(request.getRawBody(), "Hello World!");
   ASSERT_EQ(request.cookies["prova"], "1");
   ASSERT_EQ(request.cookies["prova2"], "2");
   ASSERT_EQ(request.query["prova"], "1");
@@ -53,7 +53,7 @@ TEST(HTTPRequest, PartialRequest) {
   ASSERT_EQ(request.getPath(), "/test");
   ASSERT_EQ(request.getVersion(), "HTTP/1.1");
   ASSERT_EQ(request.headersToString(), "");
-  ASSERT_EQ(request.getBody(), "");
+  ASSERT_EQ(request.getRawBody(), "");
 }
 
 TEST(HTTPRequest, WithoutBody) {
@@ -61,7 +61,7 @@ TEST(HTTPRequest, WithoutBody) {
                       "Host: localhost\r\n"
                       "\r\n");
   ASSERT_EQ(request.getMethod(), GET);
-  ASSERT_TRUE(request.getBody().empty());
+  ASSERT_TRUE(request.getRawBody().empty());
 }
 
 TEST(HTTPRequest, WithoutHeaders) {
@@ -69,7 +69,7 @@ TEST(HTTPRequest, WithoutHeaders) {
                       "\r\n"
                       "Hello World!");
   ASSERT_EQ(request.getMethod(), GET);
-  ASSERT_EQ(request.getBody(), "Hello World!");
+  ASSERT_EQ(request.getRawBody(), "Hello World!");
 }
 
 TEST(HTTPRequest, InvalidHeaders) {

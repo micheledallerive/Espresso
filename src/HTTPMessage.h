@@ -20,8 +20,8 @@ class HTTPMessage {
   bool hasHeader(const std::string& name);
   std::string getHeader(const std::string& name);
 
-  void setBody(std::string body);
-  std::string getBody();
+  void setRawBody(std::string body);
+  std::string getRawBody();
   std::string getVersion();
 
   std::string headersToString();
@@ -30,7 +30,7 @@ class HTTPMessage {
  protected:
   std::string version_;
   std::map<std::string, std::string> headers_;
-  std::string body_;
+  std::string rawBody_;
 };
 
 } // Espresso

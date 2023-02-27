@@ -16,16 +16,16 @@ HTTPRequest generateReq(HTTPMethod method, std::string path) {
 TEST(Router, Get) {
   Router router;
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(GET, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Post) {
@@ -34,13 +34,13 @@ TEST(Router, Post) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(POST, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Put) {
@@ -49,13 +49,13 @@ TEST(Router, Put) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(PUT, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Delete) {
@@ -64,13 +64,13 @@ TEST(Router, Delete) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(DELETE, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Patch) {
@@ -79,13 +79,13 @@ TEST(Router, Patch) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(PATCH, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Options) {
@@ -94,13 +94,13 @@ TEST(Router, Options) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(OPTIONS, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Head) {
@@ -109,13 +109,13 @@ TEST(Router, Head) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(HEAD, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Trace) {
@@ -124,13 +124,13 @@ TEST(Router, Trace) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(TRACE, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, Connect) {
@@ -139,13 +139,13 @@ TEST(Router, Connect) {
     response.send("Hello World!");
   });
   router.get("/test", [](HTTPRequest &request, HTTPResponse &response) {
-    response.send(request.getBody() + "Hello World!");
+    response.send(request.getRawBody() + "Hello World!");
   });
   HTTPRequest request = generateReq(CONNECT, "/test");
   HTTPResponse response;
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
   router.executeMatchingRoute(request, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 }
 
 TEST(Router, MultipleRoutes) {
@@ -162,15 +162,15 @@ TEST(Router, MultipleRoutes) {
   HTTPResponse response;
 
   router.executeMatchingRoute(request1, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 
   response = HTTPResponse();
   router.executeMatchingRoute(request2, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 
   response = HTTPResponse();
   router.executeMatchingRoute(request3, response);
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
 }
 
 TEST(Router, MultiHandlers) {
@@ -189,15 +189,15 @@ TEST(Router, MultiHandlers) {
 
   HTTPResponse response;
   router.executeMatchingRoute(request1, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 
   response = HTTPResponse();
   router.executeMatchingRoute(request2, response);
-  ASSERT_EQ(response.getBody(), "Hello World!");
+  ASSERT_EQ(response.getRawBody(), "Hello World!");
 
   response = HTTPResponse();
   router.executeMatchingRoute(request3, response);
-  ASSERT_EQ(response.getBody(), "");
+  ASSERT_EQ(response.getRawBody(), "");
 
 }
 
@@ -211,7 +211,7 @@ TEST(Router, UrlParams) {
   HTTPResponse response;
   router.executeMatchingRoute(request, response);
   ASSERT_EQ(response.getStatus(), 400);
-  ASSERT_EQ(response.getBody(), "123");
+  ASSERT_EQ(response.getRawBody(), "123");
   ASSERT_FALSE(request.params.empty());
   ASSERT_EQ(request.params.size(), 1);
 }

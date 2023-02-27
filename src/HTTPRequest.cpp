@@ -57,7 +57,7 @@ HTTPRequest::HTTPRequest(const std::string &request) {
     this->parseCookies_(this->getHeader("Cookie"));
   }
 
-  this->body_ = std::move(body);
+  this->rawBody_ = std::move(body);
 }
 
 HTTPRequest::~HTTPRequest() = default;
