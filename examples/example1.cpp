@@ -3,6 +3,7 @@
 //
 
 #include "Server.h"
+#include "middleware/FormDataMiddleware.h"
 #include <iostream>
 
 using namespace std;
@@ -10,6 +11,8 @@ using namespace Espresso;
 
 int main() {
   Espresso::Server server;
+
+  server.middlewares.use(FormDataMiddleware());
 
   server.middlewares.use([](HTTPRequest &request,
                             HTTPResponse &response,
@@ -26,6 +29,10 @@ int main() {
                     [](HTTPRequest &request, HTTPResponse &response) {
                       response.send("Hello " + request.params["id"]);
                     });
+
+  server.router.post("/test", [](HTTPRequest &request, HTTPResponse &response) {
+    response.send(request.getRawBody());
+  });
 
   server.router.get("/*", [](HTTPRequest &request, HTTPResponse &response) {
     response.send("404");
