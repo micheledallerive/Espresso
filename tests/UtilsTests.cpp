@@ -74,4 +74,21 @@ TEST(Utils, URLDecode) {
   ASSERT_EQ(urlDecode("Hello%20World%25"), "Hello World%");
 }
 
+TEST(Utils, StringSplit) {
+  ASSERT_EQ(split("HelloxxWorld", "xx").size(), 2);
+  ASSERT_EQ(split("HelloxxWorld", "xx")[0], "Hello");
+  ASSERT_EQ(split("HelloxxWorld", "xx")[1], "World");
+
+  ASSERT_EQ(split("HelloxxWorldxx", "xx").size(), 2);
+  ASSERT_EQ(split("HelloxxWorldxx", "xx")[0], "Hello");
+  ASSERT_EQ(split("HelloxxWorldxx", "xx")[1], "World");
+
+  ASSERT_EQ(split("HelloooWorld", "oo").size(), 2);
+  ASSERT_EQ(split("HelloooWorld", "oo")[0], "Hell");
+  ASSERT_EQ(split("HelloooWorld", "oo")[1], "oWorld");
+
+  ASSERT_EQ(split("abcdefg", "xx").size(), 1);
+  ASSERT_EQ(split("abcdefg", "xx")[0], "abcdefg");
+}
+
 }

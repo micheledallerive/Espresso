@@ -22,6 +22,26 @@ std::vector<std::string> split(const std::string &s, char delim) {
   return elems;
 }
 
+std::vector<std::string> split(const std::string &s, const std::string &delim) {
+  std::vector<std::string> elems;
+  std::string item;
+  size_t last_occurrence = 0;
+  size_t occurrence = s.find(delim);
+  while (occurrence != std::string::npos) {
+    item = s.substr(last_occurrence, occurrence - last_occurrence);
+    if (!item.empty()) {
+      elems.push_back(item);
+    }
+    last_occurrence = occurrence + delim.length();
+    occurrence = s.find(delim, last_occurrence);
+  }
+  item = s.substr(last_occurrence);
+  if (!item.empty()) {
+    elems.push_back(item);
+  }
+  return elems;
+}
+
 std::string getUTCDate() {
   char out[30];
   time_t t = time(nullptr);
