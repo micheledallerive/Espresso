@@ -63,4 +63,15 @@ TEST(Utils, GetAbsolutePath) {
   ASSERT_EQ(getAbsolutePath("hello/test"), "/test/hello/test");
 }
 
+TEST(Utils, URLDecode) {
+  ASSERT_EQ(urlDecode("Hello"), "Hello");
+  ASSERT_EQ(urlDecode("Hello%20World"), "Hello World");
+  // test all the encoded characters
+  ASSERT_EQ(urlDecode("Hello%20World%21"), "Hello World!");
+  ASSERT_EQ(urlDecode("Hello%20World%22"), "Hello World\"");
+  ASSERT_EQ(urlDecode("Hello%20World%23"), "Hello World#");
+  ASSERT_EQ(urlDecode("Hello%20World%24"), "Hello World$");
+  ASSERT_EQ(urlDecode("Hello%20World%25"), "Hello World%");
+}
+
 }
