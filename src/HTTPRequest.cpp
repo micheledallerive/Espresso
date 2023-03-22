@@ -92,11 +92,11 @@ void HTTPRequest::parseCookies_(const std::string &cookiesString) {
                      }
                    });
 }
-JSON::JSONEntity *HTTPRequest::getJSON() {
+const JSON::JSONEntity &HTTPRequest::getJSON() {
   if (this->data.find("json") != this->data.end()) {
-    return std::any_cast<std::shared_ptr<JSON::JSONEntity>>(this->data["json"]).get();
+    return *std::any_cast<std::shared_ptr<JSON::JSONEntity>>(this->data["json"]);
   }
-  return nullptr;
+  throw std::runtime_error("No JSON data found");
 }
 
 } // Espresso
