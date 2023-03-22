@@ -8,7 +8,18 @@ set(SOURCES
         Router.cpp
         Server.cpp
         utils.cpp
-        PathRegex.cpp Route.cpp)
+        PathRegex.cpp Route.cpp
+
+        lib/json/JSONBase.cpp
+        lib/json/JSONLiteral.cpp
+        lib/json/JSONBoolean.cpp
+        lib/json/JSONNumber.cpp
+        lib/json/JSONArray.cpp
+        lib/json/JSONObject.cpp
+        lib/json/JSONEntity.cpp
+
+        middleware/JSONMiddleware.cpp
+        )
 
 set(HEADERS Cookies.h
         HTTPMessage.h

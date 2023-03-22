@@ -5,6 +5,7 @@
 #include <sstream>
 #include <utility>
 #include <iostream>
+#include <memory>
 
 #include "HTTPRequest.h"
 #include "HTTPMethod.h"
@@ -90,6 +91,12 @@ void HTTPRequest::parseCookies_(const std::string &cookiesString) {
                        this->cookies[key.substr(1)] = value;
                      }
                    });
+}
+const JSON::JSONEntity &HTTPRequest::getJSON() {
+  if (this->data.find("json") != this->data.end()) {
+    return *std::any_cast<std::shared_ptr<JSON::JSONEntity>>(this->data["json"]);
+  }
+  throw std::runtime_error("No JSON data found");
 }
 
 } // Espresso

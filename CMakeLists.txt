@@ -4,6 +4,8 @@ project(espresso)
 set(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_C_LINK_EXECUTABLE ${CMAKE_CXX_LINK_EXECUTABLE})
 
+enable_testing()
+
 # Add the src/ directory as a subdirectory
 add_subdirectory(src)
 add_subdirectory(tests)
