@@ -10,7 +10,7 @@
 
 namespace Espresso {
 
-Middleware JSONMiddleware = [](HTTPRequest &req, HTTPResponse &res, auto next) {
+MiddlewareFunc JSONMiddleware = [](HTTPRequest &req, HTTPResponse &res, auto next) {
   if (req.hasHeader("Content-Type") &&
       req.getHeader("Content-Type") == "application/json") {
     req.data["json"] = JSON::JSONEntity::parse(req.getBody());
