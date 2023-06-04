@@ -7,24 +7,18 @@ set(TESTS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/)
 configure_file(config.h.in config.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+find_package(GTest REQUIRED)
+
+# discover all tests .cpp files with tests
+file(GLOB_RECURSE TESTS_FILES ${TESTS_PATH} "*.cpp")
 
 add_executable(
         espresso_test
-        CookiesTests.cpp HTTPMessageTests.cpp HTTPMethodTests.cpp HTTPRequestTests.cpp HTTPResponseTests.cpp MiddlewareTests.cpp ServerTests.cpp UtilsTests.cpp RouterTests.cpp PathRegexTests.cpp lib/json/JSONPrimitiveTests.cpp lib/json/JSONArrayTests.cpp lib/json/JSONObjectTests.cpp lib/json/JSONParseTests.cpp lib/json/JSONBenchmarkTest.cpp)
-
-target_link_libraries(
-        espresso_test
-        espresso
-        GTest::gtest_main
+        ${TESTS_FILES}
 )
+target_link_libraries(espresso_test PRIVATE espresso GTest::GTest GTest::Main)
+
+add_dependencies(espresso_test espresso)
 
 include(GoogleTest)
 gtest_discover_tests(espresso_test)
