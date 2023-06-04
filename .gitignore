@@ -1,4 +1,5 @@
 .idea
 Testing
 build*/
+docs
 !.github/actions/build/
