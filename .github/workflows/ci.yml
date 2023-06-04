@@ -14,16 +14,43 @@ jobs:
     name: Build the project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        uses: ./.github/actions/build
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up Conan
+        uses: conan-io/action-setup@v1
+        
+      - name: Install dependencies
+        run: |
+          mkdir build
+          cd build
+          conan install .. --build=missing
+          
+      - name: Build project
+        run: |
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build . --config Release -- -j4
+          
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build
+
   test:
     name: Run GTests
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        uses: ./.github/actions/build
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: build
       - name: Run Test
-        run: cd build && ctest -V
+        run: |
+          cd build
+          ctest -C Release -j4 --output-on-failure
