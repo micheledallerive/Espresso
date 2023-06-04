@@ -4,13 +4,13 @@
 
 #include "Server.h"
 #include "requests/HTTPRequest.h"
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <netinet/in.h>
+#include <stdexcept>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <stdexcept>
-#include <netinet/in.h>
-#include <iostream>
-#include <functional>
-#include <memory>
 #include <utility>
 
 namespace Espresso {
@@ -57,15 +57,15 @@ void Server::listen(unsigned short int port,
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
   address.sin_port = htons(this->port_);
-  if (::bind(this->socket_, (struct sockaddr *) &address, sizeof(address))
-      < 0) {
+  if (::bind(this->socket_, (struct sockaddr *)&address, sizeof(address)) < 0) {
     throw std::runtime_error("Could not bind socket");
   }
   if (::listen(this->socket_, this->max_connections_) < 0) {
     throw std::runtime_error("Could not listen on socket");
   }
 
-  if (callback) callback();
+  if (callback)
+    callback();
 
   while (true) {
     int client_socket = accept(this->socket_, nullptr, nullptr);
@@ -90,10 +90,10 @@ void Server::handle_connection_(int client_socket) {
 
   this->router.executeMatchingRoute(request, response);
 
-  send(client_socket, response.toString().c_str(),
-       response.toString().length(), 0);
+  send(client_socket, response.toString().c_str(), response.toString().length(),
+       0);
 
   shutdown(client_socket, SHUT_RDWR);
   close(client_socket);
 }
-} // Espresso
+} // namespace Espresso

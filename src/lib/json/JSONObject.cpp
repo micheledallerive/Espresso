@@ -3,10 +3,10 @@
 //
 
 #include "lib/json/JSONObject.h"
-#include "lib/json/expections.h"
 #include "lib/json/JSONEntity.h"
-#include <sstream>
+#include "lib/json/expections.h"
 #include <memory>
+#include <sstream>
 
 namespace Espresso::JSON {
 
@@ -41,10 +41,8 @@ std::shared_ptr<JSONEntity> JSONObject::fromJSON(const std::string &json) {
       key += *it;
       ++it;
     }
-    if (it == objectContent.end()
-        || key.empty()
-        || key[0] != '"'
-        || key[key.size() - 1] != '"') {
+    if (it == objectContent.end() || key.empty() || key[0] != '"' ||
+        key[key.size() - 1] != '"') {
       throw JSONParseException("Invalid JSON object (key error): " + json);
     }
     key = key.substr(1, key.size() - 2);
@@ -57,4 +55,4 @@ std::shared_ptr<JSONEntity> JSONObject::fromJSON(const std::string &json) {
   return object;
 }
 
-} // JSON
+} // namespace Espresso::JSON

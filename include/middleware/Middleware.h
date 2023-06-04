@@ -5,10 +5,10 @@
 #ifndef ESPRESSO_SRC_MIDDLEWARE_H_
 #define ESPRESSO_SRC_MIDDLEWARE_H_
 
-#include <functional>
 #include "middleware/BaseMiddleware.h"
 #include "requests/HTTPRequest.h"
 #include "requests/HTTPResponse.h"
+#include <functional>
 
 namespace Espresso {
 
@@ -17,7 +17,7 @@ using MiddlewareFunc = std::function<void(HTTPRequest &request,
                                           const std::function<void()> &next)>;
 
 class MiddlewareList {
- public:
+public:
   MiddlewareList();
   virtual ~MiddlewareList();
   void use(const MiddlewareFunc &middleware);
@@ -29,11 +29,10 @@ class MiddlewareList {
 
   void run(HTTPRequest &request, HTTPResponse &response);
 
- private:
+private:
   std::vector<std::pair<std::string, MiddlewareFunc>> middlewares_;
 };
 
-} // Espresso
+}// namespace Espresso
 
-
-#endif //ESPRESSO_SRC_MIDDLEWARE_H_
+#endif//ESPRESSO_SRC_MIDDLEWARE_H_

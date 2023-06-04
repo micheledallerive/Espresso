@@ -8,17 +8,28 @@ namespace Espresso {
 
 std::string methodToString(HTTPMethod method) {
   switch (method) {
-    case GET:return "GET";
-    case POST:return "POST";
-    case PUT:return "PUT";
-    case DELETE:return "DELETE";
-    case HEAD:return "HEAD";
-    case OPTIONS:return "OPTIONS";
-    case PATCH:return "PATCH";
-    case TRACE:return "TRACE";
-    case CONNECT:return "CONNECT";
-    case ALL:return "ALL";
-    default:return "UNDEFINED";
+  case GET:
+    return "GET";
+  case POST:
+    return "POST";
+  case PUT:
+    return "PUT";
+  case DELETE:
+    return "DELETE";
+  case HEAD:
+    return "HEAD";
+  case OPTIONS:
+    return "OPTIONS";
+  case PATCH:
+    return "PATCH";
+  case TRACE:
+    return "TRACE";
+  case CONNECT:
+    return "CONNECT";
+  case ALL:
+    return "ALL";
+  default:
+    return "UNDEFINED";
   }
 }
 
@@ -50,4 +61,4 @@ HTTPMethod stringToMethod(std::string method) {
   }
 }
 
-} // Espresso
+}// namespace Espresso

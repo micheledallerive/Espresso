@@ -10,7 +10,7 @@
 namespace Espresso {
 
 class Cookie {
- public:
+public:
   Cookie();
   Cookie(std::string name, std::string value);
   Cookie(std::string name,
@@ -31,6 +31,6 @@ class Cookie {
   [[nodiscard]] std::string toString() const;
 };
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_COOKIES_H_
+#endif//ESPRESSO_SRC_COOKIES_H_

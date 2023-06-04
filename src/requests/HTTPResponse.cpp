@@ -2,12 +2,12 @@
 // Created by michele on 08.01.23.
 //
 
-#include <sstream>
-#include <fstream>
-#include <iostream>
 #include "requests/HTTPResponse.h"
 #include "Server.h"
 #include "utils.h"
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 namespace Espresso {
 
@@ -74,8 +74,7 @@ std::unordered_map<int, std::string> HTTP_REASONS = {
     {507, "Insufficient Storage"},
     {508, "Loop Detected"},
     {510, "Not Extended"},
-    {511, "Network Authentication Required"}
-};
+    {511, "Network Authentication Required"}};
 
 HTTPResponse::HTTPResponse() : HTTPMessage() {
   this->status_ = 200;
@@ -97,14 +96,10 @@ HTTPResponse &HTTPResponse::setStatus(int status) {
   return *this;
 }
 
-int HTTPResponse::getStatus() const {
-  return this->status_;
-}
+int HTTPResponse::getStatus() const { return this->status_; }
 
 std::string HTTPResponse::toString() {
-  std::string response =
-      this->getVersion() + " " + std::to_string(this->status_) + " "
-          + HTTP_REASONS[this->status_] + "\r\n";
+  std::string response = this->getVersion() + " " + std::to_string(this->status_) + " " + HTTP_REASONS[this->status_] + "\r\n";
   response += this->headersToString();
   for (const auto &it : this->cookies_) {
     response += "Set-Cookie: " + it.second.toString() + "\r\n";
@@ -137,8 +132,7 @@ void HTTPResponse::downloadFile(const std::string &path,
                                 const std::string &filename) {
   this->sendFile(path);
   std::string disposition =
-      "attachment"
-          + (filename.empty() ? "" : "; filename=\"" + filename + "\"");
+      "attachment" + (filename.empty() ? "" : "; filename=\"" + filename + "\"");
   this->setHeader("Content-Disposition", disposition);
 }
 
@@ -159,4 +153,4 @@ void HTTPResponse::deleteCookie(const std::string &name) {
   this->setCookie(Cookie(name, "", "", "", 0, false, false));
 }
 
-} // Espresso
+}// namespace Espresso

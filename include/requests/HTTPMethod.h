@@ -26,6 +26,6 @@ std::string methodToString(HTTPMethod method);
 
 HTTPMethod stringToMethod(std::string method);
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_HTTPMETHOD_H_
+#endif//ESPRESSO_SRC_HTTPMETHOD_H_

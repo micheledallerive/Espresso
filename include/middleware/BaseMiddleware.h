@@ -8,11 +8,11 @@
 #include "requests/HTTPResponse.h"
 namespace Espresso {
 class BaseMiddleware {
- public:
+public:
   virtual void handle(HTTPRequest &request,
                       HTTPResponse &response,
                       const std::function<void()> &next) = 0;
 };
-}
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_MIDDLEWARE_BASEMIDDLEWARE_H_
+#endif//ESPRESSO_SRC_MIDDLEWARE_BASEMIDDLEWARE_H_

@@ -3,10 +3,10 @@
 //
 
 #include <algorithm>
-#include <vector>
-#include <string>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "Server.h"
 
@@ -26,26 +26,29 @@ std::string getUTCDate() {
   time_t t = time(nullptr);
   struct tm *tmp = gmtime(&t);
   const char *format = "%a, %d %b %Y %T GMT";
-  if (!tmp) return "";
-  if (strftime(out, sizeof(out), format, tmp) == 0) return "";
+  if (!tmp)
+    return "";
+  if (strftime(out, sizeof(out), format, tmp) == 0)
+    return "";
   return out;
 }
 
 std::string getAbsolutePath(const std::string &path) {
-  return path[0] == '/' ? path : (
-      any_cast<std::string>(Espresso::server_settings["BASE_PATH"]) + path);
+  return path[0] == '/'
+             ? path
+             : (any_cast<std::string>(Espresso::server_settings["BASE_PATH"]) +
+                path);
 }
 
-void splitListOfPairs(const std::string &line,
-                      char delim,
-                      char pairDelim,
-                      std::function<void(const std::string &,
-                                         const std::string &)> callback) {
+void splitListOfPairs(
+    const std::string &line, char delim, char pairDelim,
+    std::function<void(const std::string &, const std::string &)> callback) {
   std::istringstream iss(line);
   std::string values;
 
   while (std::getline(iss, values, delim)) {
-    if (values.empty()) continue;
+    if (values.empty())
+      continue;
 
     std::string key, value;
 
@@ -55,10 +58,11 @@ void splitListOfPairs(const std::string &line,
 
     key = values.substr(0, pos);
     value = values.substr(pos + 1);
-    if (key.empty()) continue;
+    if (key.empty())
+      continue;
 
     callback(key, value);
   }
 }
 
-}
+} // namespace Espresso

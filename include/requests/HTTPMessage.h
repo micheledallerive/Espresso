@@ -2,8 +2,8 @@
 // Created by michele on 08.01.23.
 //
 
-#include<string>
-#include<map>
+#include <map>
+#include <string>
 
 #ifndef ESPRESSO_LIB_HTTPMESSAGE_H_
 #define ESPRESSO_LIB_HTTPMESSAGE_H_
@@ -11,14 +11,14 @@
 namespace Espresso {
 
 class HTTPMessage {
- public:
+public:
   HTTPMessage();
-  HTTPMessage(std::string version, const std::string& headers, std::string body);
+  HTTPMessage(std::string version, const std::string &headers, std::string body);
   virtual ~HTTPMessage();
 
-  void setHeader(const std::string& name, const std::string& value);
-  bool hasHeader(const std::string& name);
-  std::string getHeader(const std::string& name);
+  void setHeader(const std::string &name, const std::string &value);
+  bool hasHeader(const std::string &name);
+  std::string getHeader(const std::string &name);
 
   void setBody(std::string body);
   std::string getBody();
@@ -26,13 +26,14 @@ class HTTPMessage {
 
   std::string headersToString();
 
-  void parseHeaders_(const std::string& headers);
- protected:
+  void parseHeaders_(const std::string &headers);
+
+protected:
   std::string version_;
   std::map<std::string, std::string> headers_;
   std::string body_;
 };
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_LIB_HTTPMESSAGE_H_
+#endif//ESPRESSO_LIB_HTTPMESSAGE_H_

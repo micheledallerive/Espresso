@@ -5,19 +5,19 @@
 #ifndef ESPRESSO_SRC_ROUTER_H_
 #define ESPRESSO_SRC_ROUTER_H_
 
-#include <string>
 #include <functional>
+#include <string>
 #include <vector>
 
+#include "Route.h"
 #include "requests/HTTPMethod.h"
 #include "requests/HTTPRequest.h"
 #include "requests/HTTPResponse.h"
-#include "Route.h"
 
 namespace Espresso {
 
 class Router {
- public:
+public:
   Router();
   ~Router();
 
@@ -44,10 +44,11 @@ class Router {
                 const RouteCallback &callback);
   void executeMatchingRoute(HTTPRequest &req,
                             HTTPResponse &res);
- private:
+
+private:
   std::vector<Route> routes_;
 };
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_ROUTER_H_
+#endif//ESPRESSO_SRC_ROUTER_H_

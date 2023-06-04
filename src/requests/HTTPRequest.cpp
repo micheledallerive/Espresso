@@ -2,24 +2,21 @@
 // Created by michele on 08.01.23.
 //
 
-#include <sstream>
-#include <utility>
 #include <iostream>
 #include <memory>
+#include <sstream>
+#include <utility>
 
-#include "requests/HTTPRequest.h"
 #include "requests/HTTPMethod.h"
+#include "requests/HTTPRequest.h"
 #include "utils.h"
 
 namespace Espresso {
 
-HTTPRequest::HTTPRequest(HTTPMethod method,
-                         std::string path,
-                         std::string version,
-                         const std::string &headers,
-                         std::string body) : HTTPMessage(std::move(version),
-                                                         headers,
-                                                         std::move(body)) {
+HTTPRequest::HTTPRequest(HTTPMethod method, std::string path,
+                         std::string version, const std::string &headers,
+                         std::string body)
+    : HTTPMessage(std::move(version), headers, std::move(body)) {
   this->method_ = method;
   this->path_ = std::move(path);
 }
@@ -63,18 +60,12 @@ HTTPRequest::HTTPRequest(const std::string &request) {
 
 HTTPRequest::~HTTPRequest() = default;
 
-HTTPMethod HTTPRequest::getMethod() {
-  return this->method_;
-}
+HTTPMethod HTTPRequest::getMethod() { return this->method_; }
 
-std::string HTTPRequest::getPath() {
-  return this->path_;
-}
+std::string HTTPRequest::getPath() { return this->path_; }
 
 void HTTPRequest::parseQuery_(const std::string &queryString) {
-  splitListOfPairs(queryString,
-                   '&',
-                   '=',
+  splitListOfPairs(queryString, '&', '=',
                    [&](const std::string &key, const std::string &value) {
                      if (!key.empty()) {
                        this->query[key] = value;
@@ -83,9 +74,7 @@ void HTTPRequest::parseQuery_(const std::string &queryString) {
 }
 
 void HTTPRequest::parseCookies_(const std::string &cookiesString) {
-  splitListOfPairs(" " + cookiesString,
-                   ';',
-                   '=',
+  splitListOfPairs(" " + cookiesString, ';', '=',
                    [&](const std::string &key, const std::string &value) {
                      if (key.length() > 1) {
                        this->cookies[key.substr(1)] = value;
@@ -94,9 +83,10 @@ void HTTPRequest::parseCookies_(const std::string &cookiesString) {
 }
 const JSON::JSONEntity &HTTPRequest::getJSON() {
   if (this->data.find("json") != this->data.end()) {
-    return *std::any_cast<std::shared_ptr<JSON::JSONEntity>>(this->data["json"]);
+    return *std::any_cast<std::shared_ptr<JSON::JSONEntity>>(
+        this->data["json"]);
   }
   throw std::runtime_error("No JSON data found");
 }
 
-} // Espresso
+}// namespace Espresso

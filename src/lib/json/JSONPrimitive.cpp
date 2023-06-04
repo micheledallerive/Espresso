@@ -4,5 +4,4 @@
 
 #include "lib/json/JSONPrimitive.h"
 
-namespace Espresso::JSON {
-} // JSON
+namespace Espresso::JSON {} // namespace Espresso::JSON

@@ -3,14 +3,15 @@
 //
 
 #include "lib/json/JSONArray.h"
-#include "lib/json/expections.h"
 #include "lib/json/JSONEntity.h"
+#include "lib/json/expections.h"
 #include <sstream>
 
 namespace Espresso::JSON {
 
 std::string JSONArray::toJSON() const {
-  if (this->empty()) return "[ ]";
+  if (this->empty())
+    return "[ ]";
   std::stringstream json;
   json << "[";
   for (auto it = this->begin(); it != this->end(); ++it) {
@@ -40,4 +41,4 @@ std::shared_ptr<JSONEntity> JSONArray::fromJSON(const std::string &json) {
   return array;
 }
 
-} // JSON
+} // namespace Espresso::JSON

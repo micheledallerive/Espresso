@@ -5,15 +5,15 @@
 #ifndef ESPRESSO_SRC_HTTPREQUEST_H_
 #define ESPRESSO_SRC_HTTPREQUEST_H_
 
-#include <unordered_map>
-#include <any>
 #include "HTTPMessage.h"
 #include "HTTPMethod.h"
 #include "lib/json/JSONEntity.h"
+#include <any>
+#include <unordered_map>
 namespace Espresso {
 
 class HTTPRequest : public HTTPMessage {
- public:
+public:
   HTTPRequest(HTTPMethod method,
               std::string path,
               std::string version,
@@ -29,13 +29,14 @@ class HTTPRequest : public HTTPMessage {
   std::unordered_map<std::string, std::string> cookies;
   std::unordered_map<std::string, std::any> data;
   const JSON::JSONEntity &getJSON();
- private:
+
+private:
   HTTPMethod method_;
   std::string path_;
   void parseQuery_(const std::string &queryString);
   void parseCookies_(const std::string &cookiesString);
 };
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_HTTPREQUEST_H_
+#endif//ESPRESSO_SRC_HTTPREQUEST_H_

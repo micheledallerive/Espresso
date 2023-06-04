@@ -5,17 +5,17 @@
 #ifndef ESPRESSO_SRC_HTTPRESPONSE_H_
 #define ESPRESSO_SRC_HTTPRESPONSE_H_
 
+#include "Cookies.h"
+#include "HTTPMessage.h"
 #include <memory>
 #include <unordered_map>
-#include "HTTPMessage.h"
-#include "Cookies.h"
 
 namespace Espresso {
 
 extern std::unordered_map<int, std::string> HTTP_REASONS;
 
 class HTTPResponse : public HTTPMessage {
- public:
+public:
   HTTPResponse();
   ~HTTPResponse() override;
   std::string toString();
@@ -32,12 +32,13 @@ class HTTPResponse : public HTTPMessage {
   void setCookie(const Cookie &cookie);
   void setCookie(const std::string &name, const std::string &value);
   void deleteCookie(const std::string &name);
- private:
+
+private:
   int status_;
   void addDefaultHeaders_();
   std::map<std::string, Cookie> cookies_;
 };
 
-} // Espresso
+}// namespace Espresso
 
-#endif //ESPRESSO_SRC_HTTPRESPONSE_H_
+#endif//ESPRESSO_SRC_HTTPRESPONSE_H_

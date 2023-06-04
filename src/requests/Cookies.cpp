@@ -15,13 +15,9 @@ Cookie::Cookie(std::string name, std::string value) : Cookie() {
   this->value = std::move(value);
 }
 
-Cookie::Cookie(std::string name,
-               std::string value,
-               std::string domain,
-               std::string path,
-               int max_age,
-               bool secure,
-               bool http_only) : Cookie() {
+Cookie::Cookie(std::string name, std::string value, std::string domain,
+               std::string path, int max_age, bool secure, bool http_only)
+    : Cookie() {
   this->name = std::move(name);
   this->value = std::move(value);
   this->domain = std::move(domain);
@@ -55,4 +51,4 @@ std::string Cookie::toString() const {
   return cookie_string;
 }
 
-} // Espresso
+}// namespace Espresso

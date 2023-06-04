@@ -7,9 +7,7 @@
 
 namespace Espresso::JSON {
 
-std::string JSONBoolean::toJSON() const {
-  return value_ ? "true" : "false";
-}
+std::string JSONBoolean::toJSON() const { return value_ ? "true" : "false"; }
 std::shared_ptr<JSONBoolean> JSONBoolean::fromJSON(const std::string &json) {
   if (json == "true") {
     return std::make_shared<JSONBoolean>(true);
@@ -19,4 +17,4 @@ std::shared_ptr<JSONBoolean> JSONBoolean::fromJSON(const std::string &json) {
   throw JSONParseException("Invalid JSON boolean");
 }
 
-}
+} // namespace Espresso::JSON

@@ -4,8 +4,4 @@
 
 #include "lib/json/JSONEntity.h"
 
-namespace Espresso::JSON {
-
-
-
-} // JSON
+namespace Espresso::JSON {} // namespace Espresso::JSON

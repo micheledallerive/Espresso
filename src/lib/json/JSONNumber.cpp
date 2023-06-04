@@ -2,9 +2,9 @@
 // Created by michele on 24.02.23.
 //
 
-#include <iomanip>
 #include "lib/json/JSONNumber.h"
 #include "lib/json/expections.h"
+#include <iomanip>
 
 namespace Espresso::JSON {
 
@@ -20,4 +20,4 @@ std::shared_ptr<JSONNumber> JSONNumber::fromJSON(const std::string &json) {
     throw JSONParseException("Invalid JSON number");
   }
 }
-} // JSON
+} // namespace Espresso::JSON

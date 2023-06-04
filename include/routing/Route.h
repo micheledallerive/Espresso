@@ -5,10 +5,10 @@
 #ifndef ESPRESSO_SRC_ROUTE_H_
 #define ESPRESSO_SRC_ROUTE_H_
 
-#include <functional>
-#include <string>
 #include "requests/HTTPRequest.h"
 #include "requests/HTTPResponse.h"
+#include <functional>
+#include <string>
 
 namespace Espresso {
 
@@ -16,7 +16,7 @@ using RouteCallback = std::function<void(HTTPRequest &request,
                                          HTTPResponse &response)>;
 
 class Route {
- public:
+public:
   Route(const std::string &path, HTTPMethod method, RouteCallback callback);
   ~Route();
 
@@ -26,5 +26,5 @@ class Route {
   RouteCallback callback;
 };
 
-}
-#endif //ESPRESSO_SRC_ROUTE_H_
+}// namespace Espresso
+#endif//ESPRESSO_SRC_ROUTE_H_

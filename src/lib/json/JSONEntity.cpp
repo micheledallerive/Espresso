@@ -2,10 +2,10 @@
 // Created by michele on 25.02.23.
 //
 #include "lib/json/JSONEntity.h"
-#include "lib/json/JSONNumber.h"
+#include "lib/json/JSONArray.h"
 #include "lib/json/JSONBoolean.h"
 #include "lib/json/JSONLiteral.h"
-#include "lib/json/JSONArray.h"
+#include "lib/json/JSONNumber.h"
 #include "lib/json/JSONObject.h"
 #include "lib/json/expections.h"
 
@@ -14,7 +14,8 @@
 
 namespace Espresso::JSON {
 
-std::shared_ptr<JSONEntity> JSONEntity::parse(const std::string &json, bool removeSpaces) {
+std::shared_ptr<JSONEntity> JSONEntity::parse(const std::string &json,
+                                              bool removeSpaces) {
   if (removeSpaces) {
     std::stringstream ss;
     bool inWord = false;
@@ -83,4 +84,4 @@ std::string JSONEntity::nextToken(std::string::iterator start,
   return result.str();
 }
 
-}
+} // namespace Espresso::JSON

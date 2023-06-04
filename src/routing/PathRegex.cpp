@@ -2,21 +2,20 @@
 // Created by michele on 15.01.23.
 //
 
-#include <regex>
 #include "routing/PathRegex.h"
 #include "utils.h"
+#include <regex>
 
 namespace Espresso {
 
-bool PathRegex::urlsMatch(const std::string &schema,
-                          const std::string &url) {
+bool PathRegex::urlsMatch(const std::string &schema, const std::string &url) {
   std::regex regex(schema);
   return std::regex_match(url, regex);
 }
 
-bool PathRegex::retrieveParams(const Route &route,
-                               const std::string &url,
-                               std::unordered_map<std::string, std::string> &params) {
+bool PathRegex::retrieveParams(
+    const Route &route, const std::string &url,
+    std::unordered_map<std::string, std::string> &params) {
   std::regex regex(route.path);
   std::smatch match;
 
@@ -37,7 +36,8 @@ std::string PathRegex::pathToRegex(const std::string &path) {
   std::vector<std::string> parts = split(path, '/');
   std::string regexPath;
   for (const auto &part : parts) {
-    if (part.empty()) continue;
+    if (part.empty())
+      continue;
 
     std::string regex;
     if (part[0] == ':') {
@@ -47,13 +47,17 @@ std::string PathRegex::pathToRegex(const std::string &path) {
     } else {
       for (const char &c : part) {
         switch (c) {
-          case '*':regex += ".*";
-            break;
-          case '?':regex += ".?";
-            break;
-          case '+':regex += ".+";
-            break;
-          default:regex += c;
+        case '*':
+          regex += ".*";
+          break;
+        case '?':
+          regex += ".?";
+          break;
+        case '+':
+          regex += ".+";
+          break;
+        default:
+          regex += c;
         }
       }
     }
@@ -62,4 +66,4 @@ std::string PathRegex::pathToRegex(const std::string &path) {
   return regexPath;
 }
 
-} // Espresso
+}// namespace Espresso

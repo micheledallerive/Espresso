@@ -52,26 +52,21 @@ void Router::all(const std::string &path, RouteCallback callback) {
   this->addRoute((path), HTTPMethod::ALL, std::move(callback));
 }
 
-void Router::addRoute(const std::string &path,
-                      HTTPMethod method,
+void Router::addRoute(const std::string &path, HTTPMethod method,
                       RouteCallback callback) {
-  this->routes_.emplace_back(path, method,
-                             std::move(callback));
+  this->routes_.emplace_back(path, method, std::move(callback));
 }
 
-void Router::addRoute(const std::vector<std::string> &paths,
-                      HTTPMethod method,
+void Router::addRoute(const std::vector<std::string> &paths, HTTPMethod method,
                       const RouteCallback &callback) {
   for (auto &path : paths) {
     this->addRoute((path), method, callback);
   }
 }
 
-void Router::executeMatchingRoute(HTTPRequest &req,
-                                  HTTPResponse &res) {
+void Router::executeMatchingRoute(HTTPRequest &req, HTTPResponse &res) {
   for (auto &route : this->routes_) {
-    if (req.getMethod() == route.method
-        && PathRegex::urlsMatch(route.path, req.getPath())) {
+    if (req.getMethod() == route.method && PathRegex::urlsMatch(route.path, req.getPath())) {
       PathRegex::retrieveParams(route, req.getPath(), req.params);
       route.callback(req, res);
       return;
@@ -79,12 +74,12 @@ void Router::executeMatchingRoute(HTTPRequest &req,
   }
 }
 
-void Router::route(const std::string &path,
-                   const std::vector<std::pair<HTTPMethod,
-                                               RouteCallback>> &callbacks) {
+void Router::route(
+    const std::string &path,
+    const std::vector<std::pair<HTTPMethod, RouteCallback>> &callbacks) {
   for (auto &pair : callbacks) {
     this->addRoute(path, pair.first, pair.second);
   }
 }
 
-} // Espresso
+}// namespace Espresso

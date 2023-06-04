@@ -4,17 +4,16 @@
 
 #include "requests/HTTPMessage.h"
 
-#include <utility>
+#include "utils.h"
 #include <iostream>
 #include <sstream>
-#include "utils.h"
+#include <utility>
 
 namespace Espresso {
 
 HTTPMessage::HTTPMessage() = default;
 
-HTTPMessage::HTTPMessage(std::string version,
-                         const std::string &headers,
+HTTPMessage::HTTPMessage(std::string version, const std::string &headers,
                          std::string body) {
   this->version_ = std::move(version);
   this->parseHeaders_(headers);
@@ -24,12 +23,12 @@ HTTPMessage::HTTPMessage(std::string version,
 HTTPMessage::~HTTPMessage() = default;
 
 void HTTPMessage::parseHeaders_(const std::string &headers) {
-  splitListOfPairs(headers,
-                   '\n',
-                   ':',
+  splitListOfPairs(headers, '\n', ':',
                    [&](const std::string &key, std::string value) {
-                     if (value.back() == '\r') value.pop_back();
-                     if (value.front() == ' ') value.erase(0, 1);
+                     if (value.back() == '\r')
+                       value.pop_back();
+                     if (value.front() == ' ')
+                       value.erase(0, 1);
                      if (!key.empty() && !value.empty()) {
                        this->headers_[key] = value;
                      }
@@ -48,17 +47,11 @@ std::string HTTPMessage::getHeader(const std::string &name) {
   return this->headers_.at(name);
 }
 
-void HTTPMessage::setBody(std::string body) {
-  this->body_ = std::move(body);
-}
+void HTTPMessage::setBody(std::string body) { this->body_ = std::move(body); }
 
-std::string HTTPMessage::getBody() {
-  return this->body_;
-}
+std::string HTTPMessage::getBody() { return this->body_; }
 
-std::string HTTPMessage::getVersion() {
-  return this->version_;
-}
+std::string HTTPMessage::getVersion() { return this->version_; }
 
 std::string HTTPMessage::headersToString() {
   std::string headers;
@@ -68,4 +61,4 @@ std::string HTTPMessage::headersToString() {
   return headers;
 }
 
-} // Espresso
+}// namespace Espresso
