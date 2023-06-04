@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 
 #include <utility>
-#include "routing/Router.h"
+#include "routing/router.h"
 
 namespace Espresso {
 

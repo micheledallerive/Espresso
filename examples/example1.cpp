@@ -2,9 +2,9 @@
 // Created by michele on 15.01.23.
 //
 
-#include "Server.h"
-#include "middleware/JSONMiddleware.h"
-#include "lib/json/JSONEntity.h"
+#include "server.h"
+#include "middleware/json_middleware.h"
+#include "lib/json/json_entity.h"
 #include <iostream>
 
 using namespace std;

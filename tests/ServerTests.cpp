@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "Server.h"
+#include "server.h"
 
 namespace Espresso {
 

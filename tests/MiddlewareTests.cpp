@@ -2,7 +2,7 @@
 // Created by michele on 10.01.23.
 //
 #include <gtest/gtest.h>
-#include "middleware/Middleware.h"
+#include "middleware/middleware.h"
 
 namespace Espresso {
 TEST(MiddlewareList, SimpleUse) {

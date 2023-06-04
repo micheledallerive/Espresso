@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "requests/HTTPRequest.h"
+#include "requests/http_request.h"
 
 namespace Espresso {
 

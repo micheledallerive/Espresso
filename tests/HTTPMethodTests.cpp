@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "requests/HTTPMethod.h"
+#include "requests/http_method.h"
 
 TEST(HTTPMethod, MethodToString) {
   EXPECT_EQ("GET", Espresso::methodToString(Espresso::GET));

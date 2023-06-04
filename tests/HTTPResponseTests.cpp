@@ -3,9 +3,9 @@
 //
 
 #include <gtest/gtest.h>
-#include "requests/HTTPResponse.h"
+#include "requests/http_response.h"
 #include "utils.h"
-#include "Server.h"
+#include "server.h"
 #include "config.h"
 
 namespace Espresso {

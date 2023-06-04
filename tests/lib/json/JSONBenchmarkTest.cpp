@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "lib/json/JSONEntity.h"
+#include "lib/json/json_entity.h"
 
 using namespace Espresso::JSON;
 

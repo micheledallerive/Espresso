@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "Server.h"
+#include "server.h"
 
 namespace Espresso {
 std::vector<std::string> split(const std::string &s, char delim) {
