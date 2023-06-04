@@ -5,7 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include "HTTPResponse.h"
+#include "requests/HTTPResponse.h"
 #include "Server.h"
 #include "utils.h"
 

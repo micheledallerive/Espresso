@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "PathRegex.h"
+#include "routing/PathRegex.h"
 
 using namespace Espresso;
 

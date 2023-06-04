@@ -4,8 +4,8 @@
 
 #ifndef ESPRESSO_SRC_MIDDLEWARE_BASEMIDDLEWARE_H_
 #define ESPRESSO_SRC_MIDDLEWARE_BASEMIDDLEWARE_H_
-#include "HTTPRequest.h"
-#include "HTTPResponse.h"
+#include "requests/HTTPRequest.h"
+#include "requests/HTTPResponse.h"
 namespace Espresso {
 class BaseMiddleware {
  public:

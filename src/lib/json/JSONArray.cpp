@@ -2,9 +2,9 @@
 // Created by michele on 25.02.23.
 //
 
-#include "JSONArray.h"
-#include "expections.h"
-#include "JSONEntity.h"
+#include "lib/json/JSONArray.h"
+#include "lib/json/expections.h"
+#include "lib/json/JSONEntity.h"
 #include <sstream>
 
 namespace Espresso::JSON {

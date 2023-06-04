@@ -9,9 +9,9 @@
 #include <functional>
 #include <vector>
 
-#include "HTTPMethod.h"
-#include "HTTPRequest.h"
-#include "HTTPResponse.h"
+#include "requests/HTTPMethod.h"
+#include "requests/HTTPRequest.h"
+#include "requests/HTTPResponse.h"
 #include "Route.h"
 
 namespace Espresso {

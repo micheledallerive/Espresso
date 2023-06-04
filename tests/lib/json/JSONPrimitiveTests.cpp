@@ -3,8 +3,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <lib/json/JSONLiteral.h>
-#include <lib/json/JSONBoolean.h>
+#include "lib/json/JSONLiteral.h"
+#include "lib/json/JSONBoolean.h"
 #include "lib/json/JSONNumber.h"
 
 using namespace Espresso::JSON;

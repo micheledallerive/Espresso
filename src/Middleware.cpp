@@ -2,9 +2,9 @@
 // Created by michele on 08.01.23.
 //
 
-#include "Middleware.h"
+#include "middleware/Middleware.h"
 #include "utils.h"
-#include "PathRegex.h"
+#include "routing/PathRegex.h"
 
 namespace Espresso {
 

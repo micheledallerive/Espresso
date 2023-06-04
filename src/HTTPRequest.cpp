@@ -7,8 +7,8 @@
 #include <iostream>
 #include <memory>
 
-#include "HTTPRequest.h"
-#include "HTTPMethod.h"
+#include "requests/HTTPRequest.h"
+#include "requests/HTTPMethod.h"
 #include "utils.h"
 
 namespace Espresso {

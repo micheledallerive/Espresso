@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <HTTPMessage.h>
+#include "requests/HTTPMessage.h"
 
 namespace Espresso {
 

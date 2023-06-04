@@ -1,13 +1,13 @@
 //
 // Created by michele on 25.02.23.
 //
-#include "JSONEntity.h"
-#include "JSONNumber.h"
-#include "JSONBoolean.h"
-#include "JSONLiteral.h"
-#include "JSONArray.h"
-#include "JSONObject.h"
-#include "expections.h"
+#include "lib/json/JSONEntity.h"
+#include "lib/json/JSONNumber.h"
+#include "lib/json/JSONBoolean.h"
+#include "lib/json/JSONLiteral.h"
+#include "lib/json/JSONArray.h"
+#include "lib/json/JSONObject.h"
+#include "lib/json/expections.h"
 
 #include <sstream>
 #include <stack>

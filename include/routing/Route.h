@@ -7,8 +7,8 @@
 
 #include <functional>
 #include <string>
-#include "HTTPRequest.h"
-#include "HTTPResponse.h"
+#include "requests/HTTPRequest.h"
+#include "requests/HTTPResponse.h"
 
 namespace Espresso {
 

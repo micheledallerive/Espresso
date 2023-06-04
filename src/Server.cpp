@@ -3,7 +3,7 @@
 //
 
 #include "Server.h"
-#include "HTTPRequest.h"
+#include "requests/HTTPRequest.h"
 #include <sys/socket.h>
 #include <unistd.h>
 #include <stdexcept>

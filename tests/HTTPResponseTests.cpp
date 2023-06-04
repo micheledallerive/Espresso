@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "HTTPResponse.h"
+#include "requests/HTTPResponse.h"
 #include "utils.h"
 #include "Server.h"
 #include "config.h"

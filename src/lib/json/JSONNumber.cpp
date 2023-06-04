@@ -3,8 +3,8 @@
 //
 
 #include <iomanip>
-#include "JSONNumber.h"
-#include "expections.h"
+#include "lib/json/JSONNumber.h"
+#include "lib/json/expections.h"
 
 namespace Espresso::JSON {
 

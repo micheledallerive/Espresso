@@ -2,7 +2,7 @@
 // Created by michele on 24.02.23.
 //
 
-#include "JSONEntity.h"
+#include "lib/json/JSONEntity.h"
 
 namespace Espresso::JSON {
 

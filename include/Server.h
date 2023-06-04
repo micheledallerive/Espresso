@@ -7,8 +7,8 @@
 
 #include <functional>
 #include <filesystem>
-#include "Middleware.h"
-#include "Router.h"
+#include "middleware/Middleware.h"
+#include "routing/Router.h"
 
 namespace Espresso {
 

@@ -36,6 +36,6 @@ class JSONPrimitive : public JSONEntity {
 
 } // JSON
 
-#include "JSONPrimitive.cpp"
+#include "lib/json/JSONPrimitive.cpp"
 
 #endif //ESPRESSO_SRC_LIB_JSON_JSONPRIMITIVE_H_
