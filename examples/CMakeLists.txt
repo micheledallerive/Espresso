@@ -1,8 +1,8 @@
-file(GLOB_RECURSE EXAMPLES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-foreach(EXAMPLE ${EXAMPLES})
-    get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
-    add_executable(${EXAMPLE_NAME} ${EXAMPLE})
-    target_link_libraries(${EXAMPLE_NAME} PRIVATE espresso)
+foreach(SOURCE ${SOURCES})
+    get_filename_component(EXAMPLE_NAME ${SOURCE} NAME_WE)
+    add_executable(${EXAMPLE_NAME} ${SOURCE})
+    target_link_libraries(${EXAMPLE_NAME} PRIVATE espresso::espresso)
     target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 endforeach()

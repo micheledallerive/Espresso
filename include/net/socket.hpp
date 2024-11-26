@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <sys/socket.h>
 
 namespace espresso {
@@ -16,7 +17,24 @@ public:
 
     explicit operator int() const;
 
-    Socket& bind(const struct sockaddr* addr, socklen_t addrlen);
+    template<typename Sockaddr>
+    Socket& bind(const Sockaddr& addr)
+    {
+        if (::bind(m_fd, reinterpret_cast<const struct sockaddr*>(&addr), sizeof(Sockaddr)) == -1) {
+            perror("bind");
+            throw std::runtime_error("bind() failed");
+        }
+        return *this;
+    }
+
+    void listen(int backlog);
+
+    template<typename Sockaddr>
+    int accept(Sockaddr& addr)
+    {
+        socklen_t addr_len = sizeof(Sockaddr);
+        return ::accept(m_fd, reinterpret_cast<struct sockaddr*>(&addr), &addr_len);
+    }
 };
 
 }// namespace espresso

@@ -10,6 +10,12 @@ Socket::Socket(int domain, int type, int protocol) : m_fd(socket(domain, type, p
     if (m_fd == -1) {
         throw std::runtime_error("socket() failed");
     }
+
+    // set socket option to reuse address
+    int optval = 1;
+    if (setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
+        throw std::runtime_error("setsockopt() failed");
+    }
 }
 Socket::Socket(const Socket& other)
 {
@@ -35,12 +41,10 @@ Socket::operator int() const
 {
     return m_fd;
 }
-Socket& Socket::bind(const struct sockaddr* addr, socklen_t addrlen)
+void Socket::listen(int backlog)
 {
-    if (::bind(m_fd, addr, addrlen) == -1) {
-        throw std::runtime_error("bind() failed");
+    if (::listen(m_fd, backlog) == -1) {
+        throw std::runtime_error("listen() failed");
     }
-    return *this;
 }
-
 }// namespace espresso
