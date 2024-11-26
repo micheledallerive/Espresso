@@ -1,11 +1,13 @@
 #pragma once
 
+#include "cookie.hpp"
 #include "headers.hpp"
 #include <sstream>
 #include <string>
 #include <vector>
 
 namespace espresso::http {
+
 class Response {
 private:
     int m_status{200};
@@ -15,19 +17,27 @@ private:
 public:
     Response() = default;
 
-    Response &write(const std::string& str)
+    Response& write(const std::string& str)
     {
         m_body.insert(m_body.end(), str.begin(), str.end());
         return *this;
     }
 
-    Response &status(int status) {
+    Response& status(int status)
+    {
         m_status = status;
         return *this;
     }
 
-    Headers &headers() {
+    Headers& headers()
+    {
         return m_headers;
+    }
+
+    Response& add_cookie(const Cookie& cookie)
+    {
+        m_headers.add("Set-Cookie", cookie.serialize());
+        return *this;
     }
 
     std::string serialize()

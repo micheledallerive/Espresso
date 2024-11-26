@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/error.hpp"
+#include <optional>
 #include <cassert>
 #include <iostream>
 #include <regex>
@@ -71,7 +71,7 @@ public:
         }
     }
 
-    [[nodiscard]] Conditional<MatchedGroups> matches(const std::vector<std::string_view>& url_parts) const
+    [[nodiscard]] std::optional<MatchedGroups> matches(const std::vector<std::string_view>& url_parts) const
     {
         if (m_parts.size() != url_parts.size()) {
             return {};
@@ -109,10 +109,10 @@ public:
             }
         next:
         }
-        return Conditional(matched_groups);
+        return matched_groups;
     }
 
-    [[nodiscard]] Conditional<MatchedGroups> matches(std::string_view url) const
+    [[nodiscard]] std::optional<MatchedGroups> matches(std::string_view url) const
     {
         return matches(split_url(url));
     }

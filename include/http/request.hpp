@@ -35,7 +35,7 @@ public:
         return m_method;
     }
 
-    [[nodiscard]] Path::MatchedGroups url_params() const
+    [[nodiscard]] const Path::MatchedGroups& url_params() const
     {
         return m_url_params;
     }
@@ -76,7 +76,7 @@ public:
                 auto pos = line.find(':');
                 if (pos != std::string::npos) {
                     std::string key = line.substr(0, pos);
-                    std::string value = line.substr(pos + 1);
+                    std::string value = line.substr(pos + 1 + (line[pos + 1] == ' '));
                     req.m_headers.add(key, value);
                 }
             }
