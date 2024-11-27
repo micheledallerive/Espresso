@@ -25,17 +25,18 @@ class Router;
 
 class Route {
 public:
-    using Function = std::function<void(const http::Request&, http::Response&)>;
+    using NextFunction = const std::function<void()>&;
+    using Function = std::function<void(const http::Request&, http::Response&, NextFunction)>;
 
 private:
-    using HandlersMap = std::map<http::Method, std::vector<Function>>;
+    using Handlers = std::vector<std::pair<http::Method, Function>>;
     Path m_path;
-    HandlersMap m_handlers;
+    Handlers m_handlers;
 
 protected:
     bool handle(http::Request& request, http::Response& response);
 
-    void set_handlers(const HandlersMap& map);
+    void set_handlers(const Handlers& map);
 
 public:
     explicit Route(const std::string& path);

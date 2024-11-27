@@ -6,21 +6,24 @@ bool Route::handle(http::Request& request, http::Response& response)
 {
     auto matched = m_path.matches(request.path());
     if (!matched) return false;
-    if (m_handlers[request.method()].empty()) return false;
 
     request.set_url_params(std::move(matched.value()));
-    for (auto& handler : m_handlers[request.method()]) {
-        handler(request, response);
+    for (const auto& [method, handler] : m_handlers) {
+        if (method != http::Method::NONE && method != request.method()) continue;
+        bool call_next = false;
+        auto next = [&call_next]() { call_next = true; };
+        handler(request, response, next);
+        if (!call_next) return true;
     }
-    return true;
+    return false;
 }
 Route::Route(const std::string& path) : m_path(path) {}
 Route& Route::use(http::Method method, const Route::Function& handler)
 {
-    m_handlers[method].push_back(handler);
+    m_handlers.emplace_back(method, handler);
     return *this;
 }
-void Route::set_handlers(const Route::HandlersMap& map)
+void Route::set_handlers(const Route::Handlers& map)
 {
     m_handlers = map;
 }
@@ -42,6 +45,7 @@ void Router::handle(http::Request& request, http::Response& response)
     for (auto& route : m_routes) {
         if (route.handle(request, response)) return;
     }
+    std::cout << "NO route found" << std::endl;
 }
 Route& Router::get_route(const std::string& path)
 {
