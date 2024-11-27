@@ -6,9 +6,13 @@ Request::~Request()
 {
     delete[] m_body.data();
 }
-const std::string &Request::path() const
+const std::string& Request::path() const
 {
     return m_path;
+}
+const Request::QueryMap& Request::query_params() const
+{
+    return m_query;
 }
 Method Request::method() const
 {
@@ -30,6 +34,16 @@ void Request::set_url_params(Path::MatchedGroups&& mp)
 {
     m_url_params = std::move(mp);
 }
+
+void Request::populate_query(std::string_view query)
+{
+    std::stringstream ss(query.data());
+    std::string key;
+    std::string value;
+    while (std::getline(ss, key, '=') && std::getline(ss, value, '&')) {
+        m_query[key] = value;
+    }
+}
 Request Request::deserialize(std::span<char> buffer)
 {
     Request req;
@@ -42,6 +56,15 @@ Request Request::deserialize(std::span<char> buffer)
     }
 
     ss >> req.m_path;
+
+    {
+        auto pos = req.m_path.find('?');
+        if (pos != std::string::npos) {
+            req.populate_query(req.m_path.substr(pos + 1));
+            req.m_path = req.m_path.substr(0, pos);
+        }
+    }
+
     std::string http_version;
     ss >> http_version;// discarded, not needed ;)
 
@@ -63,4 +86,4 @@ Request Request::deserialize(std::span<char> buffer)
 
     return req;
 }
-}// namespace espresso
+}// namespace espresso::http

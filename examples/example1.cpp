@@ -60,7 +60,13 @@ Router hello_routes()
     r.route("/{name}")
             .get([](const Request& request, Response& response) {
                 const auto& name = request.url_params().at("name");
-                response.write("Hello, " + name + "!");
+                response.write("Hello, " + name + "!\n");
+                if (!request.query_params().empty()) {
+                    response.write("Query parameters:\n");
+                    for (const auto& [key, value] : request.query_params()) {
+                        response.write(key + ": " + value + "\n");
+                    }
+                }
             })
             .get([](const auto& req, auto& res, auto next) {
                 res.write("Hello, again!");

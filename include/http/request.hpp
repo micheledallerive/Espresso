@@ -9,12 +9,17 @@
 
 namespace espresso::http {
 class Request {
+public:
+    using QueryMap = std::map<std::string,std::string>;
 private:
     Method m_method{Method::NONE};
     std::string m_path;
+    QueryMap m_query;
     Headers m_headers;
     std::span<char> m_body;
     Path::MatchedGroups m_url_params;
+
+    void populate_query(std::string_view query);
 
 public:
     Request() = default;
@@ -22,6 +27,7 @@ public:
     //Request(char* buffer);
 
     [[nodiscard]] const std::string& path() const;
+    [[nodiscard]] const QueryMap &query_params() const;
 
     [[nodiscard]] Method method() const;
 
