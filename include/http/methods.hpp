@@ -16,7 +16,7 @@ enum Method {
     NONE
 };
 
-[[maybe_unused]] static std::string_view method_to_string(Method method)
+[[maybe_unused]] static std::string method_to_string(Method method)
 {
     switch (method) {
     case GET:

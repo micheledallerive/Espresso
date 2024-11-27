@@ -93,9 +93,14 @@ std::vector<std::string_view> Path::split_url(std::string_view str)
     }
     return res;
 }
-std::vector<std::string_view> Path::split_url(const std::string& str)
+std::vector<std::string> Path::split_url(const std::string& str)
 {
-    return split_url(std::string_view(str));
+    std::vector<std::string> res;
+    const auto& res_view = split_url(std::string_view(str));
+    for (const auto& view : res_view) {
+        res.emplace_back(view);
+    }
+    return res;
 }
 const std::string& Path::path() const
 {

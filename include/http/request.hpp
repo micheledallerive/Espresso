@@ -22,7 +22,7 @@ public:
     ~Request();
     //Request(char* buffer);
 
-    [[nodiscard]] std::string_view path() const;
+    [[nodiscard]] const std::string &path() const;
 
     [[nodiscard]] Method method() const;
 

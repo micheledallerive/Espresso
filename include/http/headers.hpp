@@ -29,7 +29,7 @@ public:
 
     [[nodiscard]] const std::string& operator[](const std::string& name) const;
 
-    [[nodiscard]] std::optional<std::string_view> get_cookie(const std::string& name) const;
+    [[nodiscard]] std::optional<std::string> get_cookie(const std::string& name) const;
 
     [[nodiscard]] bool contains(const std::string& name) const;
 

@@ -15,13 +15,13 @@ void Headers::parse_cookies(std::string_view cookie)
     auto end = cookie.begin();
     while (end != cookie.end()) {
         if (*end == ';') {
-            auto cookie_str = std::string_view(start, end-1);
+            auto cookie_str = std::string_view(start, end - 1);
             parse_cookie(cookie_str);
             start = end + 1;
         }
         ++end;
     }
-    parse_cookie(std::string_view(start, end-1));
+    parse_cookie(std::string_view(start, end - 1));
 }
 Headers::Headers(Headers::Map headers) : m_headers(std::move(headers))
 {
@@ -58,7 +58,7 @@ const std::string& Headers::operator[](const std::string& name) const
 {
     return m_headers.at(name);
 }
-std::optional<std::string_view> Headers::get_cookie(const std::string& name) const
+std::optional<std::string> Headers::get_cookie(const std::string& name) const
 {
     auto it = m_cookies.find(name);
     if (it == m_cookies.end()) return {};
@@ -88,4 +88,4 @@ std::map<std::string, std::string>::const_iterator Headers::end() const
 {
     return m_headers.end();
 }
-}
+}// namespace espresso::http

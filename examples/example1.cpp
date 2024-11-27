@@ -11,10 +11,15 @@ using namespace espresso::http;
 Router hello_routes()
 {
     Router r;
+    r.route("/")
+            .get([](const Request &request, Response &response) {
+                response.write("Hello, World!");
+            });
     r.route("/{name}")
             .get([](const Request& request, Response& response) {
                 const auto& name = request.url_params().at("name");
                 response.write("Hello, " + name + "!");
+                //                response.send_file("/home/michele/index.html");
             })
             .post([](const Request& request, Response& response) {
                 response.write("Hello, POST!");

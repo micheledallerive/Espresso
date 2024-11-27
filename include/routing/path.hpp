@@ -17,12 +17,12 @@ public:
 
 private:
     std::string m_path;
-    std::vector<std::string_view> m_parts;
+    std::vector<std::string> m_parts;
     std::vector<uint8_t> m_special;
 
     static bool valid_char(char c) noexcept;
     static std::vector<std::string_view> split_url(std::string_view str);
-    static std::vector<std::string_view> split_url(const std::string& str);
+    static std::vector<std::string> split_url(const std::string& str);
 
 public:
     explicit Path(std::string_view path);

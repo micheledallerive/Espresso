@@ -6,7 +6,7 @@ Request::~Request()
 {
     delete[] m_body.data();
 }
-std::string_view Request::path() const
+const std::string &Request::path() const
 {
     return m_path;
 }
