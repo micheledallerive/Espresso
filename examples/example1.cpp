@@ -12,9 +12,12 @@ Router hello_routes()
 {
     Router r;
     r.route("/{name}")
-            .use(Method::GET, [](const Request& request, Response& response) {
+            .get([](const Request& request, Response& response) {
                 const auto& name = request.url_params().at("name");
                 response.write("Hello, " + name + "!");
+            })
+            .post([](const Request& request, Response& response) {
+                response.write("Hello, POST!");
             });
     return r;
 }

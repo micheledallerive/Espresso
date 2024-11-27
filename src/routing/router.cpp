@@ -20,17 +20,14 @@ Route& Route::use(http::Method method, const Route::Function& handler)
     m_handlers[method].push_back(handler);
     return *this;
 }
-Route& Route::use(http::Method method, std::initializer_list<Function> handlers)
-{
-    for (const auto& handler : handlers) {
-        use(method, handler);
-    }
-    return *this;
-}
 void Route::set_handlers(const Route::HandlersMap& map)
 {
     m_handlers = map;
 }
+
+//
+//
+// Router
 Router& Router::use(const std::string& path, http::Method method, const Route::Function& handler)
 {
     get_route(path).use(method, handler);
