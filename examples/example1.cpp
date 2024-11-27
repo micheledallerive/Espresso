@@ -13,7 +13,7 @@ Router hello_routes()
     Router r;
     r.route("/")
             .get([](const Request &request, Response &response) {
-                response.write("Hello, World!");
+                response.send_file("/home/michele/index.html");
             });
     r.route("/{name}")
             .get([](const Request& request, Response& response) {

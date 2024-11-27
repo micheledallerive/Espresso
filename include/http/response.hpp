@@ -1,7 +1,9 @@
 #pragma once
 
 #include "cookie.hpp"
-#include "headers.hpp"
+#include "http/headers.hpp"
+#include "http/mime.hpp"
+#include <filesystem>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -18,6 +20,8 @@ public:
     Response() = default;
 
     Response& write(const std::string& str);
+
+    void send_file(const std::filesystem::path& file);
 
     Response& status(int status);
 

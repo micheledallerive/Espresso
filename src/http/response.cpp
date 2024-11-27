@@ -1,4 +1,5 @@
 #include "http/response.hpp"
+#include <fstream>
 
 namespace espresso::http {
 
@@ -33,4 +34,17 @@ std::string Response::serialize()
     ss << std::string(m_body.begin(), m_body.end());
     return ss.str();
 }
+void Response::send_file(const std::filesystem::path& file)
+{
+    const auto mime = mime_type(file);
+    headers().add("Content-Type", mime_type(file));
+    //    headers().add("Content-Disposition", "attachment; filename=" + file.filename().string());
+    std::ifstream ifs(file, std::ios::binary);
+    if (ifs) {
+        m_body.insert(m_body.end(), std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
+    }
+    else {
+        status(404);
+    }
 }
+}// namespace espresso::http
