@@ -11,31 +11,31 @@ namespace espresso {
 
 class Router;
 
-#define ROUTE_DECLARE_METHOD(method, enum_value) \
-    Route& method(const Function& handler)       \
-    {                                            \
-        return use(enum_value, handler);         \
-    }                                            \
-    Route& method(const NoNextFunction& handler) \
-    {                                            \
-        return use(enum_value, handler);         \
+#define ROUTE_DECLARE_METHOD(method, enum_value)  \
+    Route& method(const Function& handler)        \
+    {                                             \
+        return use(enum_value, handler);          \
+    }                                             \
+    Route& method(const ReducedFunction& handler) \
+    {                                             \
+        return use(enum_value, handler);          \
     }
 
-#define ROUTER_DECLARE_METHOD(method, enum_value)                                 \
-    Router& method(const std::string& path, const Route::Function& handler)       \
-    {                                                                             \
-        return use(path, enum_value, handler);                                    \
-    }                                                                             \
-    Router& method(const std::string& path, const Route::NoNextFunction& handler) \
-    {                                                                             \
-        return use(path, enum_value, handler);                                    \
+#define ROUTER_DECLARE_METHOD(method, enum_value)                                  \
+    Router& method(const std::string& path, const Route::Function& handler)        \
+    {                                                                              \
+        return use(path, enum_value, handler);                                     \
+    }                                                                              \
+    Router& method(const std::string& path, const Route::ReducedFunction& handler) \
+    {                                                                              \
+        return use(path, enum_value, handler);                                     \
     }
 
 class Route {
 public:
-    using NextFunction = const std::function<void()>&;
-    using Function = std::function<void(const http::Request&, http::Response&, NextFunction)>;
-    using NoNextFunction = std::function<void(const http::Request&, http::Response&)>;
+    using NextFunctionRef = const std::function<void()>&;
+    using Function = std::function<void(const http::Request&, http::Response&, NextFunctionRef)>;
+    using ReducedFunction = std::function<void(const http::Request&, http::Response&)>;
 
 private:
     using Handlers = std::vector<std::pair<http::Method, Function>>;
@@ -51,7 +51,7 @@ public:
     explicit Route(const std::string& path);
 
     Route& use(http::Method method, const Function& handler);
-    Route& use(http::Method method, const NoNextFunction& handler);
+    Route& use(http::Method method, const ReducedFunction& handler);
     ROUTE_DECLARE_METHOD(get, http::Method::GET);
     ROUTE_DECLARE_METHOD(head, http::Method::HEAD);
     ROUTE_DECLARE_METHOD(post, http::Method::POST);
@@ -75,7 +75,7 @@ private:
 public:
     Router() = default;
     Router& use(const std::string& path, http::Method method, const Route::Function& handler);
-    Router& use(const std::string& path, http::Method method, const Route::NoNextFunction& handler);
+    Router& use(const std::string& path, http::Method method, const Route::ReducedFunction& handler);
     ROUTER_DECLARE_METHOD(get, http::Method::GET);
     ROUTER_DECLARE_METHOD(head, http::Method::HEAD);
     ROUTER_DECLARE_METHOD(post, http::Method::POST);

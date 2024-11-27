@@ -1,5 +1,6 @@
 #include "http/response.hpp"
 #include "http/server.hpp"
+#include "middleware/base_middleware.hpp"
 #include "routing/path.hpp"
 #include "routing/router.hpp"
 #include <fstream>
@@ -8,6 +9,28 @@
 using namespace std;
 using namespace espresso;
 using namespace espresso::http;
+
+class MyMiddleware : public BaseMiddleware {
+public:
+    http::Response operator()(http::Request& request, middleware::NextFunctionRef next) override
+    {
+        cout << "MyMiddleware 1" << endl;
+        auto response = next(request);
+        cout << "MyMiddleware 2" << endl;
+        return response;
+    }
+};
+
+class NotMyMiddleware : public BaseMiddleware {
+public:
+    http::Response operator()(http::Request& request, middleware::NextFunctionRef next) override
+    {
+        cout << "NotMyMiddleware 1" << endl;
+        auto response = next(request);
+        cout << "NotMyMiddleware 2" << endl;
+        return response;
+    }
+};
 
 void create_sample_html_file()
 {
@@ -42,7 +65,7 @@ Router hello_routes()
             .get([](const auto& req, auto& res, auto next) {
                 res.write("Hello, again!");
             })
-            .post([](const Request& request, Response& response, Route::NextFunction next) {
+            .post([](const Request& request, Response& response, Route::NextFunctionRef next) {
                 response.write("Hello, POST!");
             });
     return r;
@@ -51,8 +74,20 @@ Router hello_routes()
 int main()
 {
     create_sample_html_file();
+
     Server server;
     server.router().route("/hello", hello_routes());
+
+    server.middleware(MyMiddleware());
+    server.middleware(
+            [](http::Request& request, middleware::NextFunctionRef next) {
+                cout << "NotMyMiddleware 1" << endl;
+                auto response = next(request);
+                cout << "NotMyMiddleware 2" << endl;
+                return response;
+            });
+
     server.listen(8080);
+
     return 0;
 }

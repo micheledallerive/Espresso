@@ -1,4 +1,5 @@
 #include "routing/router.hpp"
+#include "utils/call_detectable.hpp"
 
 namespace espresso {
 
@@ -10,10 +11,9 @@ bool Route::handle(http::Request& request, http::Response& response)
     request.set_url_params(std::move(matched.value()));
     for (const auto& [method, handler] : m_handlers) {
         if (method != http::Method::NONE && method != request.method()) continue;
-        bool call_next = false;
-        auto next = [&call_next]() { call_next = true; };
-        handler(request, response, next);
-        if (!call_next) return true;
+        CallDetectable next;
+        handler(request, response, next.get_function());
+        if (!next.was_called()) return true;
     }
     return false;
 }
@@ -23,9 +23,9 @@ Route& Route::use(http::Method method, const Route::Function& handler)
     m_handlers.emplace_back(method, handler);
     return *this;
 }
-Route& Route::use(http::Method method, const Route::NoNextFunction& handler)
+Route& Route::use(http::Method method, const Route::ReducedFunction& handler)
 {
-    m_handlers.emplace_back(method, [handler](const http::Request& request, http::Response& response, Route::NextFunction) {
+    m_handlers.emplace_back(method, [handler](const http::Request& request, http::Response& response, Route::NextFunctionRef) {
         handler(request, response);// no next by default(?)
     });
     return *this;
@@ -43,7 +43,7 @@ Router& Router::use(const std::string& path, http::Method method, const Route::F
     get_route(path).use(method, handler);
     return *this;
 }
-Router& Router::use(const std::string& path, http::Method method, const Route::NoNextFunction& handler)
+Router& Router::use(const std::string& path, http::Method method, const Route::ReducedFunction& handler)
 {
     get_route(path).use(method, handler);
     return *this;

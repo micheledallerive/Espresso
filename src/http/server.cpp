@@ -1,10 +1,12 @@
 #include "http/server.hpp"
 #include "http/request.hpp"
+#include "utils/call_detectable.hpp"
 
 #include <arpa/inet.h>
 #include <iostream>
 #include <netinet/in.h>
 #include <stdexcept>
+#include <unistd.h>
 
 namespace espresso::http {
 
@@ -62,15 +64,22 @@ void Server::handle_client(int client_fd)
     }
 
     http::Request request = http::Request::deserialize(std::span(buffer, n));
-    http::Response response;
-    m_router.handle(request, response);
 
-    response.headers().add("Content-Length", std::to_string(response.body().size()));
+    http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
+        http::Response res;
+        m_router.handle(req, res);
+        res.headers().add("Content-Length", std::to_string(res.body().size()));
+        return res;
+    });
 
     std::string response_str = response.serialize();
     write(client_fd, response_str.data(), response_str.size());
 
     close(client_fd);
+}
+void Server::middleware(const middleware::MiddlewareFunction& middleware)
+{
+    m_middleware.add(middleware);
 }
 
 }// namespace espresso::http
