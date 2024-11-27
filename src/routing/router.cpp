@@ -23,6 +23,13 @@ Route& Route::use(http::Method method, const Route::Function& handler)
     m_handlers.emplace_back(method, handler);
     return *this;
 }
+Route& Route::use(http::Method method, const Route::NoNextFunction& handler)
+{
+    m_handlers.emplace_back(method, [handler](const http::Request& request, http::Response& response, Route::NextFunction) {
+        handler(request, response);// no next by default(?)
+    });
+    return *this;
+}
 void Route::set_handlers(const Route::Handlers& map)
 {
     m_handlers = map;
@@ -36,6 +43,11 @@ Router& Router::use(const std::string& path, http::Method method, const Route::F
     get_route(path).use(method, handler);
     return *this;
 }
+Router& Router::use(const std::string& path, http::Method method, const Route::NoNextFunction& handler)
+{
+    get_route(path).use(method, handler);
+    return *this;
+}
 Route& Router::route(const std::string& path)
 {
     return get_route(path);
@@ -45,7 +57,7 @@ void Router::handle(http::Request& request, http::Response& response)
     for (auto& route : m_routes) {
         if (route.handle(request, response)) return;
     }
-    std::cout << "NO route found" << std::endl;
+    response.status(404);
 }
 Route& Router::get_route(const std::string& path)
 {

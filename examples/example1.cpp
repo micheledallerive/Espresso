@@ -31,18 +31,16 @@ Router hello_routes()
 {
     Router r;
     r.route("/")
-            .get([](const Request& request, Response& response, Route::NextFunction next) {
+            .get([](const Request& request, Response& response) {
                 response.send_file("./index.html");
             });
     r.route("/{name}")
-            .get([](const Request& request, Response& response, Route::NextFunction next) {
+            .get([](const Request& request, Response& response) {
                 const auto& name = request.url_params().at("name");
                 response.write("Hello, " + name + "!");
-                next();
             })
-            .get([](const Request& request, Response& response, Route::NextFunction next) {
-                const auto& name = request.url_params().at("name");
-                response.write("Again, hello " + name + "!");
+            .get([](const auto& req, auto& res, auto next) {
+                res.write("Hello, again!");
             })
             .post([](const Request& request, Response& response, Route::NextFunction next) {
                 response.write("Hello, POST!");
