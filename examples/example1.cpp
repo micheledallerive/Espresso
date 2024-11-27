@@ -1,6 +1,7 @@
 #include "http/response.hpp"
 #include "http/server.hpp"
 #include "middleware/base_middleware.hpp"
+#include "middleware/presets/static_files.hpp"
 #include "routing/path.hpp"
 #include "routing/router.hpp"
 #include <fstream>
@@ -84,14 +85,7 @@ int main()
     Server server;
     server.router().route("/hello", hello_routes());
 
-    server.middleware(MyMiddleware());
-    server.middleware(
-            [](http::Request& request, middleware::NextFunctionRef next) {
-                cout << "NotMyMiddleware 1" << endl;
-                auto response = next(request);
-                cout << "NotMyMiddleware 2" << endl;
-                return response;
-            });
+    server.middleware(StaticFiles("/static", "./CMakeFiles/"));
 
     server.listen(8080);
 

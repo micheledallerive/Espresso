@@ -36,7 +36,6 @@ std::string Response::serialize()
 }
 void Response::send_file(const std::filesystem::path& file)
 {
-    const auto mime = mime_type(file);
     headers().add("Content-Type", mime_type(file));
     //    headers().add("Content-Disposition", "attachment; filename=" + file.filename().string());
     std::ifstream ifs(file, std::ios::binary);
