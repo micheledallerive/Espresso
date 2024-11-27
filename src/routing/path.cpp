@@ -97,4 +97,8 @@ std::vector<std::string_view> Path::split_url(const std::string& str)
 {
     return split_url(std::string_view(str));
 }
+const std::string& Path::path() const
+{
+    return m_path;
+}
 }// namespace espresso

@@ -43,7 +43,7 @@ enum Method {
     return "NONE";
 }
 
-static Method string_to_method(std::string_view method)
+[[maybe_unused]] static Method string_to_method(std::string_view method)
 {
     if (method == "GET") {
         return GET;

@@ -29,6 +29,8 @@ public:
 
     [[nodiscard]] std::optional<MatchedGroups> matches(const std::vector<std::string_view>& url_parts) const;
     [[nodiscard]] std::optional<MatchedGroups> matches(std::string_view url) const;
+
+    [[nodiscard]] const std::string &path() const;
 };
 
 }// namespace espresso
