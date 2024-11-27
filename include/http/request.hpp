@@ -9,8 +9,7 @@
 
 namespace espresso::http {
 class Request {
-    //private:
-public:
+private:
     Method m_method{Method::NONE};
     std::string m_path;
     Headers m_headers;
@@ -22,7 +21,7 @@ public:
     ~Request();
     //Request(char* buffer);
 
-    [[nodiscard]] const std::string &path() const;
+    [[nodiscard]] const std::string& path() const;
 
     [[nodiscard]] Method method() const;
 
