@@ -17,40 +17,14 @@ private:
 public:
     Response() = default;
 
-    Response& write(const std::string& str)
-    {
-        m_body.insert(m_body.end(), str.begin(), str.end());
-        return *this;
-    }
+    Response& write(const std::string& str);
 
-    Response& status(int status)
-    {
-        m_status = status;
-        return *this;
-    }
+    Response& status(int status);
 
-    Headers& headers()
-    {
-        return m_headers;
-    }
+    Headers& headers();
 
-    Response& add_cookie(const Cookie& cookie)
-    {
-        m_headers.add("Set-Cookie", cookie.serialize());
-        return *this;
-    }
+    Response& add_cookie(const Cookie& cookie);
 
-    std::string serialize()
-    {
-        std::string res;
-        std::ostringstream ss;
-        ss << "HTTP/1.1 " << m_status << " \r\n";
-        for (const auto& [key, value] : m_headers) {
-            ss << key << ": " << value << "\r\n";
-        }
-        ss << "\r\n";
-        ss << std::string(m_body.begin(), m_body.end());
-        return ss.str();
-    }
+    std::string serialize();
 };
 }// namespace espresso::http
