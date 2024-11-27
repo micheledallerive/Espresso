@@ -3,23 +3,40 @@
 #include "routing/path.hpp"
 #include "routing/router.hpp"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace espresso;
 using namespace espresso::http;
+
+void create_sample_html_file() {
+    ofstream file("./index.html");
+    file << "<!DOCTYPE html>\n"
+            "<html>\n"
+            "<head>\n"
+            "<title>Page Title</title>\n"
+            "</head>\n"
+            "<body>\n"
+            "\n"
+            "<h1>This is a Heading</h1>\n"
+            "<p>This is a paragraph.</p>\n"
+            "\n"
+            "</body>\n"
+            "</html>\n";
+    file.close();
+}
 
 Router hello_routes()
 {
     Router r;
     r.route("/")
             .get([](const Request &request, Response &response) {
-                response.send_file("/home/michele/index.html");
+                response.send_file("./index.html");
             });
     r.route("/{name}")
             .get([](const Request& request, Response& response) {
                 const auto& name = request.url_params().at("name");
                 response.write("Hello, " + name + "!");
-                //                response.send_file("/home/michele/index.html");
             })
             .post([](const Request& request, Response& response) {
                 response.write("Hello, POST!");
@@ -29,6 +46,7 @@ Router hello_routes()
 
 int main()
 {
+    create_sample_html_file();
     Server server;
     server.router().route("/hello", hello_routes());
     server.listen(8080);

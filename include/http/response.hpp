@@ -29,6 +29,8 @@ public:
 
     Response& add_cookie(const Cookie& cookie);
 
+    const std::vector<char> body() const;
+
     std::string serialize();
 };
 }// namespace espresso::http

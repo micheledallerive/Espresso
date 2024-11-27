@@ -65,6 +65,8 @@ void Server::handle_client(int client_fd)
     http::Response response;
     m_router.handle(request, response);
 
+    response.headers().add("Content-Length", std::to_string(response.body().size()));
+
     std::string response_str = response.serialize();
     write(client_fd, response_str.data(), response_str.size());
 

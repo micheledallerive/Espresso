@@ -47,4 +47,8 @@ void Response::send_file(const std::filesystem::path& file)
         status(404);
     }
 }
+const std::vector<char> Response::body() const
+{
+    return m_body;
+}
 }// namespace espresso::http
