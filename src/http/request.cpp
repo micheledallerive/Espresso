@@ -44,6 +44,15 @@ void Request::populate_query(std::string_view query)
         m_query[key] = value;
     }
 }
+
+const std::map<std::string, std::any> &Request::custom_data() const {
+    return m_custom_data;
+}
+Request &Request::set_data(const std::string &key, const std::any &value) {
+    m_custom_data[key] = value;
+    return *this;
+}
+
 Request Request::deserialize(std::span<char> buffer)
 {
     Request req;

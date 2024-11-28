@@ -1,5 +1,6 @@
 #pragma once
 
+#include <any>
 #include "http/headers.hpp"
 #include "http/methods.hpp"
 #include "routing/path.hpp"
@@ -18,6 +19,8 @@ private:
     Headers m_headers;
     std::span<char> m_body;
     Path::MatchedGroups m_url_params;
+
+    std::map<std::string, std::any> m_custom_data;
 
     void populate_query(std::string_view query);
 
@@ -38,6 +41,9 @@ public:
     [[nodiscard]] std::span<char> body() const;
 
     void set_url_params(Path::MatchedGroups&& mp);
+
+    [[nodiscard]] const std::map<std::string, std::any> &custom_data() const;
+    Request &set_data(const std::string &key, const std::any &value);
 
     static Request deserialize(std::span<char> buffer);
 };
