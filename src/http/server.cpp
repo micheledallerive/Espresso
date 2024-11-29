@@ -68,7 +68,7 @@ void Server::handle_client(int client_fd)
     http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
         http::Response res;
         m_router.handle(req, res);
-        res.headers().add("Content-Length", std::to_string(res.body().size()));
+        res.headers().insert("Content-Length", std::to_string(res.body().size()));
         return res;
     });
 

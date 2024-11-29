@@ -14,6 +14,7 @@ public:
     StaticFiles(std::string path_prefix, std::filesystem::path root_path)
         : m_path_prefix(std::move(path_prefix)), m_root_path(std::move(root_path))
     {}
+    ~StaticFiles() override = default;
 
     http::Response operator()(http::Request& request, middleware::NextFunctionRef next) override
     {

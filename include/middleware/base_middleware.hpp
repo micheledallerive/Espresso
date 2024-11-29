@@ -9,6 +9,7 @@ namespace espresso {
 
 class BaseMiddleware {
 public:
+    virtual ~BaseMiddleware() = default;
     virtual http::Response operator()(http::Request& request, middleware::NextFunctionRef next) = 0;
 };
 

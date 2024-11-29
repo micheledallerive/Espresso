@@ -19,7 +19,7 @@ Headers& Response::headers()
 }
 Response& Response::add_cookie(const Cookie& cookie)
 {
-    m_headers.add("Set-Cookie", cookie.serialize());
+    m_headers.insert("Set-Cookie", cookie.serialize());
     return *this;
 }
 std::string Response::serialize()
@@ -36,7 +36,7 @@ std::string Response::serialize()
 }
 void Response::send_file(const std::filesystem::path& file)
 {
-    headers().add("Content-Type", mime_type(file));
+    headers().insert("Content-Type", mime_type(file));
     //    headers().add("Content-Disposition", "attachment; filename=" + file.filename().string());
     std::ifstream ifs(file, std::ios::binary);
     if (ifs) {

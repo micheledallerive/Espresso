@@ -1,4 +1,5 @@
 #include "http/request.hpp"
+#include "utils/string.hpp"
 
 namespace espresso::http {
 
@@ -26,6 +27,10 @@ const Headers& Request::headers() const
 {
     return m_headers;
 }
+const Request::Cookies& Request::cookies() const
+{
+    return m_cookies;
+}
 std::span<char> Request::body() const
 {
     return m_body;
@@ -45,14 +50,25 @@ void Request::populate_query(std::string_view query)
     }
 }
 
-const std::map<std::string, std::any> &Request::custom_data() const {
+const std::map<std::string, std::any>& Request::custom_data() const
+{
     return m_custom_data;
 }
-Request &Request::set_data(const std::string &key, const std::any &value) {
+Request& Request::set_data(const std::string& key, const std::any& value)
+{
     m_custom_data[key] = value;
     return *this;
 }
 
+void Request::populate_cookies(std::string_view cookies)
+{
+    std::stringstream ss(cookies.data());
+    std::string key;
+    std::string value;
+    while (std::getline(ss, key, '=') && std::getline(ss, value, ';')) {
+        m_cookies[key] = value;
+    }
+}
 Request Request::deserialize(std::span<char> buffer)
 {
     Request req;
@@ -84,7 +100,12 @@ Request Request::deserialize(std::span<char> buffer)
             if (pos != std::string::npos) {
                 std::string key = line.substr(0, pos);
                 std::string value = line.substr(pos + 1 + (line[pos + 1] == ' '));
-                req.m_headers.add(key, value);
+                if (equals_case_insensitive(key, "Cookie")) {
+                    req.populate_cookies(value);
+                }
+                else {
+                    req.m_headers.insert(key, value);
+                }
             }
         }
     }
