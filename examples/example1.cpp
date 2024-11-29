@@ -8,21 +8,11 @@
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include "routing/presets/file_view.hpp"
 
 using namespace std;
 using namespace espresso;
 using namespace espresso::http;
-
-class NotMyMiddleware : public BaseMiddleware {
-public:
-    http::Response operator()(http::Request& request, middleware::NextFunctionRef next) override
-    {
-        cout << "NotMyMiddleware 1" << endl;
-        auto response = next(request);
-        cout << "NotMyMiddleware 2" << endl;
-        return response;
-    }
-};
 
 void create_sample_html_file()
 {
@@ -46,9 +36,7 @@ Router hello_routes()
 {
     Router r;
     r.route("/")
-            .get([](const Request& request, Response& response) {
-                response.send_file("./index.html");
-            });
+            .get(FileView("./index.html", true));
     r.route("/{name}")
             .get([](const Request& request, Response& response, auto next) {
                 const auto& name = request.url_params().at("name");
@@ -65,8 +53,7 @@ Router hello_routes()
                 res.write("Hello, again!");
             })
             .post([](const Request& request, Response& response) {
-                auto &data = request.custom_data();
-                auto json = data.get<nlohmann::json>("json");
+                auto json = request.custom_data().get<nlohmann::json>("json");
                 std::cout << json.dump(4) << std::endl;
                 response.write("Hello, POST!");
             });
