@@ -1,5 +1,6 @@
 #pragma once
 
+#include "custom_data.hpp"
 #include "http/headers.hpp"
 #include "http/methods.hpp"
 #include "routing/path.hpp"
@@ -23,7 +24,7 @@ private:
     std::span<char> m_body;
     Path::MatchedGroups m_url_params;
 
-    mutable std::map<std::string, std::any> m_custom_data;
+    mutable CustomData m_custom_data;
 
     void populate_query(std::string_view query);
 
@@ -50,24 +51,9 @@ public:
 
     void set_url_params(Path::MatchedGroups&& mp);
 
-    [[nodiscard]] const std::map<std::string, std::any>& custom_data() const;
-    bool has_custom_data(std::string_view s) const;
-    template<typename T>
-    bool has_custom_data_as(std::string_view s) const
+    [[nodiscard]] CustomData& custom_data() const
     {
-        return has_custom_data(s) && m_custom_data.at(s.data()).type() == typeid(T);
-    }
-    [[nodiscard]] const std::any& custom_data(std::string_view s) const;
-    template<typename T>
-    [[nodiscard]] const T& custom_data_as(std::string_view s) const
-    {
-        return std::any_cast<const T&>(m_custom_data.at(s.data()));
-    }
-    template<typename T>
-    const Request& set_data(const std::string& key, T value) const
-    {
-        m_custom_data[key] = std::move(value);
-        return *this;
+        return m_custom_data;
     }
 
     static Request deserialize(std::span<char> buffer);

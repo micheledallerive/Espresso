@@ -65,12 +65,8 @@ Router hello_routes()
                 res.write("Hello, again!");
             })
             .post([](const Request& request, Response& response) {
-                if (!request.has_custom_data("json"))
-                {
-                    response.status(400).write("JSON required!");
-                    return;
-                }
-                auto json = request.custom_data_as<nlohmann::json>("json");
+                auto &data = request.custom_data();
+                auto json = data.get<nlohmann::json>("json");
                 std::cout << json.dump(4) << std::endl;
                 response.write("Hello, POST!");
             });

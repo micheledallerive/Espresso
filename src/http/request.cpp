@@ -58,19 +58,6 @@ void Request::populate_query(std::string_view query)
     }
 }
 
-bool Request::has_custom_data(std::string_view s) const
-{
-    return m_custom_data.find(s.data()) != m_custom_data.end();
-}
-
-const std::map<std::string, std::any>& Request::custom_data() const
-{
-    return m_custom_data;
-}
-const std::any& Request::custom_data(std::string_view s) const
-{
-    return m_custom_data.at(s.data());
-}
 void Request::populate_cookies(std::string_view cookies)
 {
     std::stringstream ss(cookies.data());

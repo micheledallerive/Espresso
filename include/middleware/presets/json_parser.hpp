@@ -23,7 +23,7 @@ public:
 
         try {
             nlohmann::json json = nlohmann::json::parse(body);
-            request.set_data("json", json);
+            request.custom_data().insert("json", json);
             return next(request);
         }
         catch (const nlohmann::json::parse_error& e) {
