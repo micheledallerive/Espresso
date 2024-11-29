@@ -4,6 +4,7 @@
 #include "http/request.hpp"
 #include "http/response.hpp"
 #include "path.hpp"
+#include "routing/types.hpp"
 #include <functional>
 #include <string>
 
@@ -11,34 +12,29 @@ namespace espresso {
 
 class Router;
 
-#define ROUTE_DECLARE_METHOD(method, enum_value)  \
-    Route& method(const Function& handler)        \
-    {                                             \
-        return use(enum_value, handler);          \
-    }                                             \
-    Route& method(const ReducedFunction& handler) \
-    {                                             \
-        return use(enum_value, handler);          \
+#define ROUTE_DECLARE_METHOD(method, enum_value)                 \
+    Route& method(const routing::RouteFunctionWithNext& handler) \
+    {                                                            \
+        return use(enum_value, handler);                         \
+    }                                                            \
+    Route& method(const routing::RouteFunction& handler)         \
+    {                                                            \
+        return use(enum_value, handler);                         \
     }
 
-#define ROUTER_DECLARE_METHOD(method, enum_value)                                  \
-    Router& method(const std::string& path, const Route::Function& handler)        \
-    {                                                                              \
-        return use(path, enum_value, handler);                                     \
-    }                                                                              \
-    Router& method(const std::string& path, const Route::ReducedFunction& handler) \
-    {                                                                              \
-        return use(path, enum_value, handler);                                     \
+#define ROUTER_DECLARE_METHOD(method, enum_value)                                          \
+    Router& method(const std::string& path, const routing::RouteFunctionWithNext& handler) \
+    {                                                                                      \
+        return use(path, enum_value, handler);                                             \
+    }                                                                                      \
+    Router& method(const std::string& path, const routing::RouteFunction& handler)         \
+    {                                                                                      \
+        return use(path, enum_value, handler);                                             \
     }
 
 class Route {
-public:
-    using NextFunctionRef = const std::function<void()>&;
-    using Function = std::function<void(const http::Request&, http::Response&, NextFunctionRef)>;
-    using ReducedFunction = std::function<void(const http::Request&, http::Response&)>;
-
 private:
-    using Handlers = std::vector<std::pair<http::Method, Function>>;
+    using Handlers = std::vector<std::pair<http::Method, routing::RouteFunctionWithNext>>;
     Path m_path;
     Handlers m_handlers;
 
@@ -50,8 +46,8 @@ protected:
 public:
     explicit Route(const std::string& path);
 
-    Route& use(http::Method method, const Function& handler);
-    Route& use(http::Method method, const ReducedFunction& handler);
+    Route& use(http::Method method, const routing::RouteFunctionWithNext& handler);
+    Route& use(http::Method method, const routing::RouteFunction& handler);
     ROUTE_DECLARE_METHOD(get, http::Method::GET);
     ROUTE_DECLARE_METHOD(head, http::Method::HEAD);
     ROUTE_DECLARE_METHOD(post, http::Method::POST);
@@ -74,8 +70,8 @@ private:
 
 public:
     Router() = default;
-    Router& use(const std::string& path, http::Method method, const Route::Function& handler);
-    Router& use(const std::string& path, http::Method method, const Route::ReducedFunction& handler);
+    Router& use(const std::string& path, http::Method method, const routing::RouteFunctionWithNext& handler);
+    Router& use(const std::string& path, http::Method method, const routing::RouteFunction& handler);
     ROUTER_DECLARE_METHOD(get, http::Method::GET);
     ROUTER_DECLARE_METHOD(head, http::Method::HEAD);
     ROUTER_DECLARE_METHOD(post, http::Method::POST);

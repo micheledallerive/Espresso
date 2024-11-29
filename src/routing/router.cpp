@@ -18,14 +18,14 @@ bool Route::handle(http::Request& request, http::Response& response)
     return false;
 }
 Route::Route(const std::string& path) : m_path(path) {}
-Route& Route::use(http::Method method, const Route::Function& handler)
+Route& Route::use(http::Method method, const routing::RouteFunctionWithNext& handler)
 {
     m_handlers.emplace_back(method, handler);
     return *this;
 }
-Route& Route::use(http::Method method, const Route::ReducedFunction& handler)
+Route& Route::use(http::Method method, const routing::RouteFunction& handler)
 {
-    m_handlers.emplace_back(method, [handler](const http::Request& request, http::Response& response, Route::NextFunctionRef) {
+    m_handlers.emplace_back(method, [handler](const http::Request& request, http::Response& response, routing::NextFunctionRef) {
         handler(request, response);// no next by default(?)
     });
     return *this;
@@ -38,12 +38,12 @@ void Route::set_handlers(const Route::Handlers& map)
 //
 //
 // Router
-Router& Router::use(const std::string& path, http::Method method, const Route::Function& handler)
+Router& Router::use(const std::string& path, http::Method method, const routing::RouteFunctionWithNext& handler)
 {
     get_route(path).use(method, handler);
     return *this;
 }
-Router& Router::use(const std::string& path, http::Method method, const Route::ReducedFunction& handler)
+Router& Router::use(const std::string& path, http::Method method, const routing::RouteFunction& handler)
 {
     get_route(path).use(method, handler);
     return *this;
