@@ -54,12 +54,10 @@ const std::map<std::string, std::any>& Request::custom_data() const
 {
     return m_custom_data;
 }
-Request& Request::set_data(const std::string& key, const std::any& value)
+const std::any& Request::custom_data(std::string_view s) const
 {
-    m_custom_data[key] = value;
-    return *this;
+    return m_custom_data.at(s.data());
 }
-
 void Request::populate_cookies(std::string_view cookies)
 {
     std::stringstream ss(cookies.data());

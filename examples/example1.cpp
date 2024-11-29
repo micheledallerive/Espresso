@@ -59,7 +59,7 @@ Router hello_routes()
                 response.send_file("./index.html");
             });
     r.route("/{name}")
-            .get([](const Request& request, Response& response) {
+            .get([](const Request& request, Response& response, auto next) {
                 const auto& name = request.url_params().at("name");
                 response.write("Hello, " + name + "!\n");
                 if (!request.query_params().empty()) {
@@ -68,8 +68,12 @@ Router hello_routes()
                         response.write(key + ": " + value + "\n");
                     }
                 }
+                request.set_data("custom", "custom data"s);
+                next();
             })
-            .get([](const auto& req, auto& res, auto next) {
+            .get([](const http::Request& req, auto& res, auto next) {
+                const std::string &custom = req.custom_data_as<std::string>("custom");
+                std::cout << custom << std::endl;
                 res.write("Hello, again!");
             })
             .post([](const Request& request, Response& response, Route::NextFunctionRef next) {

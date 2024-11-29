@@ -23,11 +23,12 @@ private:
     std::span<char> m_body;
     Path::MatchedGroups m_url_params;
 
-    std::map<std::string, std::any> m_custom_data;
+    mutable std::map<std::string, std::any> m_custom_data;
 
     void populate_query(std::string_view query);
 
     void populate_cookies(std::string_view cookies);
+
 public:
     Request() = default;
     ~Request();
@@ -48,7 +49,18 @@ public:
     void set_url_params(Path::MatchedGroups&& mp);
 
     [[nodiscard]] const std::map<std::string, std::any>& custom_data() const;
-    Request& set_data(const std::string& key, const std::any& value);
+    [[nodiscard]] const std::any &custom_data(std::string_view s) const;
+    template<typename T>
+    [[nodiscard]] const T& custom_data_as(std::string_view s) const
+    {
+        return std::any_cast<const T&>(m_custom_data.at(s.data()));
+    }
+    template<typename T>
+    const Request& set_data(const std::string& key, T value) const
+    {
+        m_custom_data[key] = std::move(value);
+        return *this;
+    }
 
     static Request deserialize(std::span<char> buffer);
 };
