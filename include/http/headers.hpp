@@ -30,6 +30,7 @@ public:
 
     void erase(const std::string& name);
 
+    [[nodiscard]] std::string& operator[](const std::string& name);
     [[nodiscard]] const std::string& operator[](const std::string& name) const;
 
     [[nodiscard]] bool contains(const std::string& name) const;

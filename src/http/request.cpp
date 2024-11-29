@@ -27,7 +27,15 @@ const Headers& Request::headers() const
 {
     return m_headers;
 }
+Headers& Request::headers()
+{
+    return m_headers;
+}
 const Request::Cookies& Request::cookies() const
+{
+    return m_cookies;
+}
+Request::Cookies& Request::cookies()
 {
     return m_cookies;
 }
@@ -48,6 +56,11 @@ void Request::populate_query(std::string_view query)
     while (std::getline(ss, key, '=') && std::getline(ss, value, '&')) {
         m_query[key] = value;
     }
+}
+
+bool Request::has_custom_data(std::string_view s) const
+{
+    return m_custom_data.find(s.data()) != m_custom_data.end();
 }
 
 const std::map<std::string, std::any>& Request::custom_data() const
@@ -91,9 +104,15 @@ Request Request::deserialize(std::span<char> buffer)
     std::string http_version;
     ss >> http_version;// discarded, not needed ;)
 
+    // right after http_version, there is \r\n, which we want to discard as well
+    ss.ignore(2);
     {
         std::string line;
-        while (std::getline(ss, line) && !line.empty()) {
+        while (std::getline(ss, line)
+               && !line.empty()
+               && line[0] != '\r') {
+            assert(line.back() == '\r');
+            line.pop_back();
             auto pos = line.find(':');
             if (pos != std::string::npos) {
                 std::string key = line.substr(0, pos);
@@ -108,9 +127,10 @@ Request Request::deserialize(std::span<char> buffer)
         }
     }
 
-    char* ptr = new char[buffer.size() - ss.tellg()];
-    ss.read(ptr, buffer.size() - ss.tellg());
-    req.m_body = std::span<char>(ptr, buffer.size() - ss.tellg());
+    std::size_t body_len = buffer.size() - ss.tellg();
+    char* ptr = new char[body_len];
+    ss.read(ptr, body_len);
+    req.m_body = std::span<char>(ptr, body_len);
 
     return req;
 }

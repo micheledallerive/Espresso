@@ -42,14 +42,22 @@ public:
     [[nodiscard]] const Path::MatchedGroups& url_params() const;
 
     [[nodiscard]] const Headers& headers() const;
+    [[nodiscard]] Headers& headers();
     [[nodiscard]] const Cookies& cookies() const;
+    [[nodiscard]] Cookies& cookies();
 
     [[nodiscard]] std::span<char> body() const;
 
     void set_url_params(Path::MatchedGroups&& mp);
 
     [[nodiscard]] const std::map<std::string, std::any>& custom_data() const;
-    [[nodiscard]] const std::any &custom_data(std::string_view s) const;
+    bool has_custom_data(std::string_view s) const;
+    template<typename T>
+    bool has_custom_data_as(std::string_view s) const
+    {
+        return has_custom_data(s) && m_custom_data.at(s.data()).type() == typeid(T);
+    }
+    [[nodiscard]] const std::any& custom_data(std::string_view s) const;
     template<typename T>
     [[nodiscard]] const T& custom_data_as(std::string_view s) const
     {

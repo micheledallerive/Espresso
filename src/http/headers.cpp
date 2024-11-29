@@ -20,6 +20,10 @@ void Headers::erase(const std::string& name)
 {
     m_headers.erase(name);
 }
+std::string& Headers::operator[](const std::string& name)
+{
+    return m_headers[name];
+}
 const std::string& Headers::operator[](const std::string& name) const
 {
     return m_headers.at(name);

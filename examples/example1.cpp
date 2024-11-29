@@ -1,26 +1,17 @@
 #include "http/response.hpp"
 #include "http/server.hpp"
 #include "middleware/base_middleware.hpp"
+#include "middleware/presets/json_parser.hpp"
 #include "middleware/presets/static_files.hpp"
 #include "routing/path.hpp"
 #include "routing/router.hpp"
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using namespace espresso;
 using namespace espresso::http;
-
-class MyMiddleware : public BaseMiddleware {
-public:
-    http::Response operator()(http::Request& request, middleware::NextFunctionRef next) override
-    {
-        cout << "MyMiddleware 1" << endl;
-        auto response = next(request);
-        cout << "MyMiddleware 2" << endl;
-        return response;
-    }
-};
 
 class NotMyMiddleware : public BaseMiddleware {
 public:
@@ -68,15 +59,19 @@ Router hello_routes()
                         response.write(key + ": " + value + "\n");
                     }
                 }
-                request.set_data("custom", "custom data"s);
                 next();
             })
             .get([](const http::Request& req, auto& res, auto next) {
-                const std::string &custom = req.custom_data_as<std::string>("custom");
-                std::cout << custom << std::endl;
                 res.write("Hello, again!");
             })
-            .post([](const Request& request, Response& response, Route::NextFunctionRef next) {
+            .post([](const Request& request, Response& response) {
+                if (!request.has_custom_data("json"))
+                {
+                    response.status(400).write("JSON required!");
+                    return;
+                }
+                auto json = request.custom_data_as<nlohmann::json>("json");
+                std::cout << json.dump(4) << std::endl;
                 response.write("Hello, POST!");
             });
     return r;
@@ -89,6 +84,7 @@ int main()
     Server server;
     server.router().route("/hello", hello_routes());
 
+    server.middleware(JSONParser());
     server.middleware(StaticFiles("/static", "./CMakeFiles/"));
 
     server.listen(8080);

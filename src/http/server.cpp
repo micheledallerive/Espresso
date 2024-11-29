@@ -45,7 +45,13 @@ Server::Server() : m_socket(AF_INET, SOCK_STREAM, 0) {}
         }
 
         m_workers.push_back(std::async(std::launch::async, [&] {
-            handle_client(client_fd);
+            try {
+                handle_client(client_fd);
+            }
+            catch (const std::exception& e) {
+                std::cerr << "Request crashed: " << e.what() << std::endl;
+            }
+            close(client_fd);
         }));
     }
 }
@@ -74,8 +80,6 @@ void Server::handle_client(int client_fd)
 
     std::string response_str = response.serialize();
     write(client_fd, response_str.data(), response_str.size());
-
-    close(client_fd);
 }
 void Server::middleware(const middleware::MiddlewareFunction& middleware)
 {
