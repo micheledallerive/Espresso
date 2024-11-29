@@ -7,13 +7,4 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
-set(INJA_USE_EMBEDDED_JSON OFF)
-FetchContent_Declare(
-        inja
-        GIT_REPOSITORY https://github.com/pantor/inja.git
-        GIT_TAG v3.4.0
-)
-
-FetchContent_MakeAvailable(inja)
-
-target_link_libraries(espresso PRIVATE nlohmann_json::nlohmann_json inja)
+target_link_libraries(espresso PRIVATE nlohmann_json::nlohmann_json)
