@@ -12,4 +12,6 @@ target_include_directories(espresso PUBLIC ${CMAKE_SOURCE_DIR}/include)
 find_library(MAGIC_LIBRARY magic)
 target_link_libraries(espresso PUBLIC ${MAGIC_LIBRARY})
 
+espresso_link_external(espresso)
+
 add_library(espresso::espresso ALIAS espresso)

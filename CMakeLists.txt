@@ -16,6 +16,6 @@ set(CMAKE_C_LINK_EXECUTABLE ${CMAKE_CXX_LINK_EXECUTABLE})
 
 project(espresso VERSION 0.1.0 LANGUAGES CXX)
 
+add_subdirectory(extern)
 add_subdirectory(src)
 add_subdirectory(examples)
-add_subdirectory(extern)
