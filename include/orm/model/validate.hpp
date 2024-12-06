@@ -2,6 +2,7 @@
 
 #include "orm/utils.hpp"
 #include <concepts>
+#include <rfl/field_names_t.hpp>
 #include <rfl/internal/get_ith_field_from_fake_object.hpp>
 
 namespace espresso::orm {
@@ -20,23 +21,45 @@ consteval bool all_valid_types()
 }
 
 template<typename T>
-concept ModelStructConcept = std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>();
+struct contains_double_underscore;
+
+template<auto Head, auto... Tail>
+struct contains_double_underscore<rfl::Literal<Head, Tail...>> {
+    static constexpr bool value =
+            (Head.string_view().find("__") != std::string_view::npos) ||
+            contains_double_underscore<rfl::Literal<Tail...>>::value;
+};
+
+// Base case: No more elements in the pack
+template<>
+struct contains_double_underscore<rfl::Literal<>> {
+    static constexpr bool value = false;
+};
+
+// Helper for easier usage
+template<typename T>
+constexpr bool contains_double_underscore_v = contains_double_underscore<T>::value;
+
+template<typename T>
+concept ModelStructConcept = std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>()
+        && !contains_double_underscore_v<rfl::field_names_t<T>>;
+
+template<typename T>
+concept HasFieldProperties = requires {
+    typename T::FieldProperties;
+};
 
 /**
  * Require the innerclass FieldProperties to be present and all fields of the struct to have the same FieldProperties.
  */
 template<typename T>
-concept PresentFieldPropertiesConcept = requires {
-    typename T::FieldProperties;
-} && all_same<FieldPropertyList, typename T::FieldProperties>();
+concept PresentFieldPropertiesConcept = HasFieldProperties<T> && all_same<FieldPropertyList, typename T::FieldProperties>();
 
 /**
  * Require the innerclass FieldProperties to be absent.
  */
 template<typename T>
-concept AbsentFieldPropertiesConcept = not requires {
-    typename T::FieldProperties;
-};
+concept AbsentFieldPropertiesConcept = not HasFieldProperties<T>;
 
 // FieldPropertiesConcept must be:
 // Either T::FieldProperties exists and T::FieldProperties is aggregate

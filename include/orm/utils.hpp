@@ -42,4 +42,13 @@ struct is_specialization_of<Primary<Args...>, Primary> : std::true_type {};
 template<typename T, template<class...> class Primary>
 inline constexpr bool is_specialization_of_v = is_specialization_of<T, Primary>::value;
 
+template<typename T>
+struct struct_field_ptr;
+
+template<typename Model, typename FieldType>
+struct struct_field_ptr<FieldType Model::*> {
+    using Struct = Model;
+    using Field = FieldType;
+};
+
 }// namespace espresso::orm

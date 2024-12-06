@@ -1,10 +1,10 @@
 #pragma once
+#include "orm/utils.hpp"
 #include <filesystem>
 #include <functional>
 #include <memory>
 #include <sqlite3.h>
 #include <string>
-#include "orm/utils.hpp"
 
 namespace espresso::orm {
 
@@ -98,7 +98,7 @@ public:
     void rollback();
 
     template<typename... ReturnTypes>
-    void execute_query(std::string_view query, std::function<void(std::tuple<ReturnTypes...>)> &&callback)
+    void execute_query(std::string_view query, std::function<void(std::tuple<ReturnTypes...>)>&& callback)
     {
         auto stmt = generate_stmt(query);
 
@@ -119,8 +119,9 @@ public:
         }
     }
     template<typename Callable>
-    requires (!is_specialization_of_v<Callable, std::function>)
-    void execute_query(std::string_view query, Callable && callback) {
+        requires(!is_specialization_of_v<Callable, std::function>)
+    void execute_query(std::string_view query, Callable&& callback)
+    {
         execute_query(query, std::function(callback));
     }
 };
