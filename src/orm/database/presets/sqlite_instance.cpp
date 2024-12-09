@@ -4,7 +4,7 @@
 namespace espresso::orm {
 
 SQLiteInstance::SQLiteInstance(const std::filesystem::path& path)
-    : m_db(nullptr, SQLite3Destructor{})
+    : DBInstance(), m_db(nullptr, SQLite3Destructor{})
 {
     sqlite3* db;
     if (sqlite3_open(path.c_str(), &db) != SQLITE_OK) {
@@ -57,6 +57,45 @@ void SQLiteInstance::execute_query(std::string_view query)
     auto stmt = generate_stmt(query);
 
     auto ret = sqlite3_step(stmt.get());
+    if (ret != SQLITE_DONE) {
+        throw std::runtime_error("Failed to execute query");
+    }
+}
+void SQLiteInstance::execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback)
+{
+    auto stmt = generate_stmt(query);
+
+    auto ret = sqlite3_step(stmt.get());
+    while (ret == SQLITE_ROW) {
+
+        int result_size = sqlite3_column_count(stmt.get());
+        std::vector<std::any> result;result.reserve(result_size);
+        for (int i = 0; i < result_size; ++i) {
+            switch (sqlite3_column_type(stmt.get(), i)) {
+            case SQLITE_INTEGER:
+                result.emplace_back(sqlite3_column_int(stmt.get(), i));
+                break;
+            case SQLITE_FLOAT:
+                result.emplace_back(sqlite3_column_double(stmt.get(), i));
+                break;
+            case SQLITE_TEXT:
+                result.emplace_back(std::string{reinterpret_cast<const char*>(sqlite3_column_text(stmt.get(), i))});
+                break;
+            case SQLITE_BLOB:
+                result.emplace_back(std::vector<char>{reinterpret_cast<const char*>(sqlite3_column_blob(stmt.get(), i)),
+                                                      reinterpret_cast<const char*>(sqlite3_column_blob(stmt.get(), i)) + sqlite3_column_bytes(stmt.get(), i)});
+                break;
+            case SQLITE_NULL:
+                result.emplace_back();
+                break;
+            default:
+                throw std::runtime_error("Unknown column type");
+            }
+        }
+
+        callback(result);
+        ret = sqlite3_step(stmt.get());
+    }
     if (ret != SQLITE_DONE) {
         throw std::runtime_error("Failed to execute query");
     }

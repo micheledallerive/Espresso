@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rfl/named_tuple_t.hpp>
 #include <rfl/internal/get_ith_field_from_fake_object.hpp>
 #include <rfl/internal/num_fields.hpp>
 #include <tuple>
@@ -50,5 +51,30 @@ struct struct_field_ptr<FieldType Model::*> {
     using Struct = Model;
     using Field = FieldType;
 };
+
+template<typename T>
+using fields_tuple_t = typename rfl::named_tuple_t<T>::Values;
+
+//template<typename RflTuple>
+//struct rfl_tuple_to_tuple;
+//
+//template<typename... T>
+//struct rfl_tuple_to_tuple<rfl::Tuple<T...>> {
+//    using type = std::tuple<typename T::Type...>;
+//};
+//
+//template<typename NamedTuple>
+//struct rfl_namedtuple_to_tuple {
+//    using type = typename rfl_tuple_to_tuple<typename NamedTuple::Fields>::type;
+//};
+//
+//template<typename NamedTuple>
+//using rfl_namedtuple_to_tuple_t = typename rfl_namedtuple_to_tuple<NamedTuple>::type;
+
+template<typename T, typename Tuple>
+T construct_from_tuple(const Tuple& tuple)
+{
+    return rfl::apply([](auto&&... args) { return T{args...}; }, tuple);
+}
 
 }// namespace espresso::orm
