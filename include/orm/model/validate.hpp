@@ -49,6 +49,16 @@ concept HasFieldProperties = requires {
     typename T::FieldProperties;
 };
 
+template<typename T>
+concept HasModelProperties = requires {
+    typename T::ModelProperties;
+};
+template<typename T>
+concept HasTableName = HasModelProperties<T> && requires {
+    T::ModelProperties::table_name;
+};
+
+
 /**
  * Require the innerclass FieldProperties to be present and all fields of the struct to have the same FieldProperties.
  */

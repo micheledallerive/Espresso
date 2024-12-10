@@ -6,26 +6,40 @@
 
 namespace espresso::orm {
 
+enum class Property {
+    MAX_LENGTH,
+    REQUIRED,
+    COLUMN_NAME
+};
+
 struct FieldProperty {
-    std::string name;
+    Property property;
     std::variant<std::string, bool> value;
 };
 
 struct FieldPropertyList {
-    std::vector<FieldProperty> properties;
-    FieldPropertyList() : properties{} {}
+    std::vector<FieldProperty> m_properties{};
+    FieldPropertyList() : m_properties{} {}
+    FieldPropertyList(std::initializer_list<FieldProperty> props) : m_properties{props} {}
     template<typename... Args>
-    FieldPropertyList(Args&&... args) : properties{std::forward<Args>(args)...} {}
+    explicit FieldPropertyList(Args&&... args) : FieldPropertyList({std::forward<Args>(args)...})
+    {}
+    [[nodiscard]] const std::vector<FieldProperty>& properties() const { return m_properties; }
 };
 
 FieldProperty max_length(size_t max_len)
 {
-    return FieldProperty{"max_length", std::to_string(max_len)};
+    return FieldProperty{Property::MAX_LENGTH, std::to_string(max_len)};
 }
 
 FieldProperty required()
 {
-    return FieldProperty{"required", true};
+    return FieldProperty{Property::REQUIRED, true};
+}
+
+FieldProperty column_name(const std::string& col_name)
+{
+    return FieldProperty{Property::COLUMN_NAME, col_name};
 }
 
 }// namespace espresso::orm
