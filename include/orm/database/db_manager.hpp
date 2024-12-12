@@ -1,6 +1,7 @@
 #pragma once
 
 #include "orm/database/presets/sqlite_instance.hpp"
+#include "utils/tuple.hpp"
 
 namespace espresso::orm {
 
@@ -28,19 +29,18 @@ public:
 
     DBInstance& db()
     {
+        if (m_db == nullptr)
+            throw std::runtime_error("No database instance");
         return *m_db;
     }
 
     template<typename... Types>
-    void execute_query(std::string_view query, std::function<void(rfl::Tuple<Types...>&)>&& callback)
+    void execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
     {
-        rfl::Tuple<Types...> result;
-        m_db->execute_query(query, [&result](std::vector<std::any>& vals) {
-            [&]<std::size_t... Is>(std::index_sequence<Is...>) {
-                ((std::get<Is>(result) = std::any_cast<Types>(vals[Is])), ...);
-            }(std::make_index_sequence<sizeof...(Types)>{});
+        m_db->execute_query(query, [&callback](std::vector<std::any>& vals) {
+            const auto t = vector_to_tuple<Types...>(vals);
+            callback(t);
         });
-        callback(result);
     }
 
     template<typename Callable>

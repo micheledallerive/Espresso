@@ -1,5 +1,6 @@
 #pragma once
 
+#include "orm/model/field_property.hpp"
 #include "orm/utils.hpp"
 #include <concepts>
 #include <rfl/field_names_t.hpp>
@@ -26,8 +27,7 @@ struct contains_double_underscore;
 template<auto Head, auto... Tail>
 struct contains_double_underscore<rfl::Literal<Head, Tail...>> {
     static constexpr bool value =
-            (Head.string_view().find("__") != std::string_view::npos) ||
-            contains_double_underscore<rfl::Literal<Tail...>>::value;
+            (Head.string_view().find("__") != std::string_view::npos) || contains_double_underscore<rfl::Literal<Tail...>>::value;
 };
 
 // Base case: No more elements in the pack
@@ -57,7 +57,6 @@ template<typename T>
 concept HasTableName = HasModelProperties<T> && requires {
     T::ModelProperties::table_name;
 };
-
 
 /**
  * Require the innerclass FieldProperties to be present and all fields of the struct to have the same FieldProperties.
@@ -95,5 +94,8 @@ concept ModelPropertiesConcept = requires {
 
 template<typename T>
 concept ModelConcept = ModelStructConcept<T> && FieldPropertiesConcept<T> && ModelPropertiesConcept<T>;
+
+template<typename T>
+concept ModelFieldPtr = std::is_member_pointer_v<T> && std::is_member_object_pointer_v<T>;
 
 }// namespace espresso::orm

@@ -1,7 +1,8 @@
 #pragma once
 
+#include "orm/concepts.hpp"
 #include "orm/model/field_property.hpp"
-#include "orm/model/validate.hpp"
+#include "orm/reflection/field_name.hpp"
 #include <map>
 #include <rfl.hpp>
 
@@ -61,9 +62,10 @@ public:
     }
 
     template<auto field_ptr>
-    std::string column_name() noexcept
+    static std::string column_name() noexcept
     {
-        auto prop = find_property<field_ptr>(Property::COLUMN_NAME);
+        MetaModel<Model> me = instance();
+        auto prop = me.template find_property<field_ptr>(Property::COLUMN_NAME);
         if (prop.has_value()) {
             return std::get<std::string>(prop.value().value);
         }
