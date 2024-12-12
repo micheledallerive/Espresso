@@ -11,7 +11,7 @@ namespace espresso::orm {
 template<typename Model>
 class QuerySet {
 private:
-    SQLCompiler m_compiler;
+    SQLCompiler::Query m_compiler;
 
     template<typename Callback>
     void execute(Callback &&callback) const {

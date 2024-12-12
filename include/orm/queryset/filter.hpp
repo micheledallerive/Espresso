@@ -29,7 +29,7 @@ public:
             && std::is_same_v<typename struct_field_ptr<decltype(field_ptr2)>::Struct, Model>
     static constexpr Filter create(FilterField<field_ptr1> field1, std::string op, FilterField<field_ptr2> field2)
     {
-        return Filter{MetaModel<Model>::template column_name<field_ptr1>(), std::move(op), MetaModel<Model>::template column_name<field_ptr2>()};
+        return Filter{MetaModel<Model>::column_name(get_field_name_str<field_ptr1>()), std::move(op), MetaModel<Model>::column_name(get_field_name_str(field_ptr2))};
     }
 
     template<auto field_ptr>
@@ -37,7 +37,7 @@ public:
     static constexpr Filter create(FilterField<field_ptr> field, std::string op, const struct_field_ptr<decltype(field_ptr)>::Field& value)
     {
         using FieldType = typename struct_field_ptr<decltype(field_ptr)>::Field;
-        return Filter{MetaModel<Model>::template column_name<field_ptr>(), std::move(op), stringify<FieldType>::to_string(value)};
+        return Filter{MetaModel<Model>::column_name(get_field_name_str<field_ptr>()), std::move(op), stringify<FieldType>::to_string(value)};
     }
 };
 

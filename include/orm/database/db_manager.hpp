@@ -34,6 +34,11 @@ public:
         return *m_db;
     }
 
+    void execute_query(std::string_view query)
+    {
+        m_db->execute_query(query);
+    }
+
     template<typename... Types>
     void execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
     {

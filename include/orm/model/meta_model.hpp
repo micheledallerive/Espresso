@@ -43,10 +43,8 @@ public:
     }
     ~MetaModel() = default;
 
-    template<auto field_ptr>
-    std::optional<FieldProperty> find_property(Property property)
+    std::optional<FieldProperty> find_property(const std::string & field_name, Property property)
     {
-        auto field_name = get_field_name_str<field_ptr>();
         auto it = m_field_properties.find(field_name);
         if (it == m_field_properties.end()) {
             return std::nullopt;
@@ -59,17 +57,24 @@ public:
             }
         }
         return std::nullopt;
+
     }
 
     template<auto field_ptr>
-    static std::string column_name() noexcept
+    std::optional<FieldProperty> find_property(Property property)
+    {
+        auto field_name = get_field_name_str<field_ptr>();
+        return find_property(field_name, property);
+    }
+
+    static std::string column_name(const std::string &field_name) noexcept
     {
         MetaModel<Model> me = instance();
-        auto prop = me.template find_property<field_ptr>(Property::COLUMN_NAME);
+        auto prop = me.find_property(field_name, Property::COLUMN_NAME);
         if (prop.has_value()) {
             return std::get<std::string>(prop.value().value);
         }
-        return std::string(get_field_name_str_view<field_ptr>());
+        return field_name;
     }
 
     struct compile_time {
