@@ -23,13 +23,32 @@ struct stringify<std::string> {
 
 template<typename T>
 struct stringify<std::optional<T>> {
-static std::string to_string(const std::optional<T>& t)
-{
-    if (t.has_value()) {
-        return stringify<T>::to_string(t.value());
+    static std::string to_string(const std::optional<T>& t)
+    {
+        if (t.has_value()) {
+            return stringify<T>::to_string(t.value());
+        }
+        return "NULL";
     }
-    return "NULL";
-}
 };
 
-}
+template<typename T>
+struct quote_stringify {
+    static std::string to_string(const T& t)
+    {
+        return "\"" + stringify<T>::to_string(t) + "\"";
+    }
+};
+
+template<typename T>
+struct quote_stringify<std::optional<T>> {
+    static std::string to_string(const std::optional<T>& t)
+    {
+        if (t.has_value()) {
+            return "\"" + stringify<T>::to_string(t.value()) + "\"";
+        }
+        return "NULL";
+    }
+};
+
+}// namespace espresso::orm

@@ -16,11 +16,19 @@ public:
     FilterField() = default;
     ~FilterField() = default;
 
-    template<typename T>
-    Filter<Model> operator==(const T& other) const
-    {
-        return Filter<Model>::create(*this, "=", other);
+#define FILTER_FIELD_OPERATOR(op)                        \
+    template<typename T>                                 \
+    Filter operator op(const T & other) const     \
+    {                                                    \
+        return Filter::create(*this, #op, other); \
     }
+
+    FILTER_FIELD_OPERATOR(==)
+    FILTER_FIELD_OPERATOR(!=)
+    FILTER_FIELD_OPERATOR(>)
+    FILTER_FIELD_OPERATOR(<)
+    FILTER_FIELD_OPERATOR(>=)
+    FILTER_FIELD_OPERATOR(<=)
 };
 
 template<auto field_ptr>

@@ -4,9 +4,12 @@
 
 namespace espresso::orm {
 
-class ObjectDoesNotExist : public std::runtime_error {
-public:
-    ObjectDoesNotExist() : std::runtime_error("Object does not exist") {}
-};
+#define DECLARE_EXCEPTION(name, message)        \
+    class name : public std::runtime_error {    \
+    public:                                     \
+        name() : std::runtime_error(message) {} \
+    };
+
+DECLARE_EXCEPTION(ObjectDoesNotExist, "Object does not exist")
 
 }// namespace espresso::orm

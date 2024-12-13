@@ -46,7 +46,7 @@ int main()
 
     auto meta = MetaModel<User>::instance();
 
-    const auto results = User::objects().all();
+    const vector<User> results = User::objects().all();
     for (const auto& result : results) {
         cout << result.username << " " << result.age << " ";
         if (result.agf.has_value()) cout << result.agf.value();
@@ -56,15 +56,16 @@ int main()
     }
 
     try {
-        const auto result = User::objects().filter(field_t<&User::username> == "ichele").get();
+        auto result = User::objects().filter(field_t<&User::username> == "Lore").get();
         cout << result.username << endl;
+        result.remove();
     }
     catch (const User::DoesNotExist& e) {
         cout << "User does not exist!" << endl;
     }
 
-    User u{.username = "test", .age = 21, .agf = 22};
-    u.save();
+    User u{.username = "Lore", .age = 22, .agf = std::nullopt};
+//    u.save();
     //    u.remove();
     //    u.save();
 

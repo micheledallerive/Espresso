@@ -124,7 +124,7 @@ public:
     SQLiteInstance::Compiler::Insert& insert(std::string_view name, const T& value)
     {
         m_columns.emplace_back(name);
-        m_values.push_back(stringify<T>::to_string(value));
+        m_values.push_back(quote_stringify<T>::to_string(value));
         return *this;
     }
 
@@ -133,7 +133,7 @@ public:
         std::stringstream ss;
         ss << "INSERT OR REPLACE INTO " << table;
         ss << " (" << concatenate(m_columns, ", ") << ")";
-        ss << " VALUES (\"" << concatenate(m_values, "\", \"") << "\")";
+        ss << " VALUES (" << concatenate(m_values, ", ") << ")";
         auto result = ss.str();
         return result;
     }
@@ -153,7 +153,10 @@ public:
     template<typename T>
     SQLiteInstance::Compiler::Delete& filter(std::string_view column_name, const T& field)
     {
-        m_filters.push_back(std::string(column_name) + " = \"" + stringify<T>::to_string(field) + "\"");
+        std::string rhs = quote_stringify<T>::to_string(field);
+        std::string op = " = ";
+        if (rhs == "NULL") op = " IS ";
+        m_filters.push_back(std::string(column_name) + op + rhs);
         return *this;
     }
 
