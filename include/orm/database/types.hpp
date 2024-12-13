@@ -14,4 +14,6 @@ enum class SQLType {
     TEXT,
 };
 
+using DB = EspressoSettings::DB;
+
 }

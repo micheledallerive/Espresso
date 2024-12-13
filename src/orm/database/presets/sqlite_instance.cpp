@@ -4,7 +4,7 @@
 namespace espresso::orm {
 
 SQLiteInstance::SQLiteInstance(const std::filesystem::path& path)
-    : DBInstance(), m_db(nullptr, SQLite3Destructor{})
+    : m_db(nullptr, SQLite3Destructor{})
 {
     sqlite3* db;
     if (sqlite3_open(path.c_str(), &db) != SQLITE_OK) {

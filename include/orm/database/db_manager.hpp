@@ -1,9 +1,13 @@
 #pragma once
 
+#include "orm/database/types.hpp"
+#include "orm/database/concepts.hpp"
 #include "orm/database/presets/sqlite_instance.hpp"
 #include "utils/tuple.hpp"
 
 namespace espresso::orm {
+
+static_assert(DBInstanceConcept<EspressoSettings::DB>, "The database type specified in EspressoSettings::DB does not satisfy the DBInstanceConcept");
 
 /**
  * Singleton class to handle database
@@ -12,26 +16,25 @@ class DBManager {
 private:
     DBManager() = default;
 
-    std::unique_ptr<DBInstance> m_db{nullptr};
+    std::optional<DB> m_db{std::nullopt};
 
 public:
+    //using Compiler = DB::Compiler;
     static DBManager& get()
     {
         static DBManager instance;
         return instance;
     }
 
-    template<typename Backend, typename... Args>
+    template<typename... Args>
     void emplace(Args&&... args)
     {
-        m_db = std::make_unique<Backend>(std::forward<Args>(args)...);
+        m_db.emplace(std::forward<Args>(args)...);
     }
 
-    DBInstance& db()
+    DB& db()
     {
-        if (m_db == nullptr)
-            throw std::runtime_error("No database instance");
-        return *m_db;
+        return m_db.value();
     }
 
     void execute_query(std::string_view query)
@@ -42,10 +45,10 @@ public:
     template<typename... Types>
     void execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
     {
-        m_db->execute_query(query, [&callback](std::vector<std::any>& vals) {
-            const auto t = vector_to_tuple<Types...>(vals);
-            callback(t);
-        });
+        m_db->execute_query(query, std::function([&callback](std::vector<std::any>& vals) {
+                                const auto t = vector_to_tuple<Types...>(vals);
+                                callback(t);
+                            }));
     }
 
     template<typename Callable>

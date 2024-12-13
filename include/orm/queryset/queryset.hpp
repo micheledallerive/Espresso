@@ -1,17 +1,17 @@
 #pragma once
 
-#include "orm/utils.hpp"
 #include "orm/database/db_manager.hpp"
-#include "orm/database/sql_compiler.hpp"
+#include "orm/database/presets/sqlite_compiler.hpp"
 #include "orm/model/meta_model.hpp"
 #include "orm/queryset/filter.hpp"
+#include "orm/utils.hpp"
 
 namespace espresso::orm {
 
 template<typename Model>
 class QuerySet {
 private:
-    SQLCompiler::Query m_compiler;
+    DB::Compiler::Query m_compiler;
 
     template<typename Callback>
     void execute(Callback &&callback) const {

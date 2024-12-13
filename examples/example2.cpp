@@ -1,6 +1,11 @@
+#include "orm/database/presets/sqlite_instance.hpp"
+
+struct EspressoSettings {
+    using DB = espresso::orm::SQLiteInstance;
+};
+
 #include "orm/concepts.hpp"
 #include "orm/database/db_manager.hpp"
-#include "orm/database/presets/sqlite_instance.hpp"
 #include "orm/model/field_property.hpp"
 #include "orm/model/meta_model.hpp"
 #include "orm/model/model.hpp"
@@ -38,7 +43,7 @@ static_assert(rfl::internal::num_fields<User> == 3);
 
 int main()
 {
-    DBManager::get().emplace<SQLiteInstance>("test.db");
+    DBManager::get().emplace("test.db");
 
     auto meta = MetaModel<User>::instance();
 
@@ -48,8 +53,8 @@ int main()
     }
 
     User u{.username = "test", .age = 21};
-//    u.remove();
-//    u.save();
+    //    u.remove();
+    //    u.save();
 
     return 0;
 }
