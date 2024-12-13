@@ -100,5 +100,34 @@ public:
     }
 };
 
+class SQLCompiler::Delete {
+private:
+    std::string table;
+    std::vector<std::string> m_filters;
+
+public:
+    explicit Delete(std::string table)
+        : table(std::move(table))
+    {
+    }
+
+    template<typename T>
+    SQLCompiler::Delete &filter(std::string_view column_name, const T &field) {
+        m_filters.push_back(std::string(column_name) + " = \"" + stringify<T>::to_string(field) + "\"");
+        return *this;
+    }
+
+    std::string compile() const
+    {
+        std::stringstream ss;
+        ss << "DELETE FROM " << table;
+        if (!m_filters.empty()) {
+            ss << " WHERE ";
+            ss << concatenate(m_filters, " AND ");
+        }
+        auto result = ss.str();
+        return result;
+    }
+};
 
 }// namespace espresso::orm

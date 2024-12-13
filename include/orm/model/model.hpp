@@ -28,6 +28,16 @@ public:
         const auto query = insert.compile();
         DBManager::get().execute_query(query);
     }
+
+    void remove() {
+        SQLCompiler::Delete del{MetaModel<Child>::compile_time::table_name()};
+        const auto view = rfl::to_view(*_this());
+        view.apply([&](const auto& f) {
+            del.filter(MetaModel<Child>::column_name(std::string(f.name())), *f.value());
+        });
+        const auto query = del.compile();
+        DBManager::get().execute_query(query);
+    }
 };
 
 }// namespace espresso::orm

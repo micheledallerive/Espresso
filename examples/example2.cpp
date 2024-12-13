@@ -1,6 +1,10 @@
+#include "orm/concepts.hpp"
+#include "orm/database/db_manager.hpp"
 #include "orm/database/presets/sqlite_instance.hpp"
 #include "orm/model/field_property.hpp"
-#include "orm/model/validate.hpp"
+#include "orm/model/meta_model.hpp"
+#include "orm/model/model.hpp"
+#include "orm/queryset/filter_field.hpp"
 #include "orm/queryset/queryset.hpp"
 #include "orm/reflection/field_name.hpp"
 #include "rfl/field_names_t.hpp"
@@ -12,14 +16,11 @@ using namespace std;
 using namespace espresso;
 using namespace espresso::orm;
 
-struct User {
+class User : public BaseModel<User> {
+public:
     std::string username;
     int age;
     int agf;
-
-    int test() {
-        return 2;
-    }
 
     struct FieldProperties {
         const FieldPropertyList username{max_length(20), required(), column_name("UserName")};
@@ -28,41 +29,27 @@ struct User {
 
     struct ModelProperties {
         static constexpr auto primary_key = std::make_tuple(&User::username, &User::age);
-        static constexpr std::string_view table_name = "test";
+        static constexpr std::string_view table_name = "User";
     };
 };
 
-//
-//static_assert(rfl::field_names_t<User>::size() == 2);
-//static_assert(all_equal<PropertiesList, User::FieldProperties>());
-
-//static_assert(std::is_same_v<decltype(&User::age), int User::*>);
-//
-//static_assert(std::is_same_v<int,
-//                             std::remove_cvref_t<
-//                                     std::remove_pointer_t<
-//                                             typename std::remove_pointer_t<
-//                                                     decltype(rfl::internal::get_ith_field_from_fake_object<User, 1>())>>>>);
-//static_assert(rfl::internal::get_field_name_str_view<User, &User::age>()
-//              == rfl::internal::get_field_name_str_view<User, &User::agf>());
-//static_assert(std::is_same_v<decltype(rfl::internal::get_ith_field_from_fake_object<User, 1>()),
-//                             decltype(rfl::internal::get_ith_field_from_fake_object<User, 2>())>);
+static_assert(std::is_aggregate_v<User>);
+static_assert(rfl::internal::num_fields<User> == 3);
 
 int main()
 {
-    //    static_assert(ModelConcept<User>);
-    auto db = SQLiteInstance("test.db");
+    DBManager::get().emplace<SQLiteInstance>("test.db");
 
-    db.execute_query("CREATE TABLE IF NOT EXISTS test (username TEXT, age INTEGER);");
+    auto meta = MetaModel<User>::instance();
 
-    //db.execute_query("SELECT * FROM test;", fn);
-    db.execute_query("SELECT * FROM test;", [](std::tuple<std::string, int> row) {
-        cout << std::get<0>(row) << " " << std::get<1>(row) << endl;
-    });
+    const auto results = User::objects().all();
+    for (const auto& result : results) {
+        cout << result.username << " " << result.age << endl;
+    }
 
-    QuerySet<User> qs;
-    qs.filter(field<&User::age> == 3);
-    qs.filter(field<&User::age> == field<&User::agf>);
+    User u{.username = "test", .age = 21};
+//    u.remove();
+//    u.save();
 
     return 0;
 }
