@@ -43,9 +43,9 @@ public:
     }
 
     template<typename... Types>
-    void execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
+    size_t execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
     {
-        m_db->execute_query(query, std::function([&callback](std::vector<std::any>& vals) {
+        return m_db->execute_query(query, std::function([&callback](std::vector<std::any>& vals) {
                                 const auto t = vector_to_tuple<Types...>(vals);
                                 callback(t);
                             }));
@@ -53,9 +53,9 @@ public:
 
     template<typename Callable>
         requires(!is_specialization_of_v<Callable, std::function>)
-    void execute_query(std::string_view query, Callable&& callback)
+    size_t execute_query(std::string_view query, Callable&& callback)
     {
-        execute_query(query, std::function(std::forward<Callable>(callback)));
+        return execute_query(query, std::function(std::forward<Callable>(callback)));
     }
 };
 

@@ -1,5 +1,7 @@
 #pragma once
+#include "orm/exception.hpp"
 #include "orm/queryset/queryset.hpp"
+#include <stdexcept>
 
 namespace espresso::orm {
 
@@ -29,7 +31,8 @@ public:
         DBManager::get().execute_query(query);
     }
 
-    void remove() {
+    void remove()
+    {
         DB::Compiler::Delete del{MetaModel<Child>::compile_time::table_name()};
         const auto view = rfl::to_view(*_this());
         view.apply([&](const auto& f) {
@@ -38,6 +41,11 @@ public:
         const auto query = del.compile();
         DBManager::get().execute_query(query);
     }
+
+    class DoesNotExist : public ObjectDoesNotExist {
+    public:
+        DoesNotExist() : ObjectDoesNotExist() {}
+    };
 };
 
 }// namespace espresso::orm

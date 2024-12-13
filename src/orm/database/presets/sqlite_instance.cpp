@@ -61,13 +61,13 @@ void SQLiteInstance::execute_query(std::string_view query)
         throw std::runtime_error("Failed to execute query");
     }
 }
-void SQLiteInstance::execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback)
+size_t SQLiteInstance::execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback)
 {
     auto stmt = generate_stmt(query);
 
+    size_t cnt = 0;
     auto ret = sqlite3_step(stmt.get());
     while (ret == SQLITE_ROW) {
-
         int result_size = sqlite3_column_count(stmt.get());
         std::vector<std::any> result;result.reserve(result_size);
         for (int i = 0; i < result_size; ++i) {
@@ -93,12 +93,14 @@ void SQLiteInstance::execute_query(std::string_view query, std::function<void(st
             }
         }
 
+        ++cnt;
         callback(result);
         ret = sqlite3_step(stmt.get());
     }
     if (ret != SQLITE_DONE) {
         throw std::runtime_error("Failed to execute query");
     }
+    return cnt;
 }
 
 }// namespace espresso::orm

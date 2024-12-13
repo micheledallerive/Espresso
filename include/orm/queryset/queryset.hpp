@@ -5,6 +5,7 @@
 #include "orm/model/meta_model.hpp"
 #include "orm/queryset/filter.hpp"
 #include "orm/utils.hpp"
+#include "utils/maybe_uninit.hpp"
 
 namespace espresso::orm {
 
@@ -14,8 +15,9 @@ private:
     DB::Compiler::Query m_compiler;
 
     template<typename Callback>
-    void execute(Callback &&callback) const {
-        DBManager::get().execute_query(m_compiler.compile(), std::forward<Callback>(callback));
+    size_t execute(Callback&& callback) const
+    {
+        return DBManager::get().execute_query(m_compiler.compile(), std::forward<Callback>(callback));
     }
 
 public:
@@ -28,11 +30,23 @@ public:
         return *this;
     }
 
+    Model get() const
+    {
+        MaybeUninit<Model> result;
+        auto cnt = execute([&](const model_to_tuple_t<Model>& tuple) {
+            result.emplace(construct_from_tuple<Model>(tuple));
+        });
+        if (cnt == 0) {
+            throw typename Model::DoesNotExist{};
+        }
+        return result.get();
+    }
+
     std::vector<Model> all() const
     {
         std::vector<Model> result;
         using Tuple = model_to_tuple_t<Model>;
-        execute([&](const Tuple &tuple) {
+        execute([&](const Tuple& tuple) {
             result.emplace_back(construct_from_tuple<Model>(tuple));
         });
         return result;

@@ -44,8 +44,7 @@ template<typename T>
 constexpr bool contains_double_underscore_v = contains_double_underscore<T>::value;
 
 template<typename T>
-concept ModelStructConcept =
-        std::is_base_of_v<BaseModel<T>, T> && std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>() && !contains_double_underscore_v<rfl::field_names_t<T>>;
+concept ModelStructConcept = std::is_base_of_v<BaseModel<T>, T> && std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>() && !contains_double_underscore_v<rfl::field_names_t<T>>;
 
 template<typename T>
 concept HasFieldProperties = requires {

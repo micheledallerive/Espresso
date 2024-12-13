@@ -52,6 +52,13 @@ int main()
         cout << result.username << " " << result.age << endl;
     }
 
+    try {
+        const auto result = User::objects().filter(field_t<&User::username> == "ichele").get();
+        cout << result.username << endl;
+    } catch (const User::DoesNotExist& e) {
+        cout << "User does not exist!" << endl;
+    }
+
     User u{.username = "test", .age = 21};
     //    u.remove();
     //    u.save();

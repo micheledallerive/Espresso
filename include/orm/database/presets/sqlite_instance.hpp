@@ -41,7 +41,7 @@ public:
     void commit();
     void rollback();
 
-    void execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback);
+    size_t execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback);
 
     class Compiler;
 };
