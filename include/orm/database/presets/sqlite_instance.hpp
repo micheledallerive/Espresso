@@ -1,5 +1,5 @@
 #pragma once
-#include "orm/utils.hpp"
+#include "orm/utils/stringify.hpp"
 #include "utils/string.hpp"
 #include <any>
 #include <filesystem>
@@ -128,10 +128,10 @@ public:
         return *this;
     }
 
-    std::string compile() const
+    [[nodiscard]] std::string compile() const
     {
         std::stringstream ss;
-        ss << "INSERT INTO " << table;
+        ss << "INSERT OR REPLACE INTO " << table;
         ss << " (" << concatenate(m_columns, ", ") << ")";
         ss << " VALUES (\"" << concatenate(m_values, "\", \"") << "\")";
         auto result = ss.str();
@@ -157,7 +157,7 @@ public:
         return *this;
     }
 
-    std::string compile() const
+    [[nodiscard]] std::string compile() const
     {
         std::stringstream ss;
         ss << "DELETE FROM " << table;

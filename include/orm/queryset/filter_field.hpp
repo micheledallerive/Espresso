@@ -2,7 +2,6 @@
 
 #include "orm/concepts.hpp"
 #include "orm/queryset/filter.hpp"
-#include "orm/utils.hpp"
 #include <concepts>
 
 namespace espresso::orm {

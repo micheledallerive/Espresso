@@ -1,6 +1,6 @@
 #pragma once
 
-#include "orm/utils.hpp"
+#include "orm/utils/types.hpp"
 #include <rfl/internal/get_field_names.hpp>
 #include <string>
 

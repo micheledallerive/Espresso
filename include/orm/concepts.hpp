@@ -1,7 +1,7 @@
 #pragma once
 
 #include "orm/model/field_property.hpp"
-#include "orm/utils.hpp"
+#include "orm/utils/types.hpp"
 #include <concepts>
 #include <rfl/field_names_t.hpp>
 #include <rfl/internal/get_ith_field_from_fake_object.hpp>

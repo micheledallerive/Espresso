@@ -1,7 +1,7 @@
 #pragma once
 
 #include "orm/model/meta_model.hpp"
-#include "orm/utils.hpp"
+#include "orm/utils/stringify.hpp"
 #include <string>
 
 namespace espresso::orm {

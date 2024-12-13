@@ -8,7 +8,6 @@ namespace espresso::orm {
 
 enum class Property {
     MAX_LENGTH,
-    REQUIRED,
     COLUMN_NAME
 };
 
@@ -30,11 +29,6 @@ struct FieldPropertyList {
 FieldProperty max_length(size_t max_len)
 {
     return FieldProperty{Property::MAX_LENGTH, std::to_string(max_len)};
-}
-
-FieldProperty required()
-{
-    return FieldProperty{Property::REQUIRED, true};
 }
 
 FieldProperty column_name(const std::string& col_name)

@@ -4,7 +4,6 @@
 #include "orm/database/presets/sqlite_compiler.hpp"
 #include "orm/model/meta_model.hpp"
 #include "orm/queryset/filter.hpp"
-#include "orm/utils.hpp"
 #include "utils/maybe_uninit.hpp"
 
 namespace espresso::orm {

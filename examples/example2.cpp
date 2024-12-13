@@ -25,11 +25,10 @@ class User : public BaseModel<User> {
 public:
     std::string username;
     int age;
-    int agf;
+    std::optional<int> agf;
 
     struct FieldProperties {
-        const FieldPropertyList username{max_length(20), required(), column_name("UserName")};
-        const FieldPropertyList age{required()};
+        const FieldPropertyList username{max_length(20), column_name("UserName")};
     };
 
     struct ModelProperties {
@@ -49,17 +48,23 @@ int main()
 
     const auto results = User::objects().all();
     for (const auto& result : results) {
-        cout << result.username << " " << result.age << endl;
+        cout << result.username << " " << result.age << " ";
+        if (result.agf.has_value()) cout << result.agf.value();
+        else
+            cout << "NULL";
+        cout << endl;
     }
 
     try {
         const auto result = User::objects().filter(field_t<&User::username> == "ichele").get();
         cout << result.username << endl;
-    } catch (const User::DoesNotExist& e) {
+    }
+    catch (const User::DoesNotExist& e) {
         cout << "User does not exist!" << endl;
     }
 
-    User u{.username = "test", .age = 21};
+    User u{.username = "test", .age = 21, .agf = 22};
+    u.save();
     //    u.remove();
     //    u.save();
 
