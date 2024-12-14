@@ -7,7 +7,7 @@
 namespace espresso::orm {
 template<auto field_ptr>
     requires ModelFieldPtr<decltype(field_ptr)>
-struct FilterField;
+class FilterField;
 
 class Filter {
 private:
@@ -52,7 +52,7 @@ public:
         static constexpr auto equals = "=";
         static constexpr auto not_equals = "!=";
         if (op != equals && op != not_equals) throw std::runtime_error("Null comparison can only be equal or not equal");
-        return Filter{column_name<field_ptr>, op == equals ? "IS" : "IS NOT", "NULL"};
+        return Filter{column_name<field_ptr>(), op == equals ? "IS" : "IS NOT", "NULL"};
     }
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utils/tuple.hpp"
 #include "orm/utils/anycast.hpp"
+#include "utils/tuple.hpp"
 #include <rfl/internal/get_ith_field_from_fake_object.hpp>
 #include <rfl/internal/num_fields.hpp>
 #include <rfl/named_tuple_t.hpp>
@@ -64,15 +64,61 @@ T construct_from_tuple(const Tuple& tuple)
                       tuple);
 }
 
+// Concatenate two index sequences
+template<typename Seq1, typename Seq2>
+struct index_sequence_cat;
+
+template<std::size_t... I1, std::size_t... I2>
+struct index_sequence_cat<std::index_sequence<I1...>, std::index_sequence<I2...>> {
+    using type = std::index_sequence<I1..., I2...>;
+};
+
+// Helper alias for simplicity
+template<typename Seq1, typename Seq2>
+using index_sequence_cat_t = typename index_sequence_cat<Seq1, Seq2>::type;
+
+// Recursive implementation of make_index_sequence_skip_tuple
+template<std::size_t Index, typename... Types>
+struct make_index_sequence_skip_tuple_impl;
+
+// Base case: empty pack
+template<std::size_t Index>
+struct make_index_sequence_skip_tuple_impl<Index> {
+    using type = std::index_sequence<>;
+};
+
+// Case 1: Non-tuple type
+template<std::size_t Index, typename T, typename... Rest>
+struct make_index_sequence_skip_tuple_impl<Index, T, Rest...> {
+    using type = index_sequence_cat_t<
+            std::index_sequence<Index>,
+            typename make_index_sequence_skip_tuple_impl<Index + 1, Rest...>::type>;
+};
+
+// Case 2: Compound type, i.e. a type with T::Compound
+template<std::size_t Index, typename T, typename... Rest>
+    requires requires {
+        typename T::Compound;
+    }
+struct make_index_sequence_skip_tuple_impl<Index, T, Rest...> {
+    using type = index_sequence_cat_t<std::index_sequence<Index>,
+                                      typename make_index_sequence_skip_tuple_impl<
+                                              Index + 1 + (rfl::tuple_size_v<typename T::Compound> > 0 ? rfl::tuple_size_v<typename T::Compound> - 1 : 0),
+                                              Rest...>::type>;
+};
+
+// Helper alias
 template<typename... Types>
-Tuple<Types...> vector_to_tuple(const std::vector<std::any>& vec)
-{
-    Tuple<Types...> t;
-    size_t i = 0;
-    [&]<size_t... _i>(std::index_sequence<_i...>) {
-        ((std::get<_i>(t) = anycast_if_present<rfl::internal::nth_element_t<_i, Types...>>::cast(vec[i++])), ...);
-    }(std::make_index_sequence<sizeof...(Types)>{});
-    return t;
-}
+using make_index_sequence_skip_compound = typename make_index_sequence_skip_tuple_impl<0, Types...>::type;
+
+template<typename T>
+struct tuple_field_ptr_type;
+template<typename... Ptrs>
+struct tuple_field_ptr_type<std::tuple<Ptrs...>> {
+    using type = Tuple<std::remove_cvref_t<typename struct_field_ptr<Ptrs>::Field>...>;
+};
+
+template<typename T>
+using tuple_field_ptr_type_t = tuple_field_ptr_type<T>::type;
 
 }// namespace espresso::orm

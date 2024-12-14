@@ -1,7 +1,6 @@
 #pragma once
 
 #include "orm/database/db_manager.hpp"
-#include "orm/database/presets/sqlite_compiler.hpp"
 #include "orm/model/meta_model.hpp"
 #include "orm/queryset/filter.hpp"
 #include "utils/maybe_uninit.hpp"
@@ -23,7 +22,7 @@ public:
     QuerySet() : m_compiler(MetaModel<Model>::compile_time::table_name()) {}
     ~QuerySet() = default;
 
-    QuerySet& filter(const Filter<Model>& filter)
+    QuerySet& filter(const Filter& filter)
     {
         m_compiler.filter(filter.str());
         return *this;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/tuple.hpp"
 #include <any>
 #include <functional>
 #include <string_view>
@@ -38,7 +39,7 @@ concept SQLCompilerConcept = requires {
 template<typename T>
 concept DBInstanceConcept = requires(T t) {
     { t.execute_query(std::declval<std::string_view>()) } -> std::same_as<void>;
-    { t.execute_query(std::declval<std::string_view>(), std::declval<std::function<void(std::vector<std::any>&)>&&>()) } -> std::same_as<size_t>;
+    { t.execute_query(std::declval<std::string_view>(), std::declval<std::function<void(const Tuple<std::any>&)>&&>()) } -> std::same_as<size_t>;
     { t.start_transaction() } -> std::same_as<void>;
     { t.commit() } -> std::same_as<void>;
     { t.rollback() } -> std::same_as<void>;

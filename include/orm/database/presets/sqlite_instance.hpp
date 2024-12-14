@@ -1,6 +1,8 @@
 #pragma once
 #include "orm/utils/stringify.hpp"
+#include "orm/utils/types.hpp"
 #include "utils/string.hpp"
+#include "utils/tuple.hpp"
 #include <any>
 #include <filesystem>
 #include <functional>
@@ -36,14 +38,36 @@ public:
     ~SQLiteInstance() = default;
 
     void execute_query(std::string_view query);
+    template<typename... Types>
+    size_t execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
+    {
+        auto stmt = generate_stmt(query);
+
+        size_t cnt = 0;
+        auto ret = sqlite3_step(stmt.get());
+        while (ret == SQLITE_ROW) {
+            Tuple<Types...> result;
+            [&]<std::size_t... I>(std::index_sequence<I...>) {
+                ((std::get<I>(result) = SQLiteInstance::Parser<rfl::tuple_element_t<I, Tuple<Types...>>>::parse(stmt.get(), I)), ...);
+            }(make_index_sequence_skip_compound<Types...>{});
+
+            ++cnt;
+            callback(result);
+            ret = sqlite3_step(stmt.get());
+        }
+        if (ret != SQLITE_DONE) {
+            throw std::runtime_error("Failed to execute query");
+        }
+        return cnt;
+    }
 
     void start_transaction();
     void commit();
     void rollback();
 
-    size_t execute_query(std::string_view query, std::function<void(std::vector<std::any>&)>&& callback);
-
     class Compiler;
+    template<typename T>
+    struct Parser;
 };
 
 class SQLiteInstance::Compiler {
@@ -170,6 +194,54 @@ public:
         }
         auto result = ss.str();
         return result;
+    }
+};
+
+template<>
+struct SQLiteInstance::Parser<std::string> {
+    static std::string parse(sqlite3_stmt* stmt, size_t i)
+    {
+        return std::string{reinterpret_cast<const char*>(sqlite3_column_text(stmt, i))};
+    }
+};
+
+template<>
+struct SQLiteInstance::Parser<int> {
+    static int parse(sqlite3_stmt* stmt, size_t i)
+    {
+        return sqlite3_column_int(stmt, i);
+    }
+};
+
+template<>
+struct SQLiteInstance::Parser<double> {
+    static double parse(sqlite3_stmt* stmt, size_t i)
+    {
+        return sqlite3_column_double(stmt, i);
+    }
+};
+
+template<typename T>
+struct SQLiteInstance::Parser<std::optional<T>> {
+    static std::optional<T> parse(sqlite3_stmt* stmt, size_t i)
+    {
+        if (sqlite3_column_type(stmt, i) == SQLITE_NULL) {
+            return std::nullopt;
+        }
+        return Parser<T>::parse(stmt, i);
+    }
+};
+
+template<typename T>
+requires requires { typename T::Compound; }
+struct SQLiteInstance::Parser<T> {
+    static T parse(sqlite3_stmt* stmt, size_t i)
+    {
+        typename T::Compound key;
+        [&]<std::size_t... j>(std::index_sequence<j...>) {
+            ((std::get<j>(key) = Parser<rfl::tuple_element_t<j, typename T::Compound>>::parse(stmt, i + j)), ...);
+        }(std::make_index_sequence<rfl::tuple_size_v<typename T::Compound>>{});
+        return T(key);
     }
 };
 

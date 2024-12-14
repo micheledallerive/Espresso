@@ -1,13 +1,13 @@
 #pragma once
 
-#include "orm/database/types.hpp"
 #include "orm/database/concepts.hpp"
 #include "orm/database/presets/sqlite_instance.hpp"
+#include "orm/database/types.hpp"
 #include "utils/tuple.hpp"
 
 namespace espresso::orm {
 
-static_assert(DBInstanceConcept<EspressoSettings::DB>, "The database type specified in EspressoSettings::DB does not satisfy the DBInstanceConcept");
+static_assert(DBInstanceConcept<::EspressoSettings::DB>, "The database type specified in EspressoSettings::DB does not satisfy the DBInstanceConcept");
 
 /**
  * Singleton class to handle database
@@ -45,10 +45,7 @@ public:
     template<typename... Types>
     size_t execute_query(std::string_view query, std::function<void(const Tuple<Types...>&)>&& callback)
     {
-        return m_db->execute_query(query, std::function([&callback](std::vector<std::any>& vals) {
-                                const auto t = vector_to_tuple<Types...>(vals);
-                                callback(t);
-                            }));
+        return m_db->execute_query(query, std::forward<std::function<void(const Tuple<Types...>&)>>(callback));
     }
 
     template<typename Callable>
