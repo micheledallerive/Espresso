@@ -50,10 +50,8 @@ public:
         static constexpr std::string_view table_name = "User";
     };
 };
+static_assert(ModelConcept<User>);
 
-static_assert(sizeof(rfl::Tuple<std::string, int>) == sizeof(std::tuple<std::string, int>));
-static_assert(std::is_aggregate_v<User>);
-//static_assert(rfl::internal::num_fields<User> == 3);
 int main()
 {
     DBManager::get().emplace("test.db");

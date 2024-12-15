@@ -26,6 +26,10 @@ struct has_type<T, std::tuple<T, Ts...>> : std::true_type {};
 template<typename T, typename Tuple>
 inline constexpr bool has_type_v = has_type<T, Tuple>::value;
 
+
+template<typename T>
+using clean_type_t = std::remove_cvref_t<std::remove_pointer_t<T>>;
+
 /**
  * Check if all the fields of the struct T have type R
  */
@@ -121,5 +125,19 @@ struct tuple_field_ptr_type<std::tuple<Ptrs...>> {
 
 template<typename T>
 using tuple_field_ptr_type_t = tuple_field_ptr_type<std::remove_cvref_t<T>>::type;
+
+template <typename T>
+struct is_complete_helper {
+    template <typename U>
+    static auto test(U*)  -> std::integral_constant<bool, sizeof(U) == sizeof(U)>;
+    static auto test(...) -> std::false_type;
+    using type = decltype(test((T*)0));
+};
+
+template <typename T>
+struct is_complete : is_complete_helper<T>::type {};
+
+template<typename T>
+static constexpr bool is_complete_v = is_complete<T>::value;
 
 }// namespace espresso::orm
