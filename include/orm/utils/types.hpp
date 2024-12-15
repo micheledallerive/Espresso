@@ -1,6 +1,7 @@
 #pragma once
 
 #include "orm/utils/anycast.hpp"
+#include "rfl/to_view.hpp"
 #include "utils/tuple.hpp"
 #include <rfl/internal/get_ith_field_from_fake_object.hpp>
 #include <rfl/internal/num_fields.hpp>
@@ -119,6 +120,6 @@ struct tuple_field_ptr_type<std::tuple<Ptrs...>> {
 };
 
 template<typename T>
-using tuple_field_ptr_type_t = tuple_field_ptr_type<T>::type;
+using tuple_field_ptr_type_t = tuple_field_ptr_type<std::remove_cvref_t<T>>::type;
 
 }// namespace espresso::orm

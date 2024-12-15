@@ -66,6 +66,7 @@ int main()
             cout << "NULL";
         cout << endl;
         cout << result.dog->name << " " << result.dog->age << endl;
+        result.remove();
     }
 
     return 0;

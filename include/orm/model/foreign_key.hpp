@@ -55,6 +55,7 @@ public:
         retrieve();
         return &std::get<0>(m_data);
     }
+
 };
 
 template<typename ToModel>
