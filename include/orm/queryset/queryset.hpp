@@ -49,6 +49,12 @@ public:
         });
         return result;
     }
+
+    void remove()
+    {
+        DB::Compiler::Delete compiler{std::move(m_compiler)};
+        DBManager::get().execute_query(compiler.compile());
+    }
 };
 
 }// namespace espresso::orm

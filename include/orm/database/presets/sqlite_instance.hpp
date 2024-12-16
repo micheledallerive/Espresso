@@ -79,6 +79,9 @@ public:
 
 class SQLiteInstance::Compiler::Query {
 private:
+    friend class SQLiteInstance::Compiler::Insert;
+    friend class SQLiteInstance::Compiler::Delete;
+
     std::string table;
     std::vector<std::string> m_filters;
     std::vector<std::string> m_order_by;
@@ -174,6 +177,8 @@ public:
     {
     }
 
+    explicit Delete(SQLiteInstance::Compiler::Query&& query) : table(std::move(query.table)), m_filters(std::move(query.m_filters)) {}
+
     template<typename T>
     SQLiteInstance::Compiler::Delete& filter(std::string_view column_name, const T& field)
     {
@@ -233,7 +238,7 @@ struct SQLiteInstance::Parser<std::optional<T>> {
 };
 
 template<typename T>
-requires requires { typename T::Compound; }
+    requires requires { typename T::Compound; }
 struct SQLiteInstance::Parser<T> {
     static T parse(sqlite3_stmt* stmt, size_t i)
     {
