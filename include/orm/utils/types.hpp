@@ -124,7 +124,7 @@ struct tuple_field_ptr_type<std::tuple<Ptrs...>> {
 };
 
 template<typename T>
-using tuple_field_ptr_type_t = tuple_field_ptr_type<std::remove_cvref_t<T>>::type;
+using tuple_field_ptr_type_t = typename tuple_field_ptr_type<std::remove_cvref_t<T>>::type;
 
 template <typename T>
 struct is_complete_helper {
