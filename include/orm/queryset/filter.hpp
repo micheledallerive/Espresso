@@ -16,7 +16,7 @@ private:
     template<auto field_ptr>
     constexpr static std::string column_name() {
         using Model = typename struct_field_ptr<decltype(field_ptr)>::Struct;
-        return MetaModel<Model>::compile_time::table_name() + "." + MetaModel<Model>::column_name(get_field_name_str<field_ptr>());
+        return MetaModel<Model>::compile_time::table_name() + "." + MetaModel<Model>::column_name(refl::get_field_name_str<field_ptr>());
     }
 public:
     constexpr Filter(const std::string& left, const std::string& op, const std::string& right) : m_str{left + " " + op + " " + right} {}

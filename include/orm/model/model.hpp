@@ -24,7 +24,7 @@ private:
         using PK = tuple_field_ptr_type_t<PtrPK>;                   // std::tuple<Type, Type2, ...>
         constexpr auto ptr_pk = Child::ModelProperties::primary_key;
         [&]<size_t... _i>(std::index_sequence<_i...>) {
-            ((callback(MetaModel<Child>::column_name(get_field_name_str<std::get<_i>(Child::ModelProperties::primary_key)>()),
+            ((callback(MetaModel<Child>::column_name(refl::get_field_name_str<std::get<_i>(Child::ModelProperties::primary_key)>()),
                        _this()->*std::get<_i>(ptr_pk))),
              ...);
         }(std::make_index_sequence<rfl::tuple_size_v<PK>>{});
@@ -43,7 +43,7 @@ private:
                 const auto& fk = f.value()->fk();// values of Tuple<Type, Type2>
                 [&]<size_t... _i>(std::index_sequence<_i...>) {
                     ((callback(
-                             col_name + "_" + MetaModel<OtherModel>::column_name(get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
+                             col_name + "_" + MetaModel<OtherModel>::column_name(refl::get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
                              std::get<_i>(fk))),
                      ...);
                 }(std::make_index_sequence<rfl::tuple_size_v<OtherModelPtrFK>>{});
