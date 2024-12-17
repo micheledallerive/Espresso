@@ -69,7 +69,7 @@ std::optional<Path::MatchedGroups> Path::matches(const std::vector<std::string_v
         else if (m_special[i] == 2) {
             matched_groups[std::string(m_parts[i].substr(1, m_parts[i].size() - 2))] = std::string(url_parts[i]);
         }
-    next:
+    next:;
     }
     return matched_groups;
 }
