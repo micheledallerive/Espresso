@@ -1,6 +1,7 @@
 #pragma once
 
 #include "orm/model/field_property.hpp"
+#include "orm/reflection/fields.hpp"
 #include "orm/utils/types.hpp"
 #include <concepts>
 #include <rfl/field_names_t.hpp>
@@ -23,7 +24,7 @@ class ForeignKey;
 template<typename T, size_t _i>
 consteval bool all_valid_types_impl()
 {
-    using Type = clean_type_t<decltype(rfl::internal::get_ith_field_from_fake_object<T, _i>())>;
+    using Type = clean_type_t<decltype(refl::nth_field<T, _i>())>;
     if constexpr (has_type_v<Type, AllowedTypes>) {
         return true;
     }
@@ -42,32 +43,13 @@ consteval bool all_valid_types()
 {
     return all_valid_types_impl<T, 0>();
     return []<size_t... _i>(std::index_sequence<_i...>) {
-        return ((has_type_v<clean_type_t<decltype(rfl::internal::get_ith_field_from_fake_object<T, _i>())>, AllowedTypes>) && ...);
-    }(std::make_index_sequence<rfl::internal::num_fields<T>>{});
+        return ((has_type_v<clean_type_t<decltype(refl::nth_field<T, _i>())>, AllowedTypes>) && ...);
+    }(std::make_index_sequence<num_fields<T>()>{});
 }
 
 template<typename T>
-struct contains_double_underscore;
-
-template<auto Head, auto... Tail>
-struct contains_double_underscore<rfl::Literal<Head, Tail...>> {
-    static constexpr bool value =
-            (Head.string_view().find("__") != std::string_view::npos) || contains_double_underscore<rfl::Literal<Tail...>>::value;
-};
-
-// Base case: No more elements in the pack
-template<>
-struct contains_double_underscore<rfl::Literal<>> {
-    static constexpr bool value = false;
-};
-
-// Helper for easier usage
-template<typename T>
-constexpr bool contains_double_underscore_v = contains_double_underscore<T>::value;
-
-template<typename T>
 concept ModelStructConcept =
-        std::is_base_of_v<BaseModel<T>, T> && std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>() && !contains_double_underscore_v<rfl::field_names_t<T>>;
+        std::is_base_of_v<BaseModel<T>, T> && std::is_aggregate_v<T> && std::is_default_constructible_v<T> && all_valid_types<T>();
 
 template<typename T>
 concept HasFieldProperties = requires {

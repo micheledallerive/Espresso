@@ -1,10 +1,9 @@
 #pragma once
 
+#include "orm/reflection/fields.hpp"
 #include "orm/utils/anycast.hpp"
 #include "rfl/to_view.hpp"
 #include "utils/tuple.hpp"
-#include <rfl/internal/get_ith_field_from_fake_object.hpp>
-#include <rfl/internal/num_fields.hpp>
 #include <rfl/named_tuple_t.hpp>
 #include <tuple>
 #include <type_traits>
@@ -26,7 +25,6 @@ struct has_type<T, std::tuple<T, Ts...>> : std::true_type {};
 template<typename T, typename Tuple>
 inline constexpr bool has_type_v = has_type<T, Tuple>::value;
 
-
 template<typename T>
 using clean_type_t = std::remove_cvref_t<std::remove_pointer_t<T>>;
 
@@ -37,8 +35,8 @@ template<typename R, typename T>
 consteval bool all_same()
 {
     return []<size_t... _i>(std::index_sequence<_i...>) {
-        return (std::is_same_v<R, std::remove_cvref_t<std::remove_pointer_t<decltype(rfl::internal::get_ith_field_from_fake_object<T, _i>())>>> && ...);
-    }(std::make_index_sequence<rfl::internal::num_fields<T>>{});
+        return (std::is_same_v<R, clean_type_t<decltype(refl::nth_field<T, _i>())>> && ...);
+    }(std::make_index_sequence<refl::num_fields<T>()>{});
 }
 
 template<class T, template<class...> class Primary>
@@ -126,15 +124,15 @@ struct tuple_field_ptr_type<std::tuple<Ptrs...>> {
 template<typename T>
 using tuple_field_ptr_type_t = typename tuple_field_ptr_type<std::remove_cvref_t<T>>::type;
 
-template <typename T>
+template<typename T>
 struct is_complete_helper {
-    template <typename U>
-    static auto test(U*)  -> std::integral_constant<bool, sizeof(U) == sizeof(U)>;
+    template<typename U>
+    static auto test(U*) -> std::integral_constant<bool, sizeof(U) == sizeof(U)>;
     static auto test(...) -> std::false_type;
-    using type = decltype(test((T*)0));
+    using type = decltype(test((T*) 0));
 };
 
-template <typename T>
+template<typename T>
 struct is_complete : is_complete_helper<T>::type {};
 
 template<typename T>

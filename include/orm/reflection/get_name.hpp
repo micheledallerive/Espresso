@@ -36,7 +36,7 @@ consteval auto get_field_name()
     const auto func_name =
             std::string_view{std::source_location::current().function_name()};
 #if defined(__clang__) || defined(__GNUC__)
-    const auto split = func_name.substr(0, func_name.size() - 1);
+    const auto split = func_name.substr(0, func_name.size() - 2);
     return split.substr(split.find_last_of(":.") + 1);
 #elif defined(_MSC_VER)
     const auto split = func_name.substr(0, func_name.size() - 7);
@@ -47,11 +47,26 @@ consteval auto get_field_name()
 }
 }// namespace internal
 
+template <class T>
+struct Wrapper {
+    using Type = T;
+    T v;
+};
+
+template <class T>
+Wrapper(T) -> Wrapper<T>;
+
+// This workaround is necessary for clang.
+template <class T>
+constexpr auto wrap(const T& arg) noexcept {
+    return Wrapper{arg};
+}
+
 template<auto field_ptr>
 consteval std::string_view get_field_name()
 {
     using T = typename struct_field_ptr<decltype(field_ptr)>::Struct;
-    return internal::get_field_name<T, field_ptr>();
+    return internal::get_field_name<T, wrap(field_ptr)>();
 }
 
 template<auto field_ptr>
