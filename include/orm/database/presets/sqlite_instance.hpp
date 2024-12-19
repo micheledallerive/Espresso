@@ -34,7 +34,7 @@ private:
     std::unique_ptr<sqlite3_stmt, StatementDestructor> generate_stmt(std::string_view query);
 
 public:
-    explicit SQLiteInstance(const std::filesystem::path& path);
+    explicit SQLiteInstance(const std::string &path);
     ~SQLiteInstance() = default;
 
     void execute_query(std::string_view query);

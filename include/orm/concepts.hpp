@@ -21,7 +21,7 @@ class ForeignKey;
  * Check whether all fields of the model have a type in "AllowedTypes"
  */
 template<typename T, size_t _i>
-consteval bool all_valid_types_impl()
+consteval bool has_valid_type()
 {
     using Type = clean_type_t<decltype(refl::nth_field<T, _i>())>;
     if constexpr (has_type_v<Type, AllowedTypes>) {
@@ -40,9 +40,8 @@ consteval bool all_valid_types_impl()
 template<typename T>
 consteval bool all_valid_types()
 {
-    return all_valid_types_impl<T, 0>();
     return []<size_t... _i>(std::index_sequence<_i...>) {
-        return ((has_type_v<clean_type_t<decltype(refl::nth_field<T, _i>())>, AllowedTypes>) && ...);
+        return (has_valid_type<T, _i>() && ...);
     }(std::make_index_sequence<refl::num_fields<T>()>{});
 }
 

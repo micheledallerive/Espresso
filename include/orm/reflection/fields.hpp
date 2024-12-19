@@ -2812,7 +2812,7 @@ ESPRESSO_REFL_GEN_NTH_INSTANCE(
 #undef ESPRESSO_REFL_GEN_NTH_INSTANCE
 
 template<typename T, size_t N>
-consteval auto nth_field()
+static consteval auto nth_field()
 {
     return compile_time_instance_inspector<T, num_fields<T>()>::template get_field<N>();
 }

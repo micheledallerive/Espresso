@@ -3,11 +3,11 @@
 
 namespace espresso::orm {
 
-SQLiteInstance::SQLiteInstance(const std::filesystem::path& path)
+SQLiteInstance::SQLiteInstance(const std::string& path)
     : m_db(nullptr, SQLite3Destructor{})
 {
     sqlite3* db;
-    if (sqlite3_open(path.c_str(), &db) != SQLITE_OK) {
+    if (sqlite3_open_v2(path.c_str(), &db, SQLITE_OPEN_READWRITE, nullptr) != SQLITE_OK) {
         throw std::runtime_error("Failed to open database");
     }
     m_db.reset(db);

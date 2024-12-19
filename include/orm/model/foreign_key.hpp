@@ -18,7 +18,7 @@ public:
     using Compound = FK;
 
     static_assert(is_specialization_of_v<PtrFK, std::tuple>);
-    static_assert(is_specialization_of_v<FK, Tuple>);
+    static_assert(is_specialization_of_v<FK, std::tuple>);
 
 private:
     std::variant<ToModel, FK> m_data;

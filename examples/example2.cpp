@@ -25,7 +25,7 @@ public:
     int age;
 
     struct ModelProperties {
-        static constexpr auto primary_key = std::make_tuple(&Dog::name);
+        static constexpr auto primary_key = make_tuple(&Dog::name);
     };
 };
 
@@ -49,7 +49,8 @@ public:
 };
 static_assert(ModelConcept<User>);
 
-void print_all() {
+void print_all()
+{
     vector<User> results = User::objects().all();
     for (auto& result : results) {
         cout << result.username << " " << result.age << " ";
