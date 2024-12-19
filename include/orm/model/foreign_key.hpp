@@ -18,7 +18,7 @@ public:
     using Compound = FK;
 
     static_assert(is_specialization_of_v<PtrFK, std::tuple>);
-    static_assert(is_specialization_of_v<FK, rfl::Tuple>);
+    static_assert(is_specialization_of_v<FK, Tuple>);
 
 private:
     std::variant<ToModel, FK> m_data;
@@ -66,7 +66,7 @@ void ForeignKey<ToModel>::retrieve()
     QuerySet<ToModel> qs;
     [&]<size_t... _i>(std::index_sequence<_i...>) {
         (qs.filter(field_t<std::get<_i>(ToModel::ModelProperties::primary_key)> == std::get<_i>(std::get<FK>(m_data))), ...);
-    }(std::make_index_sequence<refl::num_fields<FK>()>{});
+    }(std::make_index_sequence<tuple_size_v<FK>>{});
     m_data.template emplace<0>(qs.get());
 }
 

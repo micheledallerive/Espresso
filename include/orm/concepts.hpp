@@ -2,10 +2,9 @@
 
 #include "orm/model/field_property.hpp"
 #include "orm/reflection/fields.hpp"
+#include "orm/reflection/num_fields.hpp"
 #include "orm/utils/types.hpp"
 #include <concepts>
-#include <rfl/field_names_t.hpp>
-#include <rfl/internal/get_ith_field_from_fake_object.hpp>
 #include <type_traits>
 
 namespace espresso::orm {
@@ -44,7 +43,7 @@ consteval bool all_valid_types()
     return all_valid_types_impl<T, 0>();
     return []<size_t... _i>(std::index_sequence<_i...>) {
         return ((has_type_v<clean_type_t<decltype(refl::nth_field<T, _i>())>, AllowedTypes>) && ...);
-    }(std::make_index_sequence<num_fields<T>()>{});
+    }(std::make_index_sequence<refl::num_fields<T>()>{});
 }
 
 template<typename T>

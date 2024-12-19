@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <rfl/internal/num_fields.hpp>
 #include <orm/reflection/num_fields.hpp>
 
 TEST(Reflection, NoInheritanceNumFields)

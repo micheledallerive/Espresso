@@ -7,8 +7,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
-
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.cpp)
 foreach (test_source ${TEST_SOURCES})
     get_filename_component(test_name ${test_source} NAME_WE)

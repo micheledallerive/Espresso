@@ -19,4 +19,7 @@ project(espresso VERSION 0.1.0 LANGUAGES CXX)
 add_subdirectory(extern)
 add_subdirectory(src)
 add_subdirectory(examples)
+
+enable_testing()
+
 add_subdirectory(tests)

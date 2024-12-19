@@ -12,7 +12,7 @@ struct EspressoSettings {
 #include "orm/model/model.hpp"
 #include "orm/queryset/filter_field.hpp"
 #include "orm/queryset/queryset.hpp"
-#include "orm/reflection/field_name.hpp"
+#include "orm/reflection/get_name.hpp"
 #include "rfl/field_names_t.hpp"
 #include <rfl/fields.hpp>
 #include <rfl/get.hpp>
@@ -52,10 +52,7 @@ public:
 };
 static_assert(ModelConcept<User>);
 
-int main()
-{
-    DBManager::get().emplace("test.db");
-
+void print_all() {
     vector<User> results = User::objects().all();
     for (auto& result : results) {
         cout << result.username << " " << result.age << " ";
@@ -64,8 +61,16 @@ int main()
             cout << "NULL";
         cout << endl;
         cout << result.dog->name << " " << result.dog->age << endl;
-        result.remove();
     }
+}
+
+int main()
+{
+    DBManager::get().emplace("test.db");
+
+    print_all();
+    User::objects().remove();
+    print_all();
 
     return 0;
 }

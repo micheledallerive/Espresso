@@ -48,7 +48,7 @@ public:
         while (ret == SQLITE_ROW) {
             Tuple<Types...> result;
             [&]<std::size_t... I>(std::index_sequence<I...>) {
-                ((std::get<I>(result) = SQLiteInstance::Parser<rfl::tuple_element_t<I, Tuple<Types...>>>::parse(stmt.get(), I)), ...);
+                ((std::get<I>(result) = SQLiteInstance::Parser<tuple_element_t<I, Tuple<Types...>>>::parse(stmt.get(), I)), ...);
             }(make_index_sequence_skip_compound<Types...>{});
 
             ++cnt;
@@ -244,8 +244,8 @@ struct SQLiteInstance::Parser<T> {
     {
         typename T::Compound key;
         [&]<std::size_t... j>(std::index_sequence<j...>) {
-            ((std::get<j>(key) = Parser<rfl::tuple_element_t<j, typename T::Compound>>::parse(stmt, i + j)), ...);
-        }(std::make_index_sequence<rfl::tuple_size_v<typename T::Compound>>{});
+            ((std::get<j>(key) = Parser<tuple_element_t<j, typename T::Compound>>::parse(stmt, i + j)), ...);
+        }(std::make_index_sequence<tuple_size_v<typename T::Compound>>{});
         return T(key);
     }
 };

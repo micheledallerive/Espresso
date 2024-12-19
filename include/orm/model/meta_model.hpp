@@ -85,7 +85,7 @@ public:
                 return std::string(Model::ModelProperties::table_name);
             }
             else {
-                return get_type_name_str<Model>();
+                return refl::get_type_name_str<Model>();
             }
         }
     };

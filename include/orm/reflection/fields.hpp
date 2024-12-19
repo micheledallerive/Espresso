@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "utils/types.hpp"
+#include "utils/tuple.hpp"
 #include "../always_false.hpp"
 #include "compile_time_instance.hpp"
 #include "num_fields.hpp"
@@ -30,6 +32,11 @@ struct compile_time_instance_inspector {
         n, ...)                                                                              \
     template<class T>                                                                        \
     struct compile_time_instance_inspector<T, n> {                                           \
+        static consteval auto get_all_fields()                                               \
+        {                                                                                    \
+            const auto& [__VA_ARGS__] = get_compile_time_instance<std::remove_cvref_t<T>>(); \
+            return Tuple(__VA_ARGS__);                                                       \
+        }                                                                                    \
         template<size_t N>                                                                   \
         static consteval auto get_field()                                                    \
         {                                                                                    \
@@ -38,6 +45,7 @@ struct compile_time_instance_inspector {
                 return nth_element<N>(&_refs...);                                            \
             }(__VA_ARGS__);                                                                  \
         }                                                                                    \
+        using FieldTypes = tuple_remove_pointers_t<decltype(get_all_fields())>;              \
     }
 
 ESPRESSO_REFL_GEN_NTH_INSTANCE(
@@ -2797,10 +2805,13 @@ ESPRESSO_REFL_GEN_NTH_INSTANCE(
 
 #undef ESPRESSO_REFL_GEN_NTH_INSTANCE
 
-template<class T, int N>
+template<typename T, size_t N>
 consteval auto nth_field()
 {
     return compile_time_instance_inspector<T, num_fields<T>()>::template get_field<N>();
 }
+
+template<typename T>
+using FieldTypes = compile_time_instance_inspector<T, num_fields<T>()>::FieldTypes;
 
 }// namespace espresso::orm::refl

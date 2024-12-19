@@ -27,7 +27,7 @@ private:
             ((callback(MetaModel<Child>::column_name(refl::get_field_name_str<std::get<_i>(Child::ModelProperties::primary_key)>()),
                        _this()->*std::get<_i>(ptr_pk))),
              ...);
-        }(std::make_index_sequence<rfl::tuple_size_v<PK>>{});
+        }(std::make_index_sequence<tuple_size_v<PK>>{});
     }
 
     template<typename Callback>
@@ -46,7 +46,7 @@ private:
                              col_name + "_" + MetaModel<OtherModel>::column_name(refl::get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
                              std::get<_i>(fk))),
                      ...);
-                }(std::make_index_sequence<rfl::tuple_size_v<OtherModelPtrFK>>{});
+                }(std::make_index_sequence<tuple_size_v<OtherModelPtrFK>>{});
             }
             else {
                 static_assert(!is_specialization_of_v<Field, ForeignKey>);

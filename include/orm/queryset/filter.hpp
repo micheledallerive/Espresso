@@ -49,8 +49,8 @@ public:
             return create(field, std::move(op), value.value());
         }
         using Model = typename struct_field_ptr<decltype(field_ptr)>::Struct;
-        static constexpr auto equals = "=";
-        static constexpr auto not_equals = "!=";
+        constexpr auto equals = "=";
+        constexpr auto not_equals = "!=";
         if (op != equals && op != not_equals) throw std::runtime_error("Null comparison can only be equal or not equal");
         return Filter{column_name<field_ptr>(), op == equals ? "IS" : "IS NOT", "NULL"};
     }
