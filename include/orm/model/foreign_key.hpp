@@ -33,7 +33,7 @@ public:
 
     ForeignKey() = default;
     explicit ForeignKey(const FK& fk) : m_data(fk) {}
-    explicit ForeignKey(const ToModel& model) : m_data(std::optional(model)) {}
+    ForeignKey(const ToModel& model) : m_data(model) {}
 
     ToModel& operator*()
     {
@@ -55,6 +55,14 @@ public:
         retrieve();
         return &std::get<0>(m_data);
     }
+
+    ForeignKey<ToModel>& operator=(const ToModel& obj)
+    {
+        m_data = obj;
+        return *this;
+    }
+
+    // operator to cast ToModel to ForeignKey<ToModel>
 
 };
 

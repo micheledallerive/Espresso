@@ -88,6 +88,11 @@ public:
                 return refl::get_type_name_str<Model>();
             }
         }
+
+        [[nodiscard]] static constexpr auto primary_key() noexcept
+        {
+            return Model::ModelProperties::primary_key;
+        }
     };
 };
 

@@ -12,7 +12,7 @@ namespace espresso::orm {
  * Check if all the fields of the struct T have type R
  */
 template<typename R, typename T>
-consteval bool all_same()
+static consteval bool all_same()
 {
     return []<size_t... _i>(std::index_sequence<_i...>) {
         return (std::is_same_v<R, clean_type_t<decltype(refl::nth_field<T, _i>())>> && ...);

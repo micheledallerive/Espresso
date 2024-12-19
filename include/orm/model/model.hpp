@@ -34,29 +34,38 @@ private:
     template<typename Callback>
     void iterate_db_column_values(Callback&& callback)
     {
-        const auto view = to_view(*_this());
-        view.apply([&callback]<typename _Field>(const _Field& f) {
-            using Field = std::remove_cvref_t<std::remove_pointer_t<typename _Field::Type>>;
+        refl::to_view(*_this(), [&callback]<typename _Field>(const _Field& f) {
+            using Field = clean_type_t<typename _Field::Type>;
             const auto col_name = MetaModel<Child>::column_name(std::string(f.name()));
             if constexpr (is_specialization_of_v<Field, ForeignKey>) {
                 using OtherModelPtrFK = typename Field::PtrFK;// std::tuple<Type OtherModel::*, Type2 OtherModel::*, ...>
                 using OtherModel = typename Field::Model;
-                const auto& fk = f.value()->fk();// values of Tuple<Type, Type2>
+                const auto& fk = f.value_ptr()->fk();// values of Tuple<Type, Type2>
                 [&]<size_t... _i>(std::index_sequence<_i...>) {
                     ((callback(
-                             col_name + "_" + MetaModel<OtherModel>::column_name(refl::get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
+                             col_name + "__" + MetaModel<OtherModel>::column_name(refl::get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
                              std::get<_i>(fk))),
                      ...);
                 }(std::make_index_sequence<tuple_size_v<OtherModelPtrFK>>{});
             }
             else {
                 static_assert(!is_specialization_of_v<Field, ForeignKey>);
-                callback(col_name, *f.value());
+                callback(col_name, *f.value_ptr());
             }
         });
     }
 
 public:
+    auto pk() const
+    {
+        const auto instance = _this();
+        return apply([&instance](auto const &... args) {
+            // dereference the pointer to struct field args
+            return make_tuple(instance->*args...);
+        },
+              MetaModel<Child>::compile_time::primary_key());
+    }
+
     [[maybe_unused]] static QuerySet<Child> objects()
     {
         return {};
@@ -75,7 +84,6 @@ public:
     void remove()
     {
         DB::Compiler::Delete del{MetaModel<Child>::compile_time::table_name()};
-        const auto view = to_view(*_this());
         iterate_pk_db_column_values([&](const auto& name, const auto& value) {
             del.filter(name, value);
         });
@@ -88,5 +96,9 @@ public:
         DoesNotExist() : ObjectDoesNotExist() {}
     };
 };
+
+template<typename T>
+    requires ModelConcept<T>
+using PK = tuple_field_ptr_type_t<decltype(MetaModel<T>::compile_time::primary_key())>;
 
 }// namespace espresso::orm
