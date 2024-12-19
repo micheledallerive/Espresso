@@ -2,6 +2,7 @@
 
 #include "orm/utils/types.hpp"
 #include <string>
+#include <source_location>
 
 namespace espresso::orm::refl {
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "orm/exception.hpp"
 #include "orm/queryset/queryset.hpp"
+#include "orm/reflection/to_view.hpp"
 #include <stdexcept>
 
 namespace espresso::orm {
@@ -33,7 +34,7 @@ private:
     template<typename Callback>
     void iterate_db_column_values(Callback&& callback)
     {
-        const auto view = rfl::to_view(*_this());
+        const auto view = to_view(*_this());
         view.apply([&callback]<typename _Field>(const _Field& f) {
             using Field = std::remove_cvref_t<std::remove_pointer_t<typename _Field::Type>>;
             const auto col_name = MetaModel<Child>::column_name(std::string(f.name()));
@@ -74,7 +75,7 @@ public:
     void remove()
     {
         DB::Compiler::Delete del{MetaModel<Child>::compile_time::table_name()};
-        const auto view = rfl::to_view(*_this());
+        const auto view = to_view(*_this());
         iterate_pk_db_column_values([&](const auto& name, const auto& value) {
             del.filter(name, value);
         });

@@ -5,11 +5,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "utils/types.hpp"
-#include "utils/tuple.hpp"
-#include "../always_false.hpp"
 #include "compile_time_instance.hpp"
 #include "num_fields.hpp"
+#include "utils/tuple.hpp"
+#include "utils/types.hpp"
 
 namespace espresso::orm::refl {
 
@@ -46,6 +45,13 @@ struct compile_time_instance_inspector {
             }(__VA_ARGS__);                                                                  \
         }                                                                                    \
         using FieldTypes = tuple_remove_pointers_t<decltype(get_all_fields())>;              \
+        static auto get_field_value_ptrs(T& t)                                                   \
+        {                                                                                    \
+            const auto& [__VA_ARGS__] = t;                                                   \
+            return [](auto&... fields) {                                                      \
+                return make_tuple(&fields...);                                           \
+            }(__VA_ARGS__);                                                                  \
+        }                                                                                    \
     }
 
 ESPRESSO_REFL_GEN_NTH_INSTANCE(
@@ -2812,6 +2818,13 @@ consteval auto nth_field()
 }
 
 template<typename T>
+auto field_value_ptrs(T &t)
+{
+    return compile_time_instance_inspector<T, num_fields<T>()>::get_field_value_ptrs(t);
+}
+
+template<typename T>
 using FieldTypes = compile_time_instance_inspector<T, num_fields<T>()>::FieldTypes;
+
 
 }// namespace espresso::orm::refl

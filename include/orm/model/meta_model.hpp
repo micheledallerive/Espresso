@@ -4,7 +4,7 @@
 #include "orm/model/field_property.hpp"
 #include "orm/reflection/get_name.hpp"
 #include <map>
-#include <rfl.hpp>
+#include "orm/reflection/to_view.hpp"
 
 
 namespace espresso::orm {
@@ -21,7 +21,7 @@ private:
     {
         using FP = typename Model::FieldProperties;
         FP properties{};
-        auto view = rfl::to_view(properties);
+        auto view = to_view(properties);
         view.apply([&](const auto& f) {
             std::string name{f.name()};
             FieldPropertyList val = *f.value();

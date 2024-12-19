@@ -56,4 +56,10 @@ struct tuple_remove_pointers<Tuple<Ts...>> {
 template<typename T>
 using tuple_remove_pointers_t = tuple_remove_pointers<T>::type;
 
+template<typename T>
+T *remove_const(const T *ptr)
+{
+    return const_cast<T *>(ptr);
+}
+
 }// namespace espresso
