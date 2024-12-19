@@ -1,7 +1,5 @@
 #pragma once
 
-#include <rfl/enums.hpp>
-
 namespace espresso::orm {
 
 enum class SQLType {
