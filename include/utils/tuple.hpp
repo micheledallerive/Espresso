@@ -1,11 +1,13 @@
 #pragma once
 
-#include "rfl/apply.hpp"
-#include <rfl/Tuple.hpp>
-
 namespace espresso {
 
-template<typename... T>
-using Tuple = rfl::Tuple<T...>;
+template<typename... Args>
+using Tuple = std::tuple<Args...>;
+
+using std::tuple_size_v;
+using std::tuple_element_t;
+using std::apply;
+using std::make_tuple;
 
 }// namespace espresso

@@ -1,6 +1,7 @@
 #pragma once
 #include "orm/exception.hpp"
 #include "orm/queryset/queryset.hpp"
+#include "orm/reflection/to_view.hpp"
 #include <stdexcept>
 
 namespace espresso::orm {
@@ -24,16 +25,16 @@ private:
         using PK = tuple_field_ptr_type_t<PtrPK>;                   // std::tuple<Type, Type2, ...>
         constexpr auto ptr_pk = Child::ModelProperties::primary_key;
         [&]<size_t... _i>(std::index_sequence<_i...>) {
-            ((callback(MetaModel<Child>::column_name(get_field_name_str<std::get<_i>(Child::ModelProperties::primary_key)>()),
+            ((callback(MetaModel<Child>::column_name(refl::get_field_name_str<std::get<_i>(Child::ModelProperties::primary_key)>()),
                        _this()->*std::get<_i>(ptr_pk))),
              ...);
-        }(std::make_index_sequence<rfl::tuple_size_v<PK>>{});
+        }(std::make_index_sequence<tuple_size_v<PK>>{});
     }
 
     template<typename Callback>
     void iterate_db_column_values(Callback&& callback)
     {
-        const auto view = rfl::to_view(*_this());
+        const auto view = to_view(*_this());
         view.apply([&callback]<typename _Field>(const _Field& f) {
             using Field = std::remove_cvref_t<std::remove_pointer_t<typename _Field::Type>>;
             const auto col_name = MetaModel<Child>::column_name(std::string(f.name()));
@@ -43,10 +44,10 @@ private:
                 const auto& fk = f.value()->fk();// values of Tuple<Type, Type2>
                 [&]<size_t... _i>(std::index_sequence<_i...>) {
                     ((callback(
-                             col_name + "_" + MetaModel<OtherModel>::column_name(get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
+                             col_name + "_" + MetaModel<OtherModel>::column_name(refl::get_field_name_str<std::get<_i>(OtherModel::ModelProperties::primary_key)>()),
                              std::get<_i>(fk))),
                      ...);
-                }(std::make_index_sequence<rfl::tuple_size_v<OtherModelPtrFK>>{});
+                }(std::make_index_sequence<tuple_size_v<OtherModelPtrFK>>{});
             }
             else {
                 static_assert(!is_specialization_of_v<Field, ForeignKey>);
@@ -74,7 +75,7 @@ public:
     void remove()
     {
         DB::Compiler::Delete del{MetaModel<Child>::compile_time::table_name()};
-        const auto view = rfl::to_view(*_this());
+        const auto view = to_view(*_this());
         iterate_pk_db_column_values([&](const auto& name, const auto& value) {
             del.filter(name, value);
         });

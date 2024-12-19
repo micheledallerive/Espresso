@@ -2,9 +2,9 @@
 
 #include "orm/concepts.hpp"
 #include "orm/model/field_property.hpp"
-#include "orm/reflection/field_name.hpp"
+#include "orm/reflection/get_name.hpp"
 #include <map>
-#include <rfl.hpp>
+#include "orm/reflection/to_view.hpp"
 
 
 namespace espresso::orm {
@@ -21,7 +21,7 @@ private:
     {
         using FP = typename Model::FieldProperties;
         FP properties{};
-        auto view = rfl::to_view(properties);
+        auto view = to_view(properties);
         view.apply([&](const auto& f) {
             std::string name{f.name()};
             FieldPropertyList val = *f.value();
@@ -64,7 +64,7 @@ public:
     template<auto field_ptr>
     std::optional<FieldProperty> find_property(Property property)
     {
-        auto field_name = get_field_name_str<field_ptr>();
+        auto field_name = refl::get_field_name_str<field_ptr>();
         return find_property(field_name, property);
     }
 
@@ -85,7 +85,7 @@ public:
                 return std::string(Model::ModelProperties::table_name);
             }
             else {
-                return rfl::type_name_t<Model>().str();
+                return refl::get_type_name_str<Model>();
             }
         }
     };

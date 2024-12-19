@@ -16,7 +16,7 @@ private:
     template<auto field_ptr>
     constexpr static std::string column_name() {
         using Model = typename struct_field_ptr<decltype(field_ptr)>::Struct;
-        return MetaModel<Model>::compile_time::table_name() + "." + MetaModel<Model>::column_name(get_field_name_str<field_ptr>());
+        return MetaModel<Model>::compile_time::table_name() + "." + MetaModel<Model>::column_name(refl::get_field_name_str<field_ptr>());
     }
 public:
     constexpr Filter(const std::string& left, const std::string& op, const std::string& right) : m_str{left + " " + op + " " + right} {}
@@ -49,8 +49,8 @@ public:
             return create(field, std::move(op), value.value());
         }
         using Model = typename struct_field_ptr<decltype(field_ptr)>::Struct;
-        static constexpr auto equals = "=";
-        static constexpr auto not_equals = "!=";
+        constexpr auto equals = "=";
+        constexpr auto not_equals = "!=";
         if (op != equals && op != not_equals) throw std::runtime_error("Null comparison can only be equal or not equal");
         return Filter{column_name<field_ptr>(), op == equals ? "IS" : "IS NOT", "NULL"};
     }
