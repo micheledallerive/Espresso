@@ -82,14 +82,14 @@ private:
     friend class SQLiteInstance::Compiler::Insert;
     friend class SQLiteInstance::Compiler::Delete;
 
-    std::string table;
+    std::string m_table;
     std::vector<std::string> m_filters;
     std::vector<std::string> m_order_by;
     bool m_count{false};
 
 public:
     explicit Query(std::string table)
-        : table(std::move(table))
+        : m_table(std::move(table))
     {
     }
 
@@ -121,7 +121,7 @@ public:
         else {
             ss << "*";
         }
-        ss << " FROM " << table;
+        ss << " FROM " << m_table;
         if (!m_filters.empty()) {
             ss << " WHERE ";
             ss << concatenate(m_filters, " AND ");
@@ -137,13 +137,13 @@ public:
 
 class SQLiteInstance::Compiler::Insert {
 private:
-    std::string table;
+    std::string m_table;
     std::vector<std::string> m_columns;
     std::vector<std::string> m_values;
 
 public:
     explicit Insert(std::string table)
-        : table(std::move(table))
+        : m_table(std::move(table))
     {
     }
 
@@ -158,7 +158,7 @@ public:
     [[nodiscard]] std::string compile() const
     {
         std::stringstream ss;
-        ss << "INSERT OR REPLACE INTO " << table;
+        ss << "INSERT OR REPLACE INTO " << m_table;
         ss << " (" << concatenate(m_columns, ", ") << ")";
         ss << " VALUES (" << concatenate(m_values, ", ") << ")";
         auto result = ss.str();
@@ -168,16 +168,16 @@ public:
 
 class SQLiteInstance::Compiler::Delete {
 private:
-    std::string table;
+    std::string m_table;
     std::vector<std::string> m_filters;
 
 public:
     explicit Delete(std::string table)
-        : table(std::move(table))
+        : m_table(std::move(table))
     {
     }
 
-    explicit Delete(SQLiteInstance::Compiler::Query&& query) : table(std::move(query.table)), m_filters(std::move(query.m_filters)) {}
+    explicit Delete(SQLiteInstance::Compiler::Query&& query) : m_table(std::move(query.m_table)), m_filters(std::move(query.m_filters)) {}
 
     template<typename T>
     SQLiteInstance::Compiler::Delete& filter(std::string_view column_name, const T& field)
@@ -192,7 +192,7 @@ public:
     [[nodiscard]] std::string compile() const
     {
         std::stringstream ss;
-        ss << "DELETE FROM " << table;
+        ss << "DELETE FROM " << m_table;
         if (!m_filters.empty()) {
             ss << " WHERE ";
             ss << concatenate(m_filters, " AND ");

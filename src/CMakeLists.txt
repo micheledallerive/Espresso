@@ -9,7 +9,7 @@ espresso_link_external(espresso)
 # End external libraries linking
 
 # Set compile options
-#target_compile_options(espresso PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(espresso PRIVATE -Wall -Wextra -Wpedantic -Werror -Wreorder -Wunused -Wshadow)
 #set_target_properties(espresso PROPERTIES COMPILE_FLAGS "-Wall -Wextra -Wpedantic -Werror")
 
 file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
