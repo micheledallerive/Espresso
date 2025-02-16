@@ -15,7 +15,8 @@ learning experience for me. I am open to any suggestions and contributions.
     - Supports URL parameters.
 - Middleware: use pre-defined or custom middleware to manipulate requests and
   responses.
-- Request and response objects: access request data and manipulate the response.
+- Static file serving: serve static files from a specified directory.
+- ORM (WIP): a Object-Relational Mapping system to interact with a database.
 
 ## Getting Started
 
@@ -32,16 +33,14 @@ $ sudo make install
 
 ### Usage
 
-Create a new file called `main.cpp` and add the following code:
-
 ```c++
 #include <espresso.h>
 
 int main() {
-    Espresso::Server server;
+    espresso::Server server;
 
-    server.get("/", [](Espresso::Request *req, Espresso::Response *res) {
-        res->send("Hello, World!");
+    server.router().get("/", [](const espresso::Request &req, espresso::Response &res) {
+        response.write("Hello, World!");
     });
 
     server.listen(3000);
@@ -60,6 +59,8 @@ $ g++ main.cpp -o main -lespresso -std=c++2a
 ```
 
 **Note**: the `-lespresso` flag is required to link the Espresso library.
+
+Please refer to the `examples` directory for more examples.
 
 ## Notes
 
