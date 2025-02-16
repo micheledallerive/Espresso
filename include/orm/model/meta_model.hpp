@@ -21,10 +21,9 @@ private:
     {
         using FP = typename Model::FieldProperties;
         FP properties{};
-        auto view = to_view(properties);
-        view.apply([&](const auto& f) {
+        refl::view_apply(properties, [&](const auto& f) {
             std::string name{f.name()};
-            FieldPropertyList val = *f.value();
+            FieldPropertyList val = *f.value_ptr();
             m_field_properties.emplace(name, std::move(val));
         });
     }

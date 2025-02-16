@@ -17,12 +17,13 @@ TEST(Reflection, ToTuple)
     const A a{.field_1 = 5, .field_2 = 42};
 
     int idx = 0;
-    to_view(a, [&idx]<typename Field>(const Field& field) {
+    view_apply(a, [&idx]<typename Field>(const Field& field) {
         if (idx == 0) {
             EXPECT_EQ(field.name(), "field_1");
             auto val = *field.value_ptr();
             EXPECT_EQ(val, 5);
-        } else {
+        }
+        else {
             EXPECT_EQ(field.name(), "field_2");
             auto val = *field.value_ptr();
             EXPECT_EQ(val, 42);

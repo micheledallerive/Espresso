@@ -34,7 +34,7 @@ private:
     template<typename Callback>
     void iterate_db_column_values(Callback&& callback)
     {
-        refl::to_view(*_this(), [&callback]<typename _Field>(const _Field& f) {
+        refl::view_apply(*_this(), [&callback]<typename _Field>(const _Field& f) {
             using Field = clean_type_t<typename _Field::Type>;
             const auto col_name = MetaModel<Child>::column_name(std::string(f.name()));
             if constexpr (is_specialization_of_v<Field, ForeignKey>) {

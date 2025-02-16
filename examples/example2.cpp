@@ -66,9 +66,15 @@ int main()
 {
     DBManager::get().emplace("test.db");
 
-    print_all();
-    User::objects().remove();
-    print_all();
+//    print_all();
+//    User::objects().remove();
+//    print_all();
+
+    Dog dog{.name = "Fido", .age = 69};
+    dog.save();
+
+    User user{.username = "mdr", .age = 120, .dog = dog};
+    user.save();
 
     return 0;
 }

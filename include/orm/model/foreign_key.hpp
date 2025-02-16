@@ -35,6 +35,11 @@ public:
     explicit ForeignKey(const FK& fk) : m_data(fk) {}
     ForeignKey(const ToModel& model) : m_data(model) {}
 
+    auto fk() const {
+        if (m_data.index() == 0) return std::get<0>(m_data).pk();
+        else return std::get<1>(m_data);
+    }
+
     ToModel& operator*()
     {
         retrieve();
