@@ -26,8 +26,8 @@ public:
     Headers() = default;
     explicit Headers(Map headers);
 
+    void set(const std::string &name, const std::string &value);
     void insert(const std::string& name, const std::string& value);
-
     void erase(const std::string& name);
 
     [[nodiscard]] std::string& operator[](const std::string& name);

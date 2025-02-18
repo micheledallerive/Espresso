@@ -20,8 +20,8 @@ public:
     Response() = default;
 
     Response& write(const std::string& str);
-
     void send_file(const std::filesystem::path& file);
+    void redirect(const std::string& location);
 
     Response& status(int status);
 
@@ -29,7 +29,7 @@ public:
 
     Response& add_cookie(const Cookie& cookie);
 
-    const std::vector<char> body() const;
+    std::vector<char> body() const;
 
     std::string serialize();
 };

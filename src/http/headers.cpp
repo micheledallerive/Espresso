@@ -4,6 +4,10 @@ namespace espresso::http {
 Headers::Headers(Headers::Map headers) : m_headers(std::move(headers))
 {
 }
+void Headers::set(const std::string& name, const std::string& value)
+{
+    m_headers[name] = value;
+}
 void Headers::insert(const std::string& name, const std::string& value)
 {
     if (m_headers.find(name) == m_headers.end()) {

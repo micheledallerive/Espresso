@@ -98,8 +98,11 @@ Request Request::deserialize(std::span<char> buffer)
         while (std::getline(ss, line)
                && !line.empty()
                && line[0] != '\r') {
-            assert(line.back() == '\r');
-            line.pop_back();
+            // Apparently if the body is empty, Firefox does not send the empty line but terminates the request with the last header, making the ending \r absent
+            //assert(line.back() == '\r');
+            if (line.back() == '\r') {
+                line.pop_back();
+            }
             auto pos = line.find(':');
             if (pos != std::string::npos) {
                 std::string key = line.substr(0, pos);
