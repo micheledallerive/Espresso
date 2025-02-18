@@ -1,5 +1,6 @@
 #include "http/request.hpp"
 #include "utils/string.hpp"
+#include "utils/network_stream.hpp"
 
 namespace espresso::http {
 
@@ -67,10 +68,11 @@ void Request::populate_cookies(std::string_view cookies)
         m_cookies[key] = value;
     }
 }
-Request Request::deserialize(std::span<char> buffer)
+
+Request Request::receive_from_network(std::streambuf &stream)
 {
     Request req;
-    std::stringstream ss(buffer.data());
+    std::istream ss(&stream);
 
     {
         std::string method_str;
@@ -117,7 +119,8 @@ Request Request::deserialize(std::span<char> buffer)
         }
     }
 
-    std::size_t body_len = buffer.size() - ss.tellg();
+    bool has_content_length = req.m_headers.contains("Content-Length");
+    std::size_t body_len = has_content_length ? std::stoi(req.headers()["Content-Length"]) : 0;
     char* ptr = new char[body_len];
     ss.read(ptr, body_len);
     req.m_body = std::span<char>(ptr, body_len);

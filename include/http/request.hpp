@@ -56,6 +56,6 @@ public:
         return m_custom_data;
     }
 
-    static Request deserialize(std::span<char> buffer);
+    static Request receive_from_network(std::streambuf &stream);
 };
 }// namespace espresso::http

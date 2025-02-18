@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <stdexcept>
 #include <unistd.h>
+#include <utils/network_stream.hpp>
 
 namespace espresso::http {
 
@@ -63,13 +64,8 @@ Server::~Server()
 }
 void Server::handle_client(int client_fd)
 {
-    char buffer[1024];
-    int n = read(client_fd, buffer, sizeof(buffer));
-    if (n == -1) {
-        throw std::runtime_error("read() failed");
-    }
-
-    http::Request request = http::Request::deserialize(std::span(buffer, n));
+    auto stream = NetworkStream(client_fd);
+    http::Request request = http::Request::receive_from_network(stream);
 
     http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
         http::Response res;
@@ -79,7 +75,10 @@ void Server::handle_client(int client_fd)
     });
 
     std::string response_str = response.serialize();
-    write(client_fd, response_str.data(), response_str.size());
+    ssize_t written = write(client_fd, response_str.data(), response_str.size());
+    if (written == -1) {
+        throw std::runtime_error("write() failed");
+    }
 }
 void Server::middleware(const middleware::MiddlewareFunction& middleware)
 {
