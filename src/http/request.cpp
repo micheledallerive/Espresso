@@ -73,6 +73,7 @@ Request Request::receive_from_network(std::streambuf &stream)
 {
     Request req;
     std::istream ss(&stream);
+    ss.exceptions(std::istream::badbit);
 
     {
         std::string method_str;

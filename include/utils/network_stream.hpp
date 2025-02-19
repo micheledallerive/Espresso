@@ -1,8 +1,8 @@
 #pragma once
 
+#include "net/socket.hpp"
 #include <streambuf>
 #include <unistd.h>
-#include "net/socket.hpp"
 
 namespace espresso {
 
@@ -13,13 +13,13 @@ class NetworkStream : public std::basic_streambuf<char> {
 private:
     static constexpr size_t buffer_size = 1024;
     RefSocket m_socket;
-    char buffer[buffer_size];
+    char m_buffer[buffer_size];
     int m_pos = 0;
     ssize_t m_available_data = 0;
 
     void read_more()
     {
-        m_available_data = m_socket.read(buffer, buffer_size);
+        m_available_data = m_socket.read(m_buffer, buffer_size);
         if (m_available_data == -1) {
             throw std::runtime_error("Failed to read from socket");
         }
@@ -34,7 +34,7 @@ private:
     }
 
 public:
-    explicit NetworkStream(int fd) : m_socket(fd), buffer{}
+    explicit NetworkStream(RefSocket socket) : m_socket(socket), m_buffer{}
     {
     }
     ~NetworkStream() override = default;
@@ -74,7 +74,7 @@ protected:
             if (showmanyc() == 0) {
                 return i;
             }
-            __s[i] = buffer[m_pos++];
+            __s[i] = m_buffer[m_pos++];
         }
         return __n;
     }
@@ -84,7 +84,7 @@ protected:
         if (showmanyc() == 0) {
             return traits_type::eof();
         }
-        return buffer[m_pos];
+        return m_buffer[m_pos];
     }
     int_type uflow() override
     {
@@ -92,7 +92,7 @@ protected:
         if (showmanyc() == 0) {
             return traits_type::eof();
         }
-        return buffer[m_pos++];
+        return m_buffer[m_pos++];
     }
     int_type pbackfail(int_type) override
     {

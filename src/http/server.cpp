@@ -1,4 +1,5 @@
 #include "http/server.hpp"
+#include "error/io_exceptions.hpp"
 #include "http/request.hpp"
 #include "utils/call_detectable.hpp"
 
@@ -11,7 +12,10 @@
 
 namespace espresso::http {
 
-Server::Server() : m_socket(AF_INET, SOCK_STREAM, 0) {}
+Server::Server() : Server(Settings{}) {}
+Server::Server(const Settings& settings) : m_settings(settings), m_socket(AF_INET, SOCK_STREAM, 0)
+{
+}
 
 [[noreturn]] void Server::listen(int port)
 {
@@ -49,6 +53,9 @@ Server::Server() : m_socket(AF_INET, SOCK_STREAM, 0) {}
             try {
                 handle_client(client_fd);
             }
+            catch (const TimeoutException& e) {
+                std::cerr << "Request timed out" << std::endl;
+            }
             catch (const std::exception& e) {
                 std::cerr << "Request crashed: " << e.what() << std::endl;
             }
@@ -64,7 +71,11 @@ Server::~Server()
 }
 void Server::handle_client(int client_fd)
 {
-    auto stream = NetworkStream(client_fd);
+    auto client_socket = RefSocket(client_fd);
+    client_socket.set_timeout(m_settings.recv_timeout);
+
+    auto stream = NetworkStream(client_socket);
+
     http::Request request = http::Request::receive_from_network(stream);
 
     http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {

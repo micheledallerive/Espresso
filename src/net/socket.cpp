@@ -1,15 +1,20 @@
 #include "net/socket.hpp"
 
+#include "error/io_exceptions.hpp"
+#include <iostream>
 #include <stdexcept>
 #include <unistd.h>
 
 namespace espresso {
 
-BaseSocket::BaseSocket(int fd) : m_fd(fd)
+BaseSocket::BaseSocket(int fd) : m_fd(fd), m_timeout()
 {
     if (m_fd == -1) {
         throw std::runtime_error("socket() failed");
     }
+
+    FD_ZERO(&m_read_fds);
+    FD_SET(m_fd, &m_read_fds);
 }
 Socket::Socket(int domain, int type, int protocol) : BaseSocket(socket(domain, type, protocol))
 {
@@ -39,6 +44,12 @@ BaseSocket::operator int() const
 {
     return m_fd;
 }
+void BaseSocket::set_timeout(std::chrono::microseconds timeout)
+{
+    auto us_in_s = 1000000;
+    m_timeout.tv_sec = timeout.count() / us_in_s;
+    m_timeout.tv_usec = timeout.count() % us_in_s;
+}
 void BaseSocket::listen(int backlog)
 {
     if (::listen(m_fd, backlog) == -1) {
@@ -48,16 +59,16 @@ void BaseSocket::listen(int backlog)
 
 ssize_t BaseSocket::read(void* buf, size_t count)
 {
-    // fd_set read_fds;
-    // FD_ZERO(&read_fds);
-    // FD_SET(m_fd, &read_fds);
-    // struct timeval timeout = {0, 1};
-    // if (select(m_fd + 1, &read_fds, nullptr, nullptr, &timeout) == -1) {
-    //     throw std::runtime_error("select() failed");
-    // }
-    // if (!FD_ISSET(m_fd, &read_fds)) {
-    //     return 0;
-    // }
+    int ret = select(m_fd + 1, &m_read_fds, nullptr, nullptr, &m_timeout);
+    if (ret == -1) {
+        throw std::runtime_error("select() failed");
+    }
+    else if (ret == 0) {
+        throw TimeoutException();
+    }
+    if (!FD_ISSET(m_fd, &m_read_fds)) {
+        return 0;
+    }
     return ::read(m_fd, buf, count);
 }
 RefSocket::RefSocket(int fd) : BaseSocket(fd)
