@@ -2,6 +2,7 @@
 
 #include <streambuf>
 #include <unistd.h>
+#include "net/socket.hpp"
 
 namespace espresso {
 
@@ -11,14 +12,14 @@ namespace espresso {
 class NetworkStream : public std::basic_streambuf<char> {
 private:
     static constexpr size_t buffer_size = 1024;
-    int m_fd;
+    RefSocket m_socket;
     char buffer[buffer_size];
     int m_pos = 0;
-    int m_available_data = 0;
+    ssize_t m_available_data = 0;
 
     void read_more()
     {
-        m_available_data = ::read(m_fd, buffer, buffer_size);
+        m_available_data = m_socket.read(buffer, buffer_size);
         if (m_available_data == -1) {
             throw std::runtime_error("Failed to read from socket");
         }
@@ -33,13 +34,14 @@ private:
     }
 
 public:
-    NetworkStream(int fd) : m_fd(fd), buffer{}
+    explicit NetworkStream(int fd) : m_socket(fd), buffer{}
     {
     }
     ~NetworkStream() override = default;
 
 protected:
-    void imbue(const std::locale&) override {
+    void imbue(const std::locale&) override
+    {
     }
 
     // Positioning

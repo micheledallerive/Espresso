@@ -5,29 +5,26 @@
 
 namespace espresso {
 
-Socket::Socket(int domain, int type, int protocol) : m_fd(socket(domain, type, protocol))
+BaseSocket::BaseSocket(int fd) : m_fd(fd)
 {
     if (m_fd == -1) {
         throw std::runtime_error("socket() failed");
     }
-
+}
+Socket::Socket(int domain, int type, int protocol) : BaseSocket(socket(domain, type, protocol))
+{
     // set socket option to reuse address
     int optval = 1;
     if (setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
         throw std::runtime_error("setsockopt() failed");
     }
 }
-Socket::Socket(const Socket& other)
+Socket::Socket(const Socket& other) : BaseSocket(dup(other.m_fd))
 {
-    m_fd = dup(other.m_fd);
-    if (m_fd == -1) {
-        throw std::runtime_error("dup() failed");
-    }
 }
 
-Socket::Socket(Socket&& other) noexcept
+Socket::Socket(Socket&& other) noexcept : BaseSocket(other.m_fd)
 {
-    m_fd = other.m_fd;
     other.m_fd = -1;
 }
 
@@ -37,14 +34,23 @@ Socket::~Socket()
         close(m_fd);
     }
 }
-Socket::operator int() const
+
+BaseSocket::operator int() const
 {
     return m_fd;
 }
-void Socket::listen(int backlog)
+void BaseSocket::listen(int backlog)
 {
     if (::listen(m_fd, backlog) == -1) {
         throw std::runtime_error("listen() failed");
     }
+}
+
+ssize_t BaseSocket::read(void* buf, size_t count)
+{
+    return ::read(m_fd, buf, count);
+}
+RefSocket::RefSocket(int fd) : BaseSocket(fd)
+{
 }
 }// namespace espresso

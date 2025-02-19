@@ -1,25 +1,27 @@
 #pragma once
 
+#include <cstdio>
 #include <stdexcept>
 #include <sys/socket.h>
-#include <stdio.h>
+#include <unistd.h>
 
 namespace espresso {
 
-class Socket {
+class BaseSocket {
 protected:
-    int m_fd = -1;
+    int m_fd;
+
+    explicit BaseSocket(int fd);
 
 public:
-    Socket(int domain, int type, int protocol);
-    Socket(const Socket& other);
-    Socket(Socket&& other) noexcept;
-    ~Socket();
-
     explicit operator int() const;
+    [[nodiscard]] int fd() const
+    {
+        return m_fd;
+    }
 
     template<typename Sockaddr>
-    Socket& bind(const Sockaddr& addr)
+    BaseSocket& bind(const Sockaddr& addr)
     {
         if (::bind(m_fd, reinterpret_cast<const struct sockaddr*>(&addr), sizeof(Sockaddr)) == -1) {
             perror("bind");
@@ -36,6 +38,32 @@ public:
         socklen_t addr_len = sizeof(Sockaddr);
         return ::accept(m_fd, reinterpret_cast<struct sockaddr*>(&addr), &addr_len);
     }
+
+    ssize_t read(void* buf, size_t count);
+};
+
+/**
+ * Socket that wraps a file descriptor with no life-time management.
+ *
+ * RefSocket is used whenever the interface of the BaseSocket class needs to be used, but the socket is not owned by the class.
+ * The user must ensure that the file descriptor stays available for the entire lifetime of the RefSocket object.
+ */
+class RefSocket : public BaseSocket {
+public:
+    explicit RefSocket(int fd);
+    ~RefSocket() = default;
+};
+
+/**
+ * Socket that owns a socket file descriptor.
+ * On duplication, the file descriptor is duplicated; on destruction, the file descriptor is closed.
+ */
+class Socket : public BaseSocket {
+public:
+    Socket(int domain, int type, int protocol);
+    Socket(const Socket& other);
+    Socket(Socket&& other) noexcept;
+    ~Socket();
 };
 
 }// namespace espresso
