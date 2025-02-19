@@ -127,4 +127,15 @@ Request Request::receive_from_network(std::streambuf &stream)
 
     return req;
 }
+std::string Request::serialize() const
+{
+    std::stringstream ss;
+    ss << method_to_string(m_method) << ' ' << m_path << " HTTP/1.1\r\n";
+    for (const auto& [key, value] : m_headers) {
+        ss << key << ": " << value << "\r\n";
+    }
+    ss << "\r\n";
+    ss.write(m_body.data(), m_body.size());
+    return ss.str();
+}
 }// namespace espresso::http

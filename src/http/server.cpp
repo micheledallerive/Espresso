@@ -45,7 +45,7 @@ Server::Server() : m_socket(AF_INET, SOCK_STREAM, 0) {}
             throw std::runtime_error("accept() failed");
         }
 
-        m_workers.push_back(std::async(std::launch::async, [&] {
+        m_workers.push_back(std::async(std::launch::async, [this, client_fd] {
             try {
                 handle_client(client_fd);
             }

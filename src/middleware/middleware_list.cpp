@@ -2,7 +2,7 @@
 
 namespace espresso {
 
-http::Response MiddlewareList::run_middlewares(http::Request& request, const std::function<http::Response(http::Request&)>& router)
+http::Response MiddlewareList::run_middlewares(http::Request& request, const std::function<http::Response(http::Request&)>& router) const
 {
     size_t next_idx = 0;
     auto call_chain = [&](auto&& self, size_t idx, http::Request& req) -> http::Response {

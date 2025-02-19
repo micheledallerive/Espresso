@@ -57,5 +57,7 @@ public:
     }
 
     static Request receive_from_network(std::streambuf &stream);
+
+    std::string serialize() const;
 };
 }// namespace espresso::http

@@ -16,7 +16,7 @@ private:
 public:
     MiddlewareList() = default;
 
-    http::Response run_middlewares(http::Request&, const std::function<http::Response(http::Request&)>&);
+    http::Response run_middlewares(http::Request&, const std::function<http::Response(http::Request&)>&) const;
     void add(const middleware::MiddlewareFunction& middleware);
 };
 

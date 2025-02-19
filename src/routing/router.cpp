@@ -3,7 +3,7 @@
 
 namespace espresso {
 
-bool Route::handle(http::Request& request, http::Response& response)
+bool Route::handle(http::Request& request, http::Response& response) const
 {
     auto matched = m_path.matches(request.path());
     if (!matched) return false;
@@ -52,7 +52,7 @@ Route& Router::route(const std::string& path)
 {
     return get_route(path);
 }
-void Router::handle(http::Request& request, http::Response& response)
+void Router::handle(http::Request& request, http::Response& response) const
 {
     for (auto& route : m_routes) {
         if (route.handle(request, response)) return;

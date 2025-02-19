@@ -39,7 +39,7 @@ private:
     Handlers m_handlers;
 
 protected:
-    bool handle(http::Request& request, http::Response& response);
+    bool handle(http::Request& request, http::Response& response) const;
 
     void set_handlers(const Handlers& map);
 
@@ -85,7 +85,7 @@ public:
     Route& route(const std::string& path);
     Router& route(const std::string& path, const Router& router);
 
-    void handle(http::Request& request, http::Response& response);
+    void handle(http::Request& request, http::Response& response) const;
 };
 
 }// namespace espresso

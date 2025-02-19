@@ -12,6 +12,7 @@ protected:
     int m_fd;
 
     explicit BaseSocket(int fd);
+    virtual ~BaseSocket() = default;
 
 public:
     explicit operator int() const;
@@ -51,7 +52,7 @@ public:
 class RefSocket : public BaseSocket {
 public:
     explicit RefSocket(int fd);
-    ~RefSocket() = default;
+    ~RefSocket() override = default;
 };
 
 /**
@@ -63,7 +64,7 @@ public:
     Socket(int domain, int type, int protocol);
     Socket(const Socket& other);
     Socket(Socket&& other) noexcept;
-    ~Socket();
+    ~Socket() override;
 };
 
 }// namespace espresso

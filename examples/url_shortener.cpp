@@ -23,11 +23,15 @@ int main()
     server.middleware(JSONParser());
 
     server.router()
+            .get("/test", [&](const auto& req, auto& res) {
+                res.status(200);
+            })
             .get("/url/{short}", [&](const Request& req, Response& res) {
                 const auto short_url = req.url_params().at("short");
+                std::cout << "Short url: " << short_url << " Present? " << std::boolalpha << (shortened_urls.find(short_url) != shortened_urls.end()) << std::endl;
                 if (shortened_urls.find(short_url) == shortened_urls.end()) {
                     res.status(404);
-                    res.write("aURL not found");
+                    res.write("URL not found");
                     return;
                 }
 
@@ -40,7 +44,7 @@ int main()
 
                 const std::string shorter = generate_shorter_url();
 
-                //shortened_urls[shorter] = url;
+                shortened_urls[shorter] = url;
                 nlohmann::json response_json = {
                         {"short_url", shorter}};
                 res.write(response_json.dump());

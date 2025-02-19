@@ -48,6 +48,16 @@ void BaseSocket::listen(int backlog)
 
 ssize_t BaseSocket::read(void* buf, size_t count)
 {
+    // fd_set read_fds;
+    // FD_ZERO(&read_fds);
+    // FD_SET(m_fd, &read_fds);
+    // struct timeval timeout = {0, 1};
+    // if (select(m_fd + 1, &read_fds, nullptr, nullptr, &timeout) == -1) {
+    //     throw std::runtime_error("select() failed");
+    // }
+    // if (!FD_ISSET(m_fd, &read_fds)) {
+    //     return 0;
+    // }
     return ::read(m_fd, buf, count);
 }
 RefSocket::RefSocket(int fd) : BaseSocket(fd)
