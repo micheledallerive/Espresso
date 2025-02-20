@@ -5,6 +5,7 @@
 
 #include <arpa/inet.h>
 #include <iostream>
+#include <net/connection_manager.hpp>
 #include <netinet/in.h>
 #include <stdexcept>
 #include <unistd.h>
@@ -41,6 +42,8 @@ Server::Server(const Settings& settings) : m_settings(settings), m_socket(AF_INE
             .bind(server_addr)
             .listen(10);
 
+    ConnectionManager manager(10, 100, [this](auto& conn) { handle_connection(conn); });
+
     while (1) {
         // accept incoming connection
         struct sockaddr_in client_addr;
@@ -49,44 +52,24 @@ Server::Server(const Settings& settings) : m_settings(settings), m_socket(AF_INE
             throw std::runtime_error("accept() failed");
         }
 
-        m_workers.push_back(std::async(std::launch::async, [this, client_fd] {
-            try {
-                handle_client(client_fd);
-            }
-            catch (const TimeoutException& e) {
-                std::cerr << "Request timed out" << std::endl;
-            }
-            catch (const std::exception& e) {
-                std::cerr << "Request crashed: " << e.what() << std::endl;
-            }
-            close(client_fd);
-        }));
+        manager.add_connection(Connection(RefSocket(client_fd), m_settings.recv_timeout));
     }
 }
-Server::~Server()
+void Server::handle_connection(Connection& connection)
 {
-    for (auto& worker : m_workers) {
-        worker.wait();
-    }
-}
-void Server::handle_client(int client_fd)
-{
-    auto client_socket = RefSocket(client_fd);
-    client_socket.set_timeout(m_settings.recv_timeout);
+    auto stream = NetworkStream(connection);
+    Request request = Request::receive_from_network(stream);
 
-    auto stream = NetworkStream(client_socket);
-
-    http::Request request = http::Request::receive_from_network(stream);
-
-    http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
+    Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
         http::Response res;
         m_router.handle(req, res);
         res.headers().insert("Content-Length", std::to_string(res.body().size()));
         return res;
     });
+    response.headers().insert("Connection", "keep-alive");
 
     std::string response_str = response.serialize();
-    ssize_t written = write(client_fd, response_str.data(), response_str.size());
+    ssize_t written = write(connection.socket().fd(), response_str.data(), response_str.size());
     if (written == -1) {
         throw std::runtime_error("write() failed");
     }

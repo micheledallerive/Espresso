@@ -1,6 +1,7 @@
 #pragma once
 
 #include "net/socket.hpp"
+#include <net/connection.hpp>
 #include <streambuf>
 #include <unistd.h>
 
@@ -12,14 +13,15 @@ namespace espresso {
 class NetworkStream : public std::basic_streambuf<char> {
 private:
     static constexpr size_t buffer_size = 1024;
-    RefSocket m_socket;
+    Connection m_connection;
     char m_buffer[buffer_size];
     int m_pos = 0;
     ssize_t m_available_data = 0;
 
     void read_more()
     {
-        m_available_data = m_socket.read(m_buffer, buffer_size);
+        m_connection.wait_for_data();
+        m_available_data = m_connection.socket().read(m_buffer, buffer_size);
         if (m_available_data == -1) {
             throw std::runtime_error("Failed to read from socket");
         }
@@ -34,7 +36,7 @@ private:
     }
 
 public:
-    explicit NetworkStream(RefSocket socket) : m_socket(socket), m_buffer{}
+    explicit NetworkStream(Connection connection) : m_connection(connection), m_buffer{}
     {
     }
     ~NetworkStream() override = default;

@@ -11,8 +11,7 @@ namespace espresso {
 class BaseSocket {
 protected:
     int m_fd;
-    fd_set m_read_fds;
-    struct timeval m_timeout;
+    fd_set m_read_fds{};
 
     explicit BaseSocket(int fd);
     virtual ~BaseSocket() = default;
@@ -23,8 +22,6 @@ public:
     {
         return m_fd;
     }
-
-    void set_timeout(std::chrono::microseconds timeout);
 
     template<typename Sockaddr>
     BaseSocket& bind(const Sockaddr& addr)

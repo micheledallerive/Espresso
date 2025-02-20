@@ -7,7 +7,7 @@
 
 namespace espresso {
 
-BaseSocket::BaseSocket(int fd) : m_fd(fd), m_timeout()
+BaseSocket::BaseSocket(int fd) : m_fd(fd)
 {
     if (m_fd == -1) {
         throw std::runtime_error("socket() failed");
@@ -44,12 +44,6 @@ BaseSocket::operator int() const
 {
     return m_fd;
 }
-void BaseSocket::set_timeout(std::chrono::microseconds timeout)
-{
-    auto us_in_s = 1000000;
-    m_timeout.tv_sec = timeout.count() / us_in_s;
-    m_timeout.tv_usec = timeout.count() % us_in_s;
-}
 void BaseSocket::listen(int backlog)
 {
     if (::listen(m_fd, backlog) == -1) {
@@ -59,16 +53,6 @@ void BaseSocket::listen(int backlog)
 
 ssize_t BaseSocket::read(void* buf, size_t count)
 {
-    int ret = select(m_fd + 1, &m_read_fds, nullptr, nullptr, &m_timeout);
-    if (ret == -1) {
-        throw std::runtime_error("select() failed");
-    }
-    else if (ret == 0) {
-        throw TimeoutException();
-    }
-    if (!FD_ISSET(m_fd, &m_read_fds)) {
-        return 0;
-    }
     return ::read(m_fd, buf, count);
 }
 RefSocket::RefSocket(int fd) : BaseSocket(fd)

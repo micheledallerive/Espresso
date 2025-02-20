@@ -3,8 +3,11 @@
 #include "middleware/middleware_list.hpp"
 #include "net/socket.hpp"
 #include "routing/router.hpp"
+
+#include <forward_list>
 #include <functional>
 #include <future>
+#include <net/connection.hpp>
 #include <string_view>
 #include <vector>
 
@@ -14,28 +17,29 @@ using namespace std::chrono_literals;
 class Server {
 public:
     struct Settings {
-        static constexpr std::chrono::microseconds DEFAULT_RECV_TIMEOUT{5s};
+        static constexpr Connection::Timeout DEFAULT_RECV_TIMEOUT{5s};
 
-        std::chrono::microseconds recv_timeout = DEFAULT_RECV_TIMEOUT;
+        Connection::Timeout recv_timeout = DEFAULT_RECV_TIMEOUT;
     };
 
 private:
     Settings m_settings;
 
     Socket m_socket;
-    std::vector<std::future<void>> m_workers;
+
+    std::forward_list<Connection> m_pending_connections;
 
     Router m_router;
     MiddlewareList m_middleware;
 
-    void handle_client(int client_fd);
+    void handle_connection(Connection &connection);
 
 public:
     Server();
-    explicit Server(const Settings &settings);
+    explicit Server(const Settings& settings);
     Server(const Server&) = delete;
     Server(Server&&) = delete;
-    ~Server();
+    ~Server() = default;
 
     Router& router() { return m_router; }
 
