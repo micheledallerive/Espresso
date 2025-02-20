@@ -11,11 +11,11 @@ void Headers::set(const std::string& name, const std::string& value)
 void Headers::insert(const std::string& name, const std::string& value)
 {
     if (m_headers.find(name) == m_headers.end()) {
-        m_headers[name.data()] = value;
+        m_headers[name] = value;
     }
     else {
         // combine them
-        auto& val = m_headers[name.data()];
+        auto& val = m_headers[name];
         val += ",";
         val += value;
     }

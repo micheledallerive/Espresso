@@ -19,6 +19,8 @@ private:
     Timeout m_timeout;
     epoll_event m_event{};
 
+    bool m_closing{false};
+
 public:
     Connection(const RefSocket& socket,
                const Timeout& timeout) : m_client(socket),
@@ -65,9 +67,19 @@ public:
     [[nodiscard]] bool is_active() const
     {
         char buf;
-        int ret = recv(m_client.fd(), &buf, 1, MSG_PEEK | MSG_DONTWAIT);
+        ssize_t ret = ::recv(m_client.fd(), &buf, 1, MSG_PEEK | MSG_DONTWAIT);
         bool inactive = (ret == 0) || (ret == -1 && errno != EAGAIN);
         return !inactive;
+    }
+
+    void set_closing()
+    {
+        m_closing = true;
+    }
+
+    [[nodiscard]] bool is_closing() const
+    {
+        return m_closing;
     }
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "net/connection.hpp"
 
-#include "ds/tsqueue.hpp"
+#include <condition_variable>
 #include <functional>
 #include <mutex>
 #include <queue>
@@ -17,19 +17,21 @@ public:
     using HandleFunction = std::function<void(Connection&)>;
 
 private:
-    tsqueue<Connection> m_waiting_connections;
+    std::queue<Connection> m_pending_connections;
+    std::mutex m_mutex;
+    std::condition_variable m_available;
+
     size_t m_max_idle_connections;
 
     std::vector<std::jthread> m_workers;
     std::stop_source m_stop_source{};
 
     Connection pop_connection();
-    void push_connection(Connection &&connection);
 public:
     explicit ConnectionManager(size_t workers, size_t max_idle_connections, HandleFunction &&handle);
     ~ConnectionManager();
 
-    void add_connection(const Connection& connection);
+    void push_connection(const Connection &connection);
 
 };
 

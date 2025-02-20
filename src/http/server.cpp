@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <unistd.h>
 #include <utils/network_stream.hpp>
+#include <syncstream>
 
 namespace espresso::http {
 
@@ -52,7 +53,7 @@ Server::Server(const Settings& settings) : m_settings(settings), m_socket(AF_INE
             throw std::runtime_error("accept() failed");
         }
 
-        manager.add_connection(Connection(RefSocket(client_fd), m_settings.recv_timeout));
+        manager.push_connection(Connection(RefSocket(client_fd), m_settings.recv_timeout));
     }
 }
 void Server::handle_connection(Connection& connection)
@@ -66,7 +67,7 @@ void Server::handle_connection(Connection& connection)
         res.headers().insert("Content-Length", std::to_string(res.body().size()));
         return res;
     });
-    response.headers().insert("Connection", "keep-alive");
+    response.headers().insert("Connection", connection.is_closing() ? "close" : "keep-alive");
 
     std::string response_str = response.serialize();
     ssize_t written = write(connection.socket().fd(), response_str.data(), response_str.size());

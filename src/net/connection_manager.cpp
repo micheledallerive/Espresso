@@ -5,11 +5,11 @@
 
 namespace espresso {
 
-ConnectionManager::ConnectionManager(size_t workers, size_t max_idle_connections, HandleFunction&& handle) : m_max_idle_connections(max_idle_connections)
+ConnectionManager::ConnectionManager(size_t workers, size_t max_idle_connections, HandleFunction&& handlefn) : m_max_idle_connections(max_idle_connections)
 {
     m_workers.reserve(workers);
     for (size_t i = 0; i < workers; ++i) {
-        m_workers.emplace_back([this, handle](const std::stop_token& stop) {
+        m_workers.emplace_back([this](const std::stop_token& stop, const HandleFunction& handle) {
             while (!stop.stop_requested()) {
                 Connection conn = pop_connection();
                 conn.wait_for_data();
@@ -19,20 +19,19 @@ ConnectionManager::ConnectionManager(size_t workers, size_t max_idle_connections
                 }
                 try {
                     handle(conn);
-                    push_connection(std::move(conn));
+                    if (conn.is_closing()) {
+                        conn.kill();
+                    }
+                    else
+                        push_connection(conn);
                 }
                 catch (std::runtime_error& e) {
                     std::cerr << "Exception: " << e.what() << std::endl;
                     conn.kill();
                 }
-                catch (...) {
-                    std::cerr << "Generic exception, molto male" << std::endl;
-                    conn.kill();
-                }
-                std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         },
-                               m_stop_source.get_token());
+                               m_stop_source.get_token(), handlefn);
     }
 }
 ConnectionManager::~ConnectionManager()
@@ -42,32 +41,28 @@ ConnectionManager::~ConnectionManager()
         worker.join();
     }
 
-    std::queue<Connection>& connections_queue = m_waiting_connections.queue();
-    while (!connections_queue.empty()) {
-        connections_queue.front().kill();
-        connections_queue.pop();
+    while (!m_pending_connections.empty()) {
+        m_pending_connections.front().kill();
+        m_pending_connections.pop();
     }
 }
 
-void ConnectionManager::add_connection(const Connection& connection)
-{
-    m_waiting_connections.produce(connection);
-}
 Connection ConnectionManager::pop_connection()
 {
-    return m_waiting_connections.consume();
+    std::unique_lock lock(m_mutex);
+    m_available.wait(lock, [this] { return !m_pending_connections.empty(); });
+    Connection conn = m_pending_connections.front();
+    if (m_pending_connections.size() >= m_max_idle_connections)
+        conn.set_closing();
+    m_pending_connections.pop();
+    return conn;
 }
 
-void ConnectionManager::push_connection(Connection&& connection)
+void ConnectionManager::push_connection(const Connection& connection)
 {
-    std::optional<Connection> oldest = m_waiting_connections.consume_if([this](const std::queue<Connection>& queue) {
-        return queue.size() >= m_max_idle_connections;
-    });
-    if (oldest.has_value()) {
-        std::cout << "Evicting existing request because the max was reached" << std::endl;
-        oldest->kill();
-    }
-    m_waiting_connections.produce(std::forward<Connection>(connection));
+    std::unique_lock lock(m_mutex);
+    m_pending_connections.push(connection);
+    m_available.notify_one();
 }
 
 }// namespace espresso
