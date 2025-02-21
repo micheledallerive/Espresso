@@ -43,7 +43,7 @@ Server::Server(const Settings& settings) : m_settings(settings), m_socket(AF_INE
             .bind(server_addr)
             .listen(10);
 
-    ConnectionManager manager(10, 100, [this](auto& conn) { handle_connection(conn); });
+    ConnectionManager manager(m_settings.http_workers, m_settings.max_connections, [this](auto& conn) { handle_connection(conn); });
 
     while (1) {
         // accept incoming connection

@@ -18,8 +18,12 @@ class Server {
 public:
     struct Settings {
         static constexpr Connection::Timeout DEFAULT_RECV_TIMEOUT{5s};
+        static constexpr size_t DEFAULT_HTTP_WORKERS{10};
+        static constexpr size_t DEFAULT_MAX_CONNECTIONS{1000};
 
         Connection::Timeout recv_timeout = DEFAULT_RECV_TIMEOUT;
+        size_t http_workers = DEFAULT_HTTP_WORKERS;
+        size_t max_connections = DEFAULT_MAX_CONNECTIONS;
     };
 
 private:
