@@ -9,12 +9,12 @@
 
 namespace espresso {
 
-class Connection {
-public:
-    using Timeout = std::chrono::milliseconds;
+using Timeout = std::chrono::milliseconds;
 
+template<SocketConcept SocketType>
+class Connection {
 private:
-    RefSocket m_client;
+    RefSocket<SocketType> m_client;
     int m_epoll_fd;
     Timeout m_timeout;
     epoll_event m_event{};
@@ -22,7 +22,7 @@ private:
     bool m_closing{false};
 
 public:
-    Connection(const RefSocket& socket,
+    Connection(const RefSocket<SocketType>& socket,
                const Timeout& timeout) : m_client(socket),
                                          m_epoll_fd(epoll_create1(0)),
                                          m_timeout(timeout)
@@ -39,8 +39,9 @@ public:
             throw std::runtime_error("epoll_ctl() failed");
         }
     }
+    //Connection(const Connection&) = delete;
 
-    RefSocket& socket()
+    RefSocket<SocketType>& socket()
     {
         return m_client;
     }
@@ -61,15 +62,12 @@ public:
     void kill()
     {
         close(m_epoll_fd);
-        close(m_client.fd());
+        m_client.close();
     }
 
     [[nodiscard]] bool is_active() const
     {
-        char buf;
-        ssize_t ret = ::recv(m_client.fd(), &buf, 1, MSG_PEEK | MSG_DONTWAIT);
-        bool inactive = (ret == 0) || (ret == -1 && errno != EAGAIN);
-        return !inactive;
+        return m_client.is_connected();
     }
 
     void set_closing()

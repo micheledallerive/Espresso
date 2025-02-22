@@ -10,10 +10,11 @@ namespace espresso {
 /**
  * Stream that retrieves characters from the newtork.
 */
+template<typename ConnectionType>
 class NetworkStream : public std::basic_streambuf<char> {
 private:
     static constexpr size_t buffer_size = 1024;
-    Connection m_connection;
+    ConnectionType &m_connection;
     char m_buffer[buffer_size];
     int m_pos = 0;
     ssize_t m_available_data = 0;
@@ -21,7 +22,7 @@ private:
     void read_more()
     {
         m_connection.wait_for_data();
-        m_available_data = m_connection.socket().read(m_buffer, buffer_size);
+        m_available_data = m_connection.socket().recv(m_buffer, buffer_size);
         if (m_available_data == -1) {
             throw std::runtime_error("Failed to read from socket");
         }
@@ -36,7 +37,7 @@ private:
     }
 
 public:
-    explicit NetworkStream(Connection connection) : m_connection(connection), m_buffer{}
+    explicit NetworkStream(ConnectionType &connection) : m_connection(connection), m_buffer{}
     {
     }
     ~NetworkStream() override = default;

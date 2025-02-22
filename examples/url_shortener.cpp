@@ -2,6 +2,7 @@
 
 #include "http/server.hpp"
 
+#include <https/server.hpp>
 #include <middleware/presets/json_parser.hpp>
 
 using namespace std;
@@ -18,12 +19,13 @@ std::string generate_shorter_url()
 
 int main()
 {
-    Server server(Server::Settings{.recv_timeout = 10000s});
+    https::Server server(https::Server::Settings{.recv_timeout = 100s});
 
     server.middleware(JSONParser());
 
     server.router()
             .get("/test", [&](const auto& req, auto& res) {
+                res.write("Hello world.");
                 res.status(200);
             })
             .get("/url/{short}", [&](const Request& req, Response& res) {
