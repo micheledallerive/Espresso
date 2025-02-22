@@ -16,7 +16,6 @@ SSLContext::SSLContext(const std::filesystem::path& cert_file, const std::filesy
     }
 
     if (SSL_CTX_use_certificate_file(m_ctx.get(), cert_file.c_str(), SSL_FILETYPE_PEM) <= 0) {
-        std::cout << "Exists certificate: " << std::filesystem::exists(cert_file) << "\n";
         throw std::runtime_error("Could not set the certificate file. Make sure the file exists and is a valid PEM file");
     }
     if (SSL_CTX_use_PrivateKey_file(m_ctx.get(), key_file.c_str(), SSL_FILETYPE_PEM) <= 0) {

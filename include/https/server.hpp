@@ -54,9 +54,7 @@ public:
     void handle_connection(Connection<SSLSocket>& connection)
     {
         auto stream = NetworkStream(connection);
-        std::cout << "Trying to receive request..." << std::endl;
         http::Request request = http::Request::receive_from_network(stream);
-        std::cout << "Received request" << std::endl;
 
         http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
             http::Response res;

@@ -32,12 +32,10 @@ public:
 
     ssize_t recv(void* buf, size_t count, int = 0) const
     {
-        size_t amount;
-        std::cout << "Waiting to receive on SSL socket"<<std::endl;
+        size_t amount = 0;
         int ret = SSL_read_ex(m_ssl, buf, count, &amount);
         // if the return value is 0 or -1, check the error with SSL_get_error()
         // if the client disconnected, return 0
-        std::cout << "Received on SSL socket. Ret=" << ret << " amount=" << amount << std::endl;
         if (ret == 1) {
             return amount;
         }
@@ -54,7 +52,6 @@ public:
     {
         size_t amount;
         int ret = SSL_write_ex(m_ssl, buf, count, &amount);
-        std::cout << "Sent on SSL socket. Ret=" << ret << " amount=" << amount << std::endl;
         if (ret == 1) {
             return amount;
         }
