@@ -19,7 +19,8 @@ std::string generate_shorter_url()
 
 int main()
 {
-    https::Server server(https::Server::Settings{.recv_timeout = 100s});
+    https::Server server(https::Server::Settings{.recv_timeout = 100s},
+        https::Server::SSLSettings{.cert_file = "/home/michele/key/cert.pem", .key_file = "/home/michele/key/key.pem"});
 
     server.middleware(JSONParser());
 
