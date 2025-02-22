@@ -102,6 +102,7 @@ public:
 static_assert(SocketConcept<PlainSocket>);
 
 template<typename Parent>
+    requires SocketConcept<Parent>
 class RefSocket : public Parent {
 public:
     template<typename... Args>
@@ -111,9 +112,11 @@ public:
 };
 
 template<typename Parent>
+    requires SocketConcept<Parent>
 class OwnedSocket : public Parent {
 public:
-    OwnedSocket(int domain, int type, int protocol) : Parent(socket(domain, type, protocol))
+    template<typename... Args>
+    OwnedSocket(int domain, int type, int protocol, Args&&... args) : Parent(::socket(domain, type, protocol), std::forward<Args>(args)...)
     {
         // set socket option to reuse address
         int optval = 1;

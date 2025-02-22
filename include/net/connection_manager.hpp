@@ -28,11 +28,11 @@ private:
     std::stop_source m_stop_source{};
 
 public:
-    explicit ConnectionManager(size_t workers, size_t max_idle_connections, HandleFunction&& handlefn) : m_max_idle_connections(max_idle_connections)
+    explicit ConnectionManager(size_t workers, size_t max_idle_connections, HandleFunction&& handle) : m_max_idle_connections(max_idle_connections)
     {
         m_workers.reserve(workers);
         for (size_t i = 0; i < workers; ++i) {
-            m_workers.emplace_back([this](const std::stop_token& stop, const HandleFunction& handle) {
+            m_workers.emplace_back([this, handle](const std::stop_token& stop) {
                 while (!stop.stop_requested()) {
                     Connection conn = pop_connection();
                     conn.wait_for_data();
@@ -58,7 +58,7 @@ public:
                     }
                 }
             },
-                                   m_stop_source.get_token(), handlefn);
+                                   m_stop_source.get_token());
         }
     }
     ~ConnectionManager()
