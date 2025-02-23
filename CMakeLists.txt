@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
+option(USE_OPENSSL "Enable OpenSSL" ON)
+
 # use clang
 set(CMAKE_CXX_COMPILER g++)
 #set(CMAKE_C_COMPILER clang)
