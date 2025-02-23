@@ -48,11 +48,7 @@ protected:
         });
         response.headers().set("Connection", connection.is_closing() ? "close" : "keep-alive");
 
-        std::string response_str = response.serialize();
-        ssize_t written = connection.socket().send(response_str.data(), response_str.size());
-        if (written == -1) {
-            throw std::runtime_error("write() failed");
-        }
+        response.send_to_network(stream);
     }
 
 public:
