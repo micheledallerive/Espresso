@@ -1,20 +1,37 @@
 #pragma once
 
-#include <vector>
+#include <algorithm>
 #include <string>
 #include <string_view>
-#include <algorithm>
+#include <vector>
 
 namespace espresso {
 
-[[maybe_unused]] static bool equals_case_insensitive(std::string_view s1, std::string_view s2)
+/**
+ * Return -1 if s1 < s2, 0 if s1 == s2, 1 if s1 > s2.
+ * All comparisons are case-insensitive.
+ */
+static int compare_case_insensitive(std::string_view s1, std::string_view s2)
 {
-    return s1.size() == s2.size() && std::equal(s1.begin(), s1.end(), s2.begin(), s2.end(), [](char a, char b) {
-               return std::tolower(a) == std::tolower(b);
-           });
+    size_t cmp_size = std::min(s1.length(), s2.length());
+    for (size_t i = 0; i < cmp_size; ++i) {
+        char c1 = static_cast<char>(std::tolower(s1[i]));
+        char c2 = static_cast<char>(std::tolower(s2[i]));
+        if (c1 < c2) return -1;
+        if (c1 > c2) return 1;
+    }
+    if (s1.length() < s2.length()) return -1;
+    if (s1.length() > s2.length()) return 1;
+    return 0;
 }
 
-[[maybe_unused]] static std::string concatenate(const std::vector<std::string> &strings, const std::string &separator)
+[[maybe_unused]] static bool equals_case_insensitive(std::string_view s1, std::string_view s2)
+{
+    if (s1.size() != s2.size()) return false;
+    return compare_case_insensitive(s1, s2) == 0;
+}
+
+[[maybe_unused]] static std::string concatenate(const std::vector<std::string>& strings, const std::string& separator)
 {
     if (strings.size() == 1) return strings[0];
     std::string result;
