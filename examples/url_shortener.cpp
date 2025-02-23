@@ -1,8 +1,6 @@
 #include <iostream>
 
-#include "http/server.hpp"
-
-#include <https/server.hpp>
+#include <http/server.hpp>
 #include <middleware/presets/json_parser.hpp>
 
 using namespace std;
@@ -19,8 +17,7 @@ std::string generate_shorter_url()
 
 int main()
 {
-    https::Server server(https::Server::Settings{.recv_timeout = 100s},
-        https::Server::SSLSettings{.cert_file = "/home/michele/key/cert.pem", .key_file = "/home/michele/key/key.pem"});
+    http::Server server(http::Server::Settings{.recv_timeout = 100s});
 
     server.middleware(JSONParser());
 
