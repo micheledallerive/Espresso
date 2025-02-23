@@ -43,7 +43,10 @@ void Server::listen(int port)
             throw std::runtime_error("accept() failed");
         }
 
-        manager.push_connection(Connection<SSLSocket>(ctx.create_socket(client_fd), m_settings.recv_timeout));
+        std::optional<RefSocket<SSLSocket>> client_socket = ctx.create_socket(client_fd);
+        if (client_socket.has_value()) {
+            manager.push_connection(Connection<SSLSocket>(std::move(client_socket.value()), m_settings.recv_timeout));
+        }
     }
 }
 }// namespace espresso::https
