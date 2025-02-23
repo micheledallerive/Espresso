@@ -25,7 +25,6 @@ ssize_t SSLSocket::recv(void* buf, size_t count, int)
         return amount;
     }
     int err = SSL_get_error(m_ssl, ret);
-    // print the error
 
     if (err == SSL_ERROR_ZERO_RETURN || err == SSL_ERROR_SSL || (err == SSL_ERROR_SYSCALL && errno == ECONNRESET)) {
         m_connected = false;
@@ -48,5 +47,9 @@ void SSLSocket::close() const
     SSL_shutdown(m_ssl);
     SSL_free(m_ssl);
     ::close(m_fd);
+}
+bool SSLSocket::has_more_data() const
+{
+    return SSL_pending(m_ssl) > 0;
 }
 }// namespace espresso::https

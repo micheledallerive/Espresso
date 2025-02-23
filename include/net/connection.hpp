@@ -48,6 +48,8 @@ public:
 
     void wait_for_data()
     {
+        if (m_client.has_more_data()) return;
+
         struct epoll_event event;
         int nfds = epoll_wait(m_epoll_fd, &event, 1, m_timeout.count());
         if (nfds == -1) {

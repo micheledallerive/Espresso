@@ -5,7 +5,7 @@ using namespace espresso;
 
 int main()
 {
-    https::Server server(https::Server::Settings{.recv_timeout = 100s},
+    https::Server server(https::Server::Settings{.recv_timeout = 1000s},
                          https::Server::SSLSettings{.cert_file = "/home/michele/key/cert.pem", .key_file = "/home/michele/key/key.pem"});
 
     server.router()

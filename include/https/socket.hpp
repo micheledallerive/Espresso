@@ -28,6 +28,8 @@ public:
     ssize_t send(const void* buf, size_t count, int = 0) const;
 
     void close() const;
+
+    [[nodiscard]] bool has_more_data() const;
 };
 static_assert(SocketConcept<SSLSocket>);
 

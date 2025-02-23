@@ -35,6 +35,9 @@ concept SocketConcept = requires(T socket) {
     {
         socket.fd()
     } -> std::same_as<int>;
+    {
+        socket.has_more_data()
+    } -> std::same_as<bool>;
 };
 
 class BaseSocket {
@@ -50,6 +53,11 @@ public:
     void listen(int backlog) const;
 
     [[nodiscard]] int fd() const;
+
+    /**
+     * By default, sockets are not aware of any more data available.
+     */
+    [[nodiscard]] bool has_more_data() const { return false; }
 };
 
 class PlainSocket : public BaseSocket {
