@@ -40,64 +40,32 @@ concept SocketConcept = requires(T socket) {
 class BaseSocket {
 protected:
     int m_fd;
-    explicit BaseSocket(int fd) : m_fd(fd) {}
+    explicit BaseSocket(int fd);
 
 public:
-    int accept(sockaddr_in& addr) const
-    {
-        socklen_t addr_len = sizeof(struct sockaddr_in);
-        return ::accept(m_fd, reinterpret_cast<struct sockaddr*>(&addr), &addr_len);
-    }
+    int accept(sockaddr_in& addr) const;
 
-    void bind(sockaddr_in& addr) const
-    {
-        if (::bind(m_fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(struct sockaddr_in)) == -1) {
-            throw std::runtime_error("bind() failed");
-        }
-    }
+    void bind(sockaddr_in& addr) const;
 
-    void listen(int backlog) const
-    {
-        if (::listen(m_fd, backlog) == -1) {
-            throw std::runtime_error("listen() failed");
-        }
-    }
+    void listen(int backlog) const;
 
-    [[nodiscard]] int fd() const
-    {
-        return m_fd;
-    }
+    [[nodiscard]] int fd() const;
 };
 
 class PlainSocket : public BaseSocket {
 protected:
-    explicit PlainSocket(int fd) : BaseSocket(fd) {}
+    explicit PlainSocket(int fd);
 
 public:
     ~PlainSocket() = default;
 
-    ssize_t recv(void* buf, size_t count, int flags = 0) const
-    {
-        return ::recv(m_fd, buf, count, flags);
-    }
+    ssize_t recv(void* buf, size_t count, int flags = 0) const;
 
-    ssize_t send(const void* buf, size_t count, int flags = 0) const
-    {
-        return ::send(m_fd, buf, count, flags);
-    }
+    ssize_t send(const void* buf, size_t count, int flags = 0) const;
 
-    bool is_connected() const
-    {
-        char buf;
-        ssize_t ret = recv(&buf, 1, MSG_PEEK | MSG_DONTWAIT);
-        bool inactive = (ret == 0) || (ret == -1 && errno != EAGAIN);
-        return !inactive;
-    }
+    [[nodiscard]] bool is_connected() const;
 
-    void close() const
-    {
-        ::close(m_fd);
-    }
+    void close() const;
 };
 static_assert(SocketConcept<PlainSocket>);
 

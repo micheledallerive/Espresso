@@ -22,4 +22,12 @@ SSLContext::SSLContext(const std::filesystem::path& cert_file, const std::filesy
         throw std::runtime_error("Could not set the key file. Make sure the file exists and is a valid PEM file");
     }
 }
+RefSocket<SSLSocket> SSLContext::create_socket(int fd) const
+{
+    SSL* ssl = SSL_new(m_ctx.get());
+    if (!ssl) {
+        throw std::runtime_error("SSL_new() failed");
+    }
+    return RefSocket<SSLSocket>(fd, ssl);
+}
 }// namespace espresso::tls
