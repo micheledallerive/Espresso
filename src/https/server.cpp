@@ -27,6 +27,8 @@ void Server::listen(int port)
         std::optional<RefSocket<SSLSocket>> client_socket = ctx.create_socket(client_fd);
         if (client_socket.has_value()) {
             manager.push_connection(Connection<SSLSocket>(std::move(client_socket.value()), m_settings.recv_timeout));
+        } else {
+            close(client_fd);
         }
     }
 }
