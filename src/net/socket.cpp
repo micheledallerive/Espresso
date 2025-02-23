@@ -1,61 +1,48 @@
 #include "net/socket.hpp"
 
-#include "error/io_exceptions.hpp"
-#include <iostream>
-#include <stdexcept>
-#include <unistd.h>
-
 namespace espresso {
 
-BaseSocket::BaseSocket(int fd) : m_fd(fd)
+BaseSocket::BaseSocket(int fd) : m_fd(fd) {}
+int BaseSocket::accept(sockaddr_in& addr) const
 {
-    if (m_fd == -1) {
-        throw std::runtime_error("socket() failed");
-    }
-
-    FD_ZERO(&m_read_fds);
-    FD_SET(m_fd, &m_read_fds);
+    socklen_t addr_len = sizeof(struct sockaddr_in);
+    return ::accept(m_fd, reinterpret_cast<struct sockaddr*>(&addr), &addr_len);
 }
-Socket::Socket(int domain, int type, int protocol) : BaseSocket(socket(domain, type, protocol))
+void BaseSocket::bind(sockaddr_in& addr) const
 {
-    // set socket option to reuse address
-    int optval = 1;
-    if (setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
-        throw std::runtime_error("setsockopt() failed");
+    if (::bind(m_fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(struct sockaddr_in)) == -1) {
+        throw std::runtime_error("bind() failed");
     }
 }
-Socket::Socket(const Socket& other) : BaseSocket(dup(other.m_fd))
-{
-}
-
-Socket::Socket(Socket&& other) noexcept : BaseSocket(other.m_fd)
-{
-    other.m_fd = -1;
-}
-
-Socket::~Socket()
-{
-    if (m_fd != -1) {
-        close(m_fd);
-    }
-}
-
-BaseSocket::operator int() const
-{
-    return m_fd;
-}
-void BaseSocket::listen(int backlog)
+void BaseSocket::listen(int backlog) const
 {
     if (::listen(m_fd, backlog) == -1) {
         throw std::runtime_error("listen() failed");
     }
 }
+int BaseSocket::fd() const
+{
+    return m_fd;
+}
+PlainSocket::PlainSocket(int fd) : BaseSocket(fd) {}
+ssize_t PlainSocket::recv(void* buf, size_t count, int flags) const
+{
+    return ::recv(m_fd, buf, count, flags);
+}
+ssize_t PlainSocket::send(const void* buf, size_t count, int flags) const
+{
+    return ::send(m_fd, buf, count, flags);
+}
+bool PlainSocket::is_connected() const
+{
+    char buf;
+    ssize_t ret = recv(&buf, 1, MSG_PEEK | MSG_DONTWAIT);
+    bool inactive = (ret == 0) || (ret == -1 && errno != EAGAIN);
+    return !inactive;
+}
+void PlainSocket::close() const
+{
+    ::close(m_fd);
+}
 
-ssize_t BaseSocket::read(void* buf, size_t count)
-{
-    return ::read(m_fd, buf, count);
-}
-RefSocket::RefSocket(int fd) : BaseSocket(fd)
-{
-}
 }// namespace espresso

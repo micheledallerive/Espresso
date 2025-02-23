@@ -37,8 +37,8 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Install SQLite 3 and Magic library
-      run: sudo apt-get install sqlite3 libsqlite3-dev libmagic-dev
+    - name: "Install dependencies: SQLite 3, Magic, OpenSSL"
+      run: sudo apt-get install sqlite3 libsqlite3-dev libmagic-dev libssl-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

@@ -4,6 +4,7 @@
 #include "net/socket.hpp"
 #include "routing/router.hpp"
 
+#include "base_server.hpp"
 #include <forward_list>
 #include <functional>
 #include <future>
@@ -13,44 +14,20 @@
 
 namespace espresso::http {
 
-using namespace std::chrono_literals;
-class Server {
-public:
-    struct Settings {
-        static constexpr Connection::Timeout DEFAULT_RECV_TIMEOUT{5s};
-        static constexpr size_t DEFAULT_HTTP_WORKERS{10};
-        static constexpr size_t DEFAULT_MAX_CONNECTIONS{1000};
-
-        Connection::Timeout recv_timeout = DEFAULT_RECV_TIMEOUT;
-        size_t http_workers = DEFAULT_HTTP_WORKERS;
-        size_t max_connections = DEFAULT_MAX_CONNECTIONS;
-    };
-
+class Server : public BaseServer {
 private:
-    Settings m_settings;
+    OwnedSocket<PlainSocket> m_socket;
 
-    Socket m_socket;
-
-    std::forward_list<Connection> m_pending_connections;
-
-    Router m_router;
-    MiddlewareList m_middleware;
-
-    void handle_connection(Connection &connection);
+    void handle_connection(Connection<PlainSocket>& connection);
 
 public:
     Server();
     explicit Server(const Settings& settings);
-    Server(const Server&) = delete;
-    Server(Server&&) = delete;
     ~Server() = default;
 
-    Router& router() { return m_router; }
-
-    void middleware(const middleware::MiddlewareFunction& middleware);
-
     [[noreturn]] void listen(int port);
-    [[noreturn]] void listen(std::string_view address, int port);
 };
+
+static_assert(ServerConcept<Server>);
 
 }// namespace espresso::http
