@@ -53,10 +53,10 @@ void Server::handle_connection(Connection<PlainSocket>& connection)
     Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
         http::Response res;
         m_router.handle(req, res);
-        res.headers().insert("Content-Length", std::to_string(res.body().size()));
+        res.headers().set("Content-Length", std::to_string(res.body().size()));
         return res;
     });
-    response.headers().insert("Connection", connection.is_closing() ? "close" : "keep-alive");
+    response.headers().set("Connection", connection.is_closing() ? "close" : "keep-alive");
 
     std::string response_str = response.serialize();
     ssize_t written = connection.socket().send(response_str.data(), response_str.size());

@@ -33,7 +33,7 @@ public:
     void operator()(const http::Request& request, http::Response& response, routing::NextFunctionRef next) override
     {
         response.status(200);
-        response.headers().insert("Content-Type", mime_type(m_path));
+        response.headers().set("Content-Type", mime_type(m_path));
         if (!m_cache.empty()) {
             response.write(m_cache);
             return;

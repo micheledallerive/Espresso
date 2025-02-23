@@ -2,9 +2,8 @@
 
 #include <string>
 
-
 namespace espresso::http {
-enum Method {
+enum class Method {
     GET,
     HEAD,
     POST,
@@ -20,25 +19,25 @@ enum Method {
 [[maybe_unused]] static std::string method_to_string(Method method)
 {
     switch (method) {
-    case GET:
+    case Method::GET:
         return "GET";
-    case HEAD:
+    case Method::HEAD:
         return "HEAD";
-    case POST:
+    case Method::POST:
         return "POST";
-    case PUT:
+    case Method::PUT:
         return "PUT";
-    case DELETE:
+    case Method::DELETE:
         return "DELETE";
-    case CONNECT:
+    case Method::CONNECT:
         return "CONNECT";
-    case OPTIONS:
+    case Method::OPTIONS:
         return "OPTIONS";
-    case TRACE:
+    case Method::TRACE:
         return "TRACE";
-    case PATCH:
+    case Method::PATCH:
         return "PATCH";
-    case NONE:
+    case Method::NONE:
         return "NONE";
     }
     return "NONE";
@@ -47,34 +46,34 @@ enum Method {
 [[maybe_unused]] static Method string_to_method(std::string_view method)
 {
     if (method == "GET") {
-        return GET;
+        return Method::GET;
     }
     else if (method == "HEAD") {
-        return HEAD;
+        return Method::HEAD;
     }
     else if (method == "POST") {
-        return POST;
+        return Method::POST;
     }
     else if (method == "PUT") {
-        return PUT;
+        return Method::PUT;
     }
     else if (method == "DELETE") {
-        return DELETE;
+        return Method::DELETE;
     }
     else if (method == "CONNECT") {
-        return CONNECT;
+        return Method::CONNECT;
     }
     else if (method == "OPTIONS") {
-        return OPTIONS;
+        return Method::OPTIONS;
     }
     else if (method == "TRACE") {
-        return TRACE;
+        return Method::TRACE;
     }
     else if (method == "PATCH") {
-        return PATCH;
+        return Method::PATCH;
     }
     else {
-        return NONE;
+        return Method::NONE;
     }
 }
 }// namespace espresso::http

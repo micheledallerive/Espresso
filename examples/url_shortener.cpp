@@ -17,7 +17,7 @@ std::string generate_shorter_url()
 
 int main()
 {
-    http::Server server(http::Server::Settings{.recv_timeout = 100s});
+    http::Server server(http::Server::Settings{.recv_timeout = 100s, .http_workers = 1});
 
     server.middleware(JSONParser());
 
