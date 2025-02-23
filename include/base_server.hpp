@@ -1,6 +1,7 @@
 #pragma once
 #include <middleware/middleware_list.hpp>
 #include <middleware/types.hpp>
+#include "utils/network_stream.hpp"
 #include <net/connection.hpp>
 #include <routing/router.hpp>
 #include <utility>
@@ -11,7 +12,9 @@ using namespace std::chrono_literals;
 
 template<typename T>
 concept ServerConcept = requires(T server) {
-    { server.listen(std::declval<int>()) } -> std::same_as<void>;
+    {
+        server.listen(std::declval<int>())
+    } -> std::same_as<void>;
 };
 
 class BaseServer {
@@ -30,6 +33,27 @@ protected:
     Settings m_settings;
     Router m_router;
     MiddlewareList m_middleware;
+
+    //template<typename ConnectionType>
+    void handle_connection(auto& connection) const
+    {
+        auto stream = NetworkStream(connection);
+        http::Request request = http::Request::receive_from_network(stream);
+
+        http::Response response = m_middleware.run_middlewares(request, [this](http::Request& req) {
+            http::Response res;
+            m_router.handle(req, res);
+            res.headers().set("Content-Length", std::to_string(res.body().size()));
+            return res;
+        });
+        response.headers().set("Connection", connection.is_closing() ? "close" : "keep-alive");
+
+        std::string response_str = response.serialize();
+        ssize_t written = connection.socket().send(response_str.data(), response_str.size());
+        if (written == -1) {
+            throw std::runtime_error("write() failed");
+        }
+    }
 
 public:
     BaseServer() : BaseServer(Settings{}) {}

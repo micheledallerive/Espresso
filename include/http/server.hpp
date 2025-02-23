@@ -18,8 +18,6 @@ class Server : public BaseServer {
 private:
     OwnedSocket<PlainSocket> m_socket;
 
-    void handle_connection(Connection<PlainSocket>& connection);
-
 public:
     Server();
     explicit Server(const Settings& settings);

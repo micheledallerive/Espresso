@@ -21,8 +21,6 @@ private:
     OwnedSocket<PlainSocket> m_socket;
     SSLSettings m_ssl_settings;
 
-    void handle_connection(Connection<SSLSocket>& connection) const;
-
 public:
     //Server() : Server({}, {}) {}
     explicit Server(SSLSettings ssl_settings);
