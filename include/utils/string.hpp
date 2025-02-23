@@ -25,6 +25,13 @@ static int compare_case_insensitive(std::string_view s1, std::string_view s2)
     return 0;
 }
 
+struct case_insensitive_comparator {
+    bool operator()(std::string_view s1, std::string_view s2) const
+    {
+        return compare_case_insensitive(s1, s2) < 0;
+    }
+};
+
 [[maybe_unused]] static bool equals_case_insensitive(std::string_view s1, std::string_view s2)
 {
     if (s1.size() != s2.size()) return false;

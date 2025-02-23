@@ -3,21 +3,14 @@
 #include "utils/string.hpp"
 #include <optional>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <utility>
 
 namespace espresso::http {
 
-struct case_insensitive_compare {
-    bool operator()(const std::string& a, const std::string& b) const
-    {
-        return equals_case_insensitive(a, b);
-    }
-};
-
 class Headers {
 public:
-    using Map = std::unordered_map<std::string, std::string, std::hash<std::string>, case_insensitive_compare>;
+    using Map = std::map<std::string, std::string, case_insensitive_comparator>;
 
 private:
     Map m_headers;

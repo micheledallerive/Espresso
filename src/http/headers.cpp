@@ -10,8 +10,9 @@ void Headers::set(const std::string& name, const std::string& value)
 }
 void Headers::insert(const std::string& name, const std::string& value)
 {
-    if (m_headers.find(name) == m_headers.end()) {
-        m_headers[name] = value;
+    auto it = m_headers.find(name);
+    if (it == m_headers.end()) {
+        m_headers.emplace_hint(it, name, value);
     }
     else {
         // combine them
